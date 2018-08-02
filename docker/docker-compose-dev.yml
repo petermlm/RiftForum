@@ -1,0 +1,17 @@
+version: '2'
+services:
+  server:
+    build:
+      context: ..
+      dockerfile: docker/server.docker
+    ports:
+      - "8080:8080"
+    depends_on:
+      - postgres
+    entrypoint: docker/entry-dev.sh
+    volumes:
+      - ../:/app
+  postgres:
+    build:
+      context: ..
+      dockerfile: docker/postgres.docker

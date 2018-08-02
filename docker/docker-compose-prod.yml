@@ -1,0 +1,17 @@
+version: '2'
+services:
+  server:
+    build:
+      context: ..
+      dockerfile: docker/server.docker
+    ports:
+      - "8000:8000"
+    depends_on:
+      - postgres
+    entrypoint: docker/entry-prod.sh
+  postgres:
+    build:
+      context: ..
+      dockerfile: docker/postgres.docker
+    volumes:
+      - ./data:/var/lib/postgresql/data
