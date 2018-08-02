@@ -6,6 +6,8 @@ RUN apt update --fix-missing && \
 
 # Install Go Dependencies
 RUN go get github.com/gorilla/mux
+RUN go get github.com/go-pg/pg
+RUN go get github.com/go-pg/pg/orm
 
 # Working directory is the project's directory
 RUN mkdir -p /app

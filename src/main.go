@@ -8,6 +8,8 @@ import (
 func main() {
     log.Println("Rift Forum starting")
 
+    InitDB()
+    defer CloseDB()
     router := CreateRouter()
 
     log.Println("Serving")
