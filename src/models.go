@@ -6,8 +6,8 @@ import (
 
 type DBObject struct {
     Id uint
-    Created time.Time
-    Modified time.Time
+    CreatedAt time.Time `sql:"default:now()"`
+    UpdatedAt time.Time
 }
 
 /* ============================================================================
@@ -31,6 +31,15 @@ type User struct {
     Signature string
     About string
     UserType UserTypes
+}
+
+func NewUser(username string, user_type string, password string) User {
+    user := User{
+        Username: "admin",
+        UserType: Administrator,
+    }
+
+    return user
 }
 
 func (u User) GetUserType() string {

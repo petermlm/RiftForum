@@ -6,7 +6,7 @@ import (
     "github.com/gorilla/mux"
 )
 
-func index(w http.ResponseWriter, r *http.Request) {
+func index(writer http.ResponseWriter, r *http.Request) {
     user := new(User)
     db := GetDBCon()
     err := db.Model(user).
@@ -31,13 +31,16 @@ func index(w http.ResponseWriter, r *http.Request) {
         },
     }
 
-
-    Render("index.html", w, data)
+    Render(writer, "index.html", data)
 }
 
 func CreateRouter() *mux.Router {
     router := mux.NewRouter()
     router.HandleFunc("/", index).Methods("GET")
+
+    router.
+        PathPrefix("/static/style/").
+        Handler(http.StripPrefix("/static/style/", http.FileServer(http.Dir("../static/style/"))))
 
     log.Println("Routers created")
     return router

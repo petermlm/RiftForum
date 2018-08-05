@@ -1,15 +1,23 @@
 <!DOCTYPE html>
-<html>
-    <head>
-        <meta charset="UTF-8">
-    </head>
-    <body>
-        Name: {{.Username}}
-        Type: {{.Usertype}}
-        <ul>
-        {{range .Items}}
-            <li>{{ . }}</li>
-        {{end}}
-        </ul>
-    </body>
+<html lang="en">
+<head>
+    {{template "head"}}
+</head>
+<body>
+    {{template "header"}}
+
+    <main>
+
+    <div class="page_title_wrapper">
+        <div class="page_title">
+            <h1>Topics</h1>
+        </div>
+    </div>
+
+    TODO
+
+    </main>
+
+    {{template "footer"}}
+</body>
 </html>

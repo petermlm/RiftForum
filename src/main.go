@@ -10,6 +10,7 @@ func main() {
 
     InitDB()
     defer CloseDB()
+    InitTmpl()
     router := CreateRouter()
 
     log.Println("Serving")

@@ -1,25 +1,51 @@
 package main
 
 import (
+    "strings"
     "log"
+    "os"
+    "io/ioutil"
     "net/http"
     "html/template"
 )
+
+var templates *template.Template
 
 func tpl_dir(tpl_name string) string {
     return "../templates/" + tpl_name
 }
 
-func Render(tpl_name string, w http.ResponseWriter, data interface{}) {
-    t, err := template.New("webpage").ParseFiles(tpl_dir(tpl_name))
+func InitTmpl() {
+    var all_files []string
+    var files []os.FileInfo
+    var err error
 
+    files, err = ioutil.ReadDir("../templates")
     if err != nil {
-        log.Fatal("Can't open template")
+        log.Println("can't read directory with templates")
+        log.Fatal(err)
     }
 
-    err = t.ExecuteTemplate(w, tpl_name, data)
+    for _, file := range files {
+        filename := file.Name()
+        if strings.HasSuffix(filename, ".html") {
+            all_files = append(all_files, "../templates/" + filename)
+        }
+    }
+
+    templates, err = template.New("webpage").ParseFiles(all_files...)
 
     if err != nil {
+        log.Println("Can't parse template files")
+        log.Fatal(err)
+    }
+}
+
+func Render(writer http.ResponseWriter, tpl_name string, data interface{}) {
+    err := templates.ExecuteTemplate(writer, tpl_name, data)
+
+    if err != nil {
+        log.Println("Can't execute template")
         log.Fatal(err)
     }
 }
