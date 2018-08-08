@@ -14,7 +14,50 @@
         </div>
     </div>
 
-    TODO
+    <div class="topics_list_wrapper">
+        <table class="table table-striped table-hover">
+            <thead>
+                <tr>
+                    <th class="col-sm-*">Topic Title</th>
+                    <th class="col-sm-2 topics_list_messages">Messages</th>
+                    <th class="col-sm-2">Last Post</th>
+                </tr>
+            </thead>
+            <tbody>
+                {{range .Topics}}
+                <tr>
+                    <td class="topics_list_title">
+                        <a href="/topics/{{ .AuthorId }}" class="link_visited">{{ .Title }}</a><br/>
+                        <span class="topics_list_title_author">
+                            By
+                            <a href="/users/{{ .AuthorUsername }}" class="topics_list_title_author_hl">
+                                {{ .AuthorUsername }}
+                            </a>
+                            on
+                            <span class="topics_list_title_author_hl">{{ .CreatedAt }}</span>
+                        </span>
+                    </td>
+                    <td class="topics_list_messages">{{ .MessageCount }}</td>
+                    <td>
+                        <span class="topics_list_last">
+                            By
+                            <span class="topics_list_last_hl">
+                                <a href="/users/{{ .LastAuthor }}">
+                                {{ .LastAuthor }}
+                                </a>
+                            </span>
+                            on<br/>
+                            <span class="topics_list_last_hl">{{ .LastTimestamp }}</span>
+                        </span>
+                    </td>
+                </tr>
+                {{end}}
+            </tbody>
+        </table>
+
+    </div>
+
+    TODO: Needs way to write new topic
 
     </main>
 

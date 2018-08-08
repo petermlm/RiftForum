@@ -31,6 +31,9 @@ type User struct {
     Signature string
     About string
     UserType UserTypes
+
+    Topics []*Topic
+    Messages []*Message
 }
 
 func NewUser(username string, user_type string, password string) User {
@@ -64,8 +67,10 @@ type Topic struct {
 
     Title string
 
-    AuthorID uint
+    AuthorId uint
     Author *User
+
+    Messages []*Message
 }
 
 /* ============================================================================
@@ -77,11 +82,11 @@ type Message struct {
     DBObject
     Message string
 
-    AuthorID uint
+    AuthorId uint
     Author *User
 
-    TopicID uint
-    Topic *User
+    TopicId uint
+    Topic *Topic
 }
 
 /* ============================================================================
@@ -92,5 +97,5 @@ type Message struct {
 type Invite struct {
     DBObject
     Key string
-    Userd bool
+    Used bool
 }

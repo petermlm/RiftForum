@@ -15,3 +15,5 @@ services:
     build:
       context: ..
       dockerfile: docker/postgres.docker
+    ports:
+      - "8090:5432"

@@ -64,13 +64,46 @@ func createSchema() error {
 }
 
 func createDefaultData() error {
-    err := db.Insert(&User{
+    var err error
+
+    // User
+    user := &User{
         Username: "admin",
         // PasswordHash: "",
         Signature: "I'm the Administrator",
         About: "I'm the Administrator",
         UserType: Administrator,
-    })
+    }
+
+    err = db.Insert(user)
+
+    if err != nil {
+        return err
+    }
+
+    // Topic
+    topic := &Topic{
+        Title: "Test Topic",
+        Author: user,
+        AuthorId: user.Id,
+    }
+
+    err = db.Insert(topic)
+
+    if err != nil {
+        return err
+    }
+
+    // Message
+    message := &Message{
+        Message: "Test message",
+        Author: user,
+        AuthorId: user.Id,
+        Topic: topic,
+        TopicId: topic.Id,
+    }
+
+    err = db.Insert(message)
 
     if err != nil {
         return err

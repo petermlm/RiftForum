@@ -7,28 +7,13 @@ import (
 )
 
 func index(writer http.ResponseWriter, r *http.Request) {
-    user := new(User)
-    db := GetDBCon()
-    err := db.Model(user).
-        Where("username = ?", "admin").
-        Select()
-
-    if err != nil {
-        panic(err)
-    }
+    topics := GetTopics()
+    ser_topics := SerializeTopics(topics)
 
     data := struct {
-        Username string
-        Usertype string
-        Items []string
+        Topics []interface{}
     }{
-        Username: user.Username,
-        Usertype: user.GetUserType(),
-        Items: []string{
-            "One item",
-            "Another item",
-            "Final item",
-        },
+        Topics: ser_topics,
     }
 
     Render(writer, "index.html", data)
