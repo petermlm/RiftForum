@@ -7,7 +7,7 @@ import (
 type DBObject struct {
     Id uint
     CreatedAt time.Time `sql:"default:now()"`
-    UpdatedAt time.Time
+    UpdatedAt time.Time `sql:"default:now()"`
 }
 
 /* ============================================================================

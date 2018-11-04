@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+{{template "head"}}
+<body>
+    {{template "header"}}
+
+    <main>
+
+    <div class="page_title_wrapper">
+        <div class="page_title">
+            <h1>{{ .Title }}</h1>
+        </div>
+    </div>
+
+    <div class="message_list_wrapper">
+        <div class="message_list_messages">
+            {{range .Messages}}
+            <div class="container message_list_message">
+                <div class="row">
+                    <div class="col-sm-2 message_list_author_info">
+                        <div class="message_list_author_info_name">
+                            <a href="/users/{{.AuthorId}}">{{.AuthorUsername}}</a>
+                        </div>
+                        <div class="message_list_author_info_type">TODO</div>
+                        <div class="message_list_author_info_date">
+                            Posted on<br/>
+                            <span>{{.CreatedAt}}</span>
+                        </div>
+            <!--             <% if(message.CanEdit) { %> -->
+            <!--             <div class="message_list_edit_bnt" data&#45;message&#45;id="<%= message.message_id %>"> -->
+            <!--                 <a href="#">Edit</a> -->
+            <!--             </div> -->
+            <!--             <% } %> -->
+                    </div>
+                    <div class="col-sm-10 message_list_author_message">
+                        <div class="message_list_author_message_text">
+                            {{.Message}}
+                        </div>
+                        <!-- <% if(message.SignatureF.length > 0) { %> -->
+                        <!--     <div class="message_list_author_message_sig message_list_author_message_sig_line"> -->
+                        <!-- <% } else { %> -->
+                        <!--     <div class="message_list_author_message_sig"> -->
+                        <!-- <% } %> -->
+                        <!--     <%&#45; message.SignatureF %> -->
+                        <!-- </div> -->
+                    </div>
+                </div>
+            </div>
+            {{end}}
+        </div>
+    </div>
+
+    <div class="new_message_wrapper">
+        <div id="new_message" class="new_message">
+            <form method="POST" action="/topics/{{ .TopicId }}">
+                <input type="hidden" name="method" value="post" />
+                <input type="hidden" name="message_id" value="" />
+                <textarea class="form-control" name="message" placeholder="Message"></textarea>
+                <button type="submit" name="post" class="btn btn-default submit_button">Post</button>
+                <button type="button" name="clear" class="btn btn-default">Clear</button>
+            </form>
+            <div id="text_feedback" class="text_feedback_normal"><span id="text_feedback_val">0</span> / 500</div>
+        </div>
+    </div>
+
+    </main>
+
+    {{template "footer"}}
+</body>
+</html>

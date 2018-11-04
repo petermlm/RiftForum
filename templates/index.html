@@ -1,8 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    {{template "head"}}
-</head>
+{{template "head"}}
 <body>
     {{template "header"}}
 
@@ -27,7 +25,7 @@
                 {{range .Topics}}
                 <tr>
                     <td class="topics_list_title">
-                        <a href="/topics/{{ .AuthorId }}" class="link_visited">{{ .Title }}</a><br/>
+                        <a href="/topics/{{ .TopicId }}" class="link_visited">{{ .Title }}</a><br/>
                         <span class="topics_list_title_author">
                             By
                             <a href="/users/{{ .AuthorUsername }}" class="topics_list_title_author_hl">
