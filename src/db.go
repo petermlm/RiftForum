@@ -66,16 +66,16 @@ func createSchema() error {
 func createDefaultData() error {
     var err error
 
-    // User
-    user := &User{
-        Username: "admin",
-        // PasswordHash: "",
-        Signature: "I'm the Administrator",
-        About: "I'm the Administrator",
-        UserType: Administrator,
+    // Users
+    user_admin := NewUser("admin", Administrator, "pl")
+    err = db.Insert(user_admin)
+
+    if err != nil {
+        return err
     }
 
-    err = db.Insert(user)
+    user_basic := NewUser("user", Basic, "pl")
+    err = db.Insert(user_basic)
 
     if err != nil {
         return err
@@ -84,8 +84,8 @@ func createDefaultData() error {
     // Topic
     topic := &Topic{
         Title: "Test Topic",
-        Author: user,
-        AuthorId: user.Id,
+        Author: user_admin,
+        AuthorId: user_admin.Id,
     }
 
     err = db.Insert(topic)
@@ -97,8 +97,8 @@ func createDefaultData() error {
     // Message
     message := &Message{
         Message: "Test message",
-        Author: user,
-        AuthorId: user.Id,
+        Author: user_admin,
+        AuthorId: user_admin.Id,
         Topic: topic,
         TopicId: topic.Id,
     }

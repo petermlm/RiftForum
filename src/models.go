@@ -2,6 +2,8 @@ package main
 
 import (
     "time"
+
+    "golang.org/x/crypto/bcrypt"
 )
 
 type DBObject struct {
@@ -26,7 +28,7 @@ const (
 type User struct {
     DBObject
 
-    Username string
+    Username string `sql:",unique"`
     PasswordHash string
     Signature string
     About string
@@ -36,9 +38,28 @@ type User struct {
     Messages []*Message
 }
 
-func NewUser(username string, user_type string, password string) User {
-    user := User{
-        Username: "admin",
+func GenerateHash(password string) (string, error) {
+    salted_bytes := []byte(password)
+    hashed_bytes, err := bcrypt.GenerateFromPassword(salted_bytes, bcrypt.DefaultCost)
+
+    if err != nil {
+        return "", err
+    }
+
+    hash := string(hashed_bytes[:])
+    return hash, nil
+}
+
+func NewUser(username string, user_type int, password string) *User {
+    hash, err := GenerateHash(password)
+
+    if err != nil {
+        panic(err)
+    }
+
+    user := &User{
+        Username: username,
+        PasswordHash: hash,
         UserType: Administrator,
     }
 
@@ -96,6 +117,6 @@ type Message struct {
 
 type Invite struct {
     DBObject
-    Key string
+    Key string `sql:",unique"`
     Used bool
 }

@@ -1,9 +1,25 @@
 package main
 
 import (
+    "errors"
     "time"
     "github.com/go-pg/pg/orm"
 )
+
+func GetUser(username string) (*User, error) {
+    db := GetDBCon()
+
+    user := new(User)
+    err := db.Model(user).
+        Where("\"user\".username = ?", username).
+        Select()
+
+    if err != nil {
+        return nil, errors.New("User doesn't exist")
+    }
+
+    return user, nil
+}
 
 func GetTopics() []*Topic {
     db := GetDBCon()
