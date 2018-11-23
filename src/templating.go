@@ -41,8 +41,15 @@ func InitTmpl() {
     }
 }
 
-func Render(writer http.ResponseWriter, tpl_name string, data interface{}) {
-    err := templates.ExecuteTemplate(writer, tpl_name, data)
+func Render(writer *http.ResponseWriter, r *http.Request, tpl_name string, data RiftDataI) {
+    ctx := r.Context()
+    user_info, ok := ctx.Value("UserInfo").(*UserInfo)
+
+    if ok {
+        data.SetUserInfo(user_info)
+    }
+
+    err := templates.ExecuteTemplate(*writer, tpl_name, data)
 
     if err != nil {
         log.Println("Can't execute template")

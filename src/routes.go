@@ -13,7 +13,34 @@ import (
 func index(writer http.ResponseWriter, r *http.Request) {
     topics := GetTopics()
     data := SerializeTopics(topics)
-    Render(writer, "index.html", data)
+    Render(&writer, r, "index.html", data)
+}
+
+func login(writer http.ResponseWriter, r *http.Request) {
+    form_username := r.PostFormValue("username")
+    form_password := r.PostFormValue("password")
+
+    token, err := CreateToken(form_username, form_password)
+
+    if err == nil {
+        cookie := http.Cookie{
+            Name: "jwt",
+            Value: token,
+        }
+        http.SetCookie(writer, &cookie)
+    }
+
+    http.Redirect(writer, r, "/", http.StatusSeeOther)
+}
+
+func logout(writer http.ResponseWriter, r *http.Request) {
+    cookie := http.Cookie{
+        Name: "jwt",
+        Value: "",
+    }
+    http.SetCookie(writer, &cookie)
+
+    http.Redirect(writer, r, "/", http.StatusSeeOther)
 }
 
 func topics_post(writer http.ResponseWriter, r *http.Request) {
@@ -65,9 +92,6 @@ func topic_get(writer http.ResponseWriter, r *http.Request) {
     vars := mux.Vars(r)
     topic_id_parsed, err := strconv.ParseUint(vars["id"], 10, 32)
 
-    ctx := r.Context()
-    fmt.Println(ctx.Value("Username"))
-
     if err != nil {
         // TODO
     }
@@ -75,7 +99,7 @@ func topic_get(writer http.ResponseWriter, r *http.Request) {
     topic_id := uint(topic_id_parsed)
     topic := GetTopic(topic_id)
     data := SerializeTopic(topic)
-    Render(writer, "topic.html", data)
+    Render(&writer, r, "topic.html", data)
 }
 
 func topic_post(writer http.ResponseWriter, r *http.Request) {
@@ -122,53 +146,41 @@ func topic_post(writer http.ResponseWriter, r *http.Request) {
     http.Redirect(writer, r, redirect_path, http.StatusSeeOther)
 }
 
-func login(writer http.ResponseWriter, r *http.Request) {
-    form_username := r.PostFormValue("username")
-    form_password := r.PostFormValue("password")
+func save_user_info(next http.Handler) http.Handler {
+    return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+        cookie, err := r.Cookie("jwt")
+        ctx := r.Context()
+        authenticated := false
 
-    token, err := CreateToken(form_username, form_password)
+        if err == nil {
+            claims := VerifyToken(cookie.Value)
 
-    if err == nil {
-        cookie := http.Cookie{
-            Name: "jwt",
-            Value: token,
+            if claims != nil {
+                user_info := &UserInfo {
+                    Username: claims.Username,
+                }
+
+                ctx = context.WithValue(ctx, "UserInfo", user_info)
+                authenticated = true
+            }
         }
-        http.SetCookie(writer, &cookie)
-    }
 
-    http.Redirect(writer, r, "/", http.StatusSeeOther)
-}
+        if !authenticated {
+            ctx = context.WithValue(ctx, "UserInfo", nil)
+        }
 
-func logout(writer http.ResponseWriter, r *http.Request) {
-    cookie := http.Cookie{
-        Name: "jwt",
-        Value: "",
-    }
-    http.SetCookie(writer, &cookie)
-
-    http.Redirect(writer, r, "/", http.StatusSeeOther)
+        next.ServeHTTP(w, r.WithContext(ctx))
+    })
 }
 
 func auth_middleware(next http.Handler) http.Handler {
     return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-        var authenticated bool
-        cookie, ok := r.Cookie("jwt")
+        ctx := r.Context()
+        user_info := ctx.Value("UserInfo").(*UserInfo)
 
-        if ok == nil {
-            valid := VerifyToken(cookie.Value)
-
-            if valid {
-                ctx := context.WithValue(r.Context(), "Username", "ze")
-                next.ServeHTTP(w, r.WithContext(ctx))
-                authenticated = true
-            } else {
-                authenticated = false
-            }
+        if user_info != nil {
+            next.ServeHTTP(w, r.WithContext(ctx))
         } else {
-            authenticated = false
-        }
-
-        if !authenticated {
             http.Error(w, "Forbidden", http.StatusForbidden)
         }
     })
@@ -179,12 +191,13 @@ func CreateRouter() *mux.Router {
     router.HandleFunc("/", index).Methods("GET")
     router.HandleFunc("/login", login).Methods("POST")
     router.HandleFunc("/logout", logout).Methods("POST")
+    router.Use(save_user_info)
 
-    topics_router := router.PathPrefix("/topics").Subrouter()
-    topics_router.HandleFunc("/", topics_post).Methods("POST")
-    topics_router.HandleFunc("/{id:[0-9]+}", topic_get).Methods("GET")
-    topics_router.HandleFunc("/{id:[0-9]+}", topic_post).Methods("POST")
-    topics_router.Use(auth_middleware)
+    auth_routes := router.PathPrefix("/").Subrouter()
+    auth_routes.HandleFunc("/topics", topics_post).Methods("POST")
+    auth_routes.HandleFunc("/topics/{id:[0-9]+}", topic_get).Methods("GET")
+    auth_routes.HandleFunc("/topics/{id:[0-9]+}", topic_post).Methods("POST")
+    auth_routes.Use(auth_middleware)
 
     router.
         PathPrefix("/static/style/").
