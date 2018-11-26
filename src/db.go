@@ -74,7 +74,7 @@ func createDefaultData() error {
         return err
     }
 
-    user_basic := NewUser("petermlm", Basic, "pl")
+    user_basic := NewUser("petermlm", Moderator, "pl")
     err = db.Insert(user_basic)
 
     if err != nil {

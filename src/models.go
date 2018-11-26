@@ -32,7 +32,7 @@ type User struct {
     PasswordHash string
     Signature string
     About string
-    UserType UserTypes
+    Usertype UserTypes
 
     Topics []*Topic
     Messages []*Message
@@ -60,18 +60,18 @@ func NewUser(username string, user_type int, password string) *User {
     user := &User{
         Username: username,
         PasswordHash: hash,
-        UserType: Administrator,
+        Usertype: Administrator,
     }
 
     return user
 }
 
 func (u User) GetUserType() string {
-    if u.UserType == Administrator {
+    if u.Usertype == Administrator {
         return "Administrator"
-    } else if u.UserType == Moderator {
+    } else if u.Usertype == Moderator {
         return "Moderator"
-    } else if u.UserType == Basic {
+    } else if u.Usertype == Basic {
         return "Basic"
     }
 
