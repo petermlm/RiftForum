@@ -1,8 +1,14 @@
 package main
 
+type UserInfo struct {
+    Username string
+    Usertype UserTypes
+}
+
 type RiftDataI interface {
     SetUserInfo(UserInfo *UserInfo)
     HasUser() bool
+    IsAdmin() bool
 }
 
 type RiftData struct {
@@ -15,6 +21,26 @@ func (r *RiftData) SetUserInfo(UserInfo *UserInfo) {
 
 func (r *RiftData) HasUser() bool {
     return r.UserInfo != nil
+}
+
+func (r *RiftData) IsAdmin() bool {
+    if r.UserInfo == nil {
+        return false
+    }
+
+    return r.UserInfo.Usertype == Administrator
+}
+
+func (r *RiftData) IsMod() bool {
+    if r.UserInfo == nil {
+        return false
+    }
+
+    return r.UserInfo.Usertype == Administrator || r.UserInfo.Usertype == Moderator
+}
+
+type EmptyData struct {
+    RiftData
 }
 
 type TopicListData struct {
@@ -45,6 +71,10 @@ type TopicData struct {
     TopicId uint
     Title string
     Messages []*MessageData
+}
+
+func SerializeEmpty() *EmptyData {
+    return new(EmptyData)
 }
 
 func SerializeTopics(topics []*Topic) *TopicsListData {

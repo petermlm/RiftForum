@@ -43,6 +43,11 @@ func logout(writer http.ResponseWriter, r *http.Request) {
     http.Redirect(writer, r, "/", http.StatusSeeOther)
 }
 
+func admin_get(writer http.ResponseWriter, r *http.Request) {
+    data := SerializeEmpty()
+    Render(&writer, r, "admin.html", data)
+}
+
 func topics_post(writer http.ResponseWriter, r *http.Request) {
     var err error
     db := GetDBCon()
@@ -158,6 +163,7 @@ func save_user_info(next http.Handler) http.Handler {
             if claims != nil {
                 user_info := &UserInfo {
                     Username: claims.Username,
+                    Usertype: claims.Usertype,
                 }
 
                 ctx = context.WithValue(ctx, "UserInfo", user_info)
@@ -194,6 +200,7 @@ func CreateRouter() *mux.Router {
     router.Use(save_user_info)
 
     auth_routes := router.PathPrefix("/").Subrouter()
+    auth_routes.HandleFunc("/admin", admin_get).Methods("GET")
     auth_routes.HandleFunc("/topics", topics_post).Methods("POST")
     auth_routes.HandleFunc("/topics/{id:[0-9]+}", topic_get).Methods("GET")
     auth_routes.HandleFunc("/topics/{id:[0-9]+}", topic_post).Methods("POST")

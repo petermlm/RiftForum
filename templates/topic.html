@@ -50,6 +50,7 @@
         </div>
     </div>
 
+    {{if .HasUser}}
     <div class="new_message_wrapper">
         <div id="new_message" class="new_message">
             <form method="POST" action="/topics/{{ .TopicId }}">
@@ -62,6 +63,7 @@
             <div id="text_feedback" class="text_feedback_normal"><span id="text_feedback_val">0</span> / 500</div>
         </div>
     </div>
+    {{end}}
 
     </main>
 

@@ -12,24 +12,24 @@ import (
 type Claims struct {
     jwt.StandardClaims
     Username string
+    Usertype UserTypes
 }
 
-func verify_user_pass(form_username string, form_password string) bool {
-    user, user_err := GetUser(form_username)
-
-    if user_err != nil {
-        return false
-    }
-
-    incoming := []byte(form_password)
+func verify_user_pass(user *User, password string) bool {
+    incoming := []byte(password)
     existing := []byte(user.PasswordHash)
     err := bcrypt.CompareHashAndPassword(existing, incoming)
-
     return err == nil
 }
 
 func CreateToken(form_username string, form_password string) (string, error) {
-    if !verify_user_pass(form_username, form_password) {
+    user, user_err := GetUser(form_username)
+
+    if user_err != nil {
+        return "", errors.New("Login credentials are invalid")
+    }
+
+    if !verify_user_pass(user, form_password) {
         return "", errors.New("Login credentials are invalid")
     }
 
@@ -37,7 +37,8 @@ func CreateToken(form_username string, form_password string) (string, error) {
         jwt.StandardClaims{
             ExpiresAt: time.Now().Add(time.Hour * 24).Unix(),
         },
-        form_username,
+        user.Username,
+        user.Usertype,
     }
 
     token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
