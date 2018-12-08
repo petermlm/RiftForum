@@ -115,8 +115,32 @@ type Message struct {
  * ============================================================================
  */
 
+type InviteStatus uint8
+
+const (
+    Unused = iota
+    Used
+    Canceled
+)
+
 type Invite struct {
     DBObject
     Key string `sql:",unique"`
-    Used bool
+    Status InviteStatus
+}
+
+func (i Invite) GetInviteStatus() string {
+    if i.Status == Unused {
+        return "Unnused"
+    } else if i.Status == Used {
+        return "Used"
+    } else if i.Status == Canceled {
+        return "Canceled"
+    }
+
+    return "NoStatus"
+}
+
+func (i Invite) GetKeyUrl() string {
+    return "TODO Key Url"
 }

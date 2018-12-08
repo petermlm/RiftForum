@@ -21,6 +21,22 @@ func GetUser(username string) (*User, error) {
     return user, nil
 }
 
+func GetInvites() []*Invite {
+    db := GetDBCon()
+    var invites []*Invite
+
+    err := db.Model(&invites).
+        Order("invite.created_at DESC").
+        Limit(10).
+        Select()
+
+    if err != nil {
+        panic(err)
+    }
+
+    return invites
+}
+
 func GetTopics() []*Topic {
     db := GetDBCon()
     var topics []*Topic

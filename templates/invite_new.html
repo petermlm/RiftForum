@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+{{template "head"}}
+<body>
+    {{template "header" .}}
+
+    <main>
+
+    <div class="admin_wrapper">
+        <div class="admin_part form-group">
+            <h2>New Invite</h2>
+            <div class="form-group">
+                <label for="invite_key">Invite Key</label>
+                <input id="invite_key" class="form-control" value="{{.Key}}" readonly />
+                <small class="form-text text-muted">The key for this invite</small>
+            </div>
+            <div class="form-group">
+                <label for="invite_url">Invite URL</label>
+                <input id="invite_url" class="form-control" value="{{.KeyUrl}}" readonly />
+                <small class="form-text text-muted">The URL for registration with this key</small>
+            </div>
+            <div class="form-group">
+                <a href="/admin/invites">Back</a>
+            </div>
+        </div>
+    </div>
+
+    </main>
+
+    {{template "footer"}}
+</body>
+</html>

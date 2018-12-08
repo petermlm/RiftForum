@@ -43,6 +43,23 @@ type EmptyData struct {
     RiftData
 }
 
+type InviteListData struct {
+    Key string
+    Status string
+    CreatedAt string
+}
+
+type InvitesListData struct {
+    RiftData
+    Invites []InviteListData
+}
+
+type InviteNewData struct {
+    RiftData
+    Key string
+    KeyUrl string
+}
+
 type TopicListData struct {
     TopicId uint
     Title string
@@ -75,6 +92,29 @@ type TopicData struct {
 
 func SerializeEmpty() *EmptyData {
     return new(EmptyData)
+}
+
+func SerializeInvites(invites []*Invite) *InvitesListData {
+    ser_invites := new(InvitesListData)
+
+    for _, invite := range invites {
+        ser_invite := InviteListData {
+            Key: invite.Key,
+            Status: invite.GetInviteStatus(),
+            CreatedAt: invite.CreatedAt.Format("2006-01-02 15:04:05"),
+        }
+
+        ser_invites.Invites = append(ser_invites.Invites, ser_invite)
+    }
+
+    return ser_invites
+}
+
+func SerializeInviteNew(new_invite *Invite) *InviteNewData {
+    return &InviteNewData {
+        Key: new_invite.Key,
+        KeyUrl: new_invite.GetKeyUrl(),
+    }
 }
 
 func SerializeTopics(topics []*Topic) *TopicsListData {

@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+{{template "head"}}
+<body>
+    {{template "header" .}}
+
+    <main>
+
+    <div class="page_title_wrapper">
+        <div class="page_title">
+            <h1>Invites</h1>
+        </div>
+    </div>
+
+    <form action="/admin/invites" method="POST">
+        <input type="submit">New Invite</input>
+    </form>
+
+    <div class="invites_list_wrapper">
+        <table>
+            <thead class="table table-striped table-hover">
+                <tr>
+                    <th class="col-sm-*">Key</th>
+                    <th class="col-sm-2 topics_list_messages">Status</th>
+                    <th class="col-sm-2">Date</th>
+                </tr>
+            </thead>
+            <tbody>
+                {{range .Invites}}
+                <tr>
+                    <td>{{.Key}}</td>
+                    <td>{{.Status}}</td>
+                    <td>{{.CreatedAt}}</td>
+                </tr>
+                {{end}}
+            </tbody>
+        </table>
+    </div>
+
+    </main>
+
+    {{template "footer"}}
+</body>
+</html>

@@ -43,9 +43,31 @@ func logout(writer http.ResponseWriter, r *http.Request) {
     http.Redirect(writer, r, "/", http.StatusSeeOther)
 }
 
+func register_get(writer http.ResponseWriter, r *http.Request) {
+    // TODO
+    http.Redirect(writer, r, "/", http.StatusSeeOther)
+}
+
+func register_post(writer http.ResponseWriter, r *http.Request) {
+    // TODO
+    http.Redirect(writer, r, "/", http.StatusSeeOther)
+}
+
 func admin_get(writer http.ResponseWriter, r *http.Request) {
     data := SerializeEmpty()
     Render(&writer, r, "admin.html", data)
+}
+
+func admin_invites_get(writer http.ResponseWriter, r *http.Request) {
+    invites := GetInvites()
+    data := SerializeInvites(invites)
+    Render(&writer, r, "invites.html", data)
+}
+
+func admin_invites_post(writer http.ResponseWriter, r *http.Request) {
+    new_invite := make_new_invite()
+    data := SerializeInviteNew(new_invite)
+    Render(&writer, r, "invite_new.html", data)
 }
 
 func topics_post(writer http.ResponseWriter, r *http.Request) {
@@ -192,19 +214,39 @@ func auth_middleware(next http.Handler) http.Handler {
     })
 }
 
+func admin_middleware(next http.Handler) http.Handler {
+    return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+        ctx := r.Context()
+        user_info := ctx.Value("UserInfo").(*UserInfo)
+
+        if user_info != nil {
+            next.ServeHTTP(w, r.WithContext(ctx))
+        } else {
+            http.Error(w, "Forbidden", http.StatusForbidden)
+        }
+    })
+}
+
 func CreateRouter() *mux.Router {
     router := mux.NewRouter()
     router.HandleFunc("/", index).Methods("GET")
     router.HandleFunc("/login", login).Methods("POST")
     router.HandleFunc("/logout", logout).Methods("POST")
+    router.HandleFunc("/register", register_get).Methods("GET")
+    router.HandleFunc("/register", register_post).Methods("POST")
     router.Use(save_user_info)
 
     auth_routes := router.PathPrefix("/").Subrouter()
-    auth_routes.HandleFunc("/admin", admin_get).Methods("GET")
     auth_routes.HandleFunc("/topics", topics_post).Methods("POST")
     auth_routes.HandleFunc("/topics/{id:[0-9]+}", topic_get).Methods("GET")
     auth_routes.HandleFunc("/topics/{id:[0-9]+}", topic_post).Methods("POST")
     auth_routes.Use(auth_middleware)
+
+    admin_routes := router.PathPrefix("/admin").Subrouter()
+    admin_routes.HandleFunc("/", admin_get).Methods("GET")
+    admin_routes.HandleFunc("/invites", admin_invites_get).Methods("GET")
+    admin_routes.HandleFunc("/invites", admin_invites_post).Methods("POST")
+    admin_routes.Use(admin_middleware)
 
     router.
         PathPrefix("/static/style/").
