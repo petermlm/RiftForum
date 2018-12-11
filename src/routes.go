@@ -44,12 +44,19 @@ func logout(writer http.ResponseWriter, r *http.Request) {
 }
 
 func register_get(writer http.ResponseWriter, r *http.Request) {
-    // TODO
-    http.Redirect(writer, r, "/", http.StatusSeeOther)
+    key := r.URL.Query().Get("key")
+    data := SerializeRegister(key)
+    Render(&writer, r, "register.html", data)
 }
 
 func register_post(writer http.ResponseWriter, r *http.Request) {
-    // TODO
+    form_invite_key := r.PostFormValue("invite_key")
+    form_username := r.PostFormValue("username")
+    form_password := r.PostFormValue("password")
+    form_password2 := r.PostFormValue("password2")
+
+    Register(form_invite_key, form_username, form_password, form_password2)
+
     http.Redirect(writer, r, "/", http.StatusSeeOther)
 }
 
@@ -242,7 +249,7 @@ func CreateRouter() *mux.Router {
     auth_routes.HandleFunc("/topics/{id:[0-9]+}", topic_post).Methods("POST")
     auth_routes.Use(auth_middleware)
 
-    admin_routes := router.PathPrefix("/admin").Subrouter()
+    admin_routes := auth_routes.PathPrefix("/admin").Subrouter()
     admin_routes.HandleFunc("/", admin_get).Methods("GET")
     admin_routes.HandleFunc("/invites", admin_invites_get).Methods("GET")
     admin_routes.HandleFunc("/invites", admin_invites_post).Methods("POST")

@@ -21,6 +21,15 @@ func GetUser(username string) (*User, error) {
     return user, nil
 }
 
+func SaveUser(user *User) {
+    db := GetDBCon()
+    err := db.Insert(user)
+
+    if err != nil {
+        panic(err)
+    }
+}
+
 func GetInvites() []*Invite {
     db := GetDBCon()
     var invites []*Invite
@@ -35,6 +44,19 @@ func GetInvites() []*Invite {
     }
 
     return invites
+}
+
+func InviteExists(invite_key string) bool {
+    invite := new(Invite)
+    err := db.Model(invite).
+        Where("\"invite\".key = ?", invite_key).
+        Select()
+
+    if err != nil {
+        return false
+    }
+
+    return true
 }
 
 func GetTopics() []*Topic {

@@ -43,6 +43,15 @@ type EmptyData struct {
     RiftData
 }
 
+type RegisterData struct {
+    RiftData
+    Key string
+}
+
+func (r *RegisterData) HasKey() bool {
+    return r.Key != ""
+}
+
 type InviteListData struct {
     Key string
     Status string
@@ -92,6 +101,12 @@ type TopicData struct {
 
 func SerializeEmpty() *EmptyData {
     return new(EmptyData)
+}
+
+func SerializeRegister(key string) *RegisterData {
+    ser_register := new(RegisterData)
+    ser_register.Key = key
+    return ser_register
 }
 
 func SerializeInvites(invites []*Invite) *InvitesListData {
