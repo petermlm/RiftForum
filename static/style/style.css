@@ -73,6 +73,24 @@ nav {
  * ============================================================================
  */
 
+.invites_bulk_actions {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+}
+
+.invites_bulk_actions_text {
+    width: 1030px;
+}
+
+.invites_bulk_actions_text_subtitle {
+    font-weight: bold;
+}
+
+.invites_bulk_actions_text_middot {
+    font-weight: bold;
+}
+
 .invites_list_wrapper {
     width: 100%;
     display: flex;
@@ -81,6 +99,18 @@ nav {
 
 .invites_list_wrapper table {
     width: 1030px;
+}
+
+.invites_list_actions_head {
+    text-align: right;
+}
+
+.invites_list_key {
+    font-family: "Courier New", Courier, monospace;
+}
+
+.invites_list_actions {
+    text-align: right;
 }
 
 /* ============================================================================

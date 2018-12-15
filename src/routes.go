@@ -77,6 +77,20 @@ func admin_invites_post(writer http.ResponseWriter, r *http.Request) {
     Render(&writer, r, "invite_new.html", data)
 }
 
+func admin_invites_cancel_get(writer http.ResponseWriter, r *http.Request) {
+    vars := mux.Vars(r)
+    key := vars["key"]
+
+    InviteSet(key, Canceled)
+
+    http.Redirect(writer, r, "/admin/invites", http.StatusSeeOther)
+}
+
+func admin_cancel_all_post(writer http.ResponseWriter, r *http.Request) {
+    InviteCancelAll()
+    http.Redirect(writer, r, "/admin/invites", http.StatusSeeOther)
+}
+
 func topics_post(writer http.ResponseWriter, r *http.Request) {
     var err error
     db := GetDBCon()
@@ -252,7 +266,9 @@ func CreateRouter() *mux.Router {
     admin_routes := auth_routes.PathPrefix("/admin").Subrouter()
     admin_routes.HandleFunc("/", admin_get).Methods("GET")
     admin_routes.HandleFunc("/invites", admin_invites_get).Methods("GET")
-    admin_routes.HandleFunc("/invites", admin_invites_post).Methods("POST")
+    admin_routes.HandleFunc("/invites_new", admin_invites_post).Methods("GET")
+    admin_routes.HandleFunc("/invites_cancel/{key:[a-zA-Z0-9]+}", admin_invites_cancel_get).Methods("GET")
+    admin_routes.HandleFunc("/invites_cancel_all", admin_cancel_all_post).Methods("GET")
     admin_routes.Use(admin_middleware)
 
     router.

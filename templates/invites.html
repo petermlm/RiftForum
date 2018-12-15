@@ -6,31 +6,39 @@
 
     <main>
 
+
     <div class="page_title_wrapper">
         <div class="page_title">
             <h1>Invites</h1>
         </div>
     </div>
 
-    <form action="/admin/invites" method="POST">
-        <input type="submit">New Invite</input>
-    </form>
+    <div class="invites_bulk_actions">
+        <div class="invites_bulk_actions_text">
+            <span class="invites_bulk_actions_text_subtitle">Bulk Action:</span>&nbsp;&nbsp;
+            <a href="/admin/invites_new">New Invite</a>
+            <span class="invites_bulk_actions_text_middot">&middot;</span>
+            <a href="/admin/invites_cancel_all">Cancel All</a>
+        </div>
+    </div>
 
     <div class="invites_list_wrapper">
-        <table>
-            <thead class="table table-striped table-hover">
+        <table class="table table-striped table-hover">
+            <thead>
                 <tr>
                     <th class="col-sm-*">Key</th>
-                    <th class="col-sm-2 topics_list_messages">Status</th>
+                    <th class="col-sm-2">Status</th>
                     <th class="col-sm-2">Date</th>
+                    <th class="col-sm-1 invites_list_actions_head">Actions</th>
                 </tr>
             </thead>
             <tbody>
                 {{range .Invites}}
                 <tr>
-                    <td>{{.Key}}</td>
-                    <td>{{.Status}}</td>
-                    <td>{{.CreatedAt}}</td>
+                    <td class="invites_list_key">{{.Key}}</td>
+                    <td class="invites_list_status">{{.Status}}</td>
+                    <td class="invites_list_created_at">{{.CreatedAt}}</td>
+                    <td class="invites_list_actions"><a href="/admin/invites_cancel/{{.Key}}">Cancel</a></td>
                 </tr>
                 {{end}}
             </tbody>

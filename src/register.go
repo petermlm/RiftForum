@@ -14,4 +14,5 @@ func Register(invite_key string,
 
     new_user := NewUser(username, Basic, password)
     SaveUser(new_user)
+    InviteSet(invite_key, Used)
 }

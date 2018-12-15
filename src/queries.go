@@ -59,6 +59,32 @@ func InviteExists(invite_key string) bool {
     return true
 }
 
+func InviteSet(invite_key string, new_status InviteStatus) {
+    invite := new(Invite)
+    err := db.Model(invite).
+        Where("\"invite\".key = ?", invite_key).
+        Select()
+
+    if err != nil {
+        return
+    }
+
+    invite.Status = new_status
+
+    db.Update(invite)
+}
+
+func InviteCancelAll() {
+    db := GetDBCon()
+
+    // TODO: User ORM instead of direct SQL query
+    db.Model((*Invite)(nil)).Exec(`
+        UPDATE invites
+        SET status = 2
+        WHERE status = 0
+    `)
+}
+
 func GetTopics() []*Topic {
     db := GetDBCon()
     var topics []*Topic

@@ -28,11 +28,11 @@ const (
 type User struct {
     DBObject
 
-    Username string `sql:",unique"`
-    PasswordHash string
-    Signature string
-    About string
-    Usertype UserTypes
+    Username string `sql:",notnull,unique"`
+    PasswordHash string `sql:",notnull"`
+    Signature string `sql:"default:''`
+    About string `sql:"default:''`
+    Usertype UserTypes `sql:",notnull"`
 
     Topics []*Topic
     Messages []*Message
@@ -86,10 +86,10 @@ func (u User) GetUserType() string {
 type Topic struct {
     DBObject
 
-    Title string
+    Title string `sql:",notnull"`
 
-    AuthorId uint
-    Author *User
+    AuthorId uint `sql:",notnull"`
+    Author *User `sql:",notnull"`
 
     Messages []*Message
 }
@@ -101,13 +101,13 @@ type Topic struct {
 
 type Message struct {
     DBObject
-    Message string
+    Message string `sql:",notnull"`
 
-    AuthorId uint
-    Author *User
+    AuthorId uint `sql:",notnull"`
+    Author *User `sql:",notnull"`
 
-    TopicId uint
-    Topic *Topic
+    TopicId uint `sql:",notnull"`
+    Topic *Topic `sql:",notnull"`
 }
 
 /* ============================================================================
@@ -125,8 +125,8 @@ const (
 
 type Invite struct {
     DBObject
-    Key string `sql:",unique"`
-    Status InviteStatus
+    Key string `sql:",notnull,unique"`
+    Status InviteStatus `sql:",notnull"`
 }
 
 func (i Invite) GetInviteStatus() string {
