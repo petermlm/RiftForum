@@ -99,6 +99,7 @@ type TopicsListData struct {
 type MessageData struct {
     AuthorId uint
     AuthorUsername string
+    AuthorUsertype string
     CreatedAt string
     Message string
 }
@@ -190,6 +191,7 @@ func SerializeTopic(topic *Topic) *TopicData {
         message_struct := &MessageData {
             AuthorId: message.Author.Id,
             AuthorUsername: message.Author.Username,
+            AuthorUsertype: message.Author.GetUserType(),
             CreatedAt: message.CreatedAt.Format("2006-01-02 15:04:05"),
             Message: message.Message,
         }

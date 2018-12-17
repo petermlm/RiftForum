@@ -23,25 +23,24 @@
             </thead>
             <tbody>
                 {{range .Users}}
-                <!-- <% if(users[i].user_type == "Administrator") { %> -->
-                <!--     <tr class="danger"> -->
-                <!-- <% } else if(users[i].user_type == "Moderator") { %> -->
-                <!--     <tr class="info"> -->
-                <!-- <% } else { %> -->
-                <!--     <tr> -->
-                <!-- <% } %> -->
+                    {{if eq .Usertype "Administrator"}}
+                    <tr class="danger">
+                    {{else if eq .Usertype "Moderator"}}
+                    <tr class="info">
+                    {{else}}
                     <tr>
+                    {{end}}
 
-                    <td>
-                        <a href="/users/{{.Username}}">{{.Username}}</a>
-                    </td>
-                    <td class="users_list_user_type">
-                        {{.Usertype}}
-                    </td>
-                    <td class="users_list_creation_date">
-                        {{.CreatedAt}}
-                    </td>
-                </tr>
+                        <td>
+                            <a href="/users/{{.Username}}">{{.Username}}</a>
+                        </td>
+                        <td class="users_list_user_type">
+                            {{.Usertype}}
+                        </td>
+                        <td class="users_list_creation_date">
+                            {{.CreatedAt}}
+                        </td>
+                    </tr>
                 {{end}}
             </tbody>
         </table>

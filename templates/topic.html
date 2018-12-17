@@ -21,11 +21,12 @@
                         <div class="message_list_author_info_name">
                             <a href="/users/{{.AuthorId}}">{{.AuthorUsername}}</a>
                         </div>
-                        <div class="message_list_author_info_type">TODO</div>
+                        <div class="message_list_author_info_type">{{.AuthorUsertype}}</div>
                         <div class="message_list_author_info_date">
                             Posted on<br/>
                             <span>{{.CreatedAt}}</span>
                         </div>
+            <!-- TODO -->
             <!--             <% if(message.CanEdit) { %> -->
             <!--             <div class="message_list_edit_bnt" data&#45;message&#45;id="<%= message.message_id %>"> -->
             <!--                 <a href="#">Edit</a> -->
@@ -36,6 +37,7 @@
                         <div class="message_list_author_message_text">
                             {{.Message}}
                         </div>
+                        <!-- TODO -->
                         <!-- <% if(message.SignatureF.length > 0) { %> -->
                         <!--     <div class="message_list_author_message_sig message_list_author_message_sig_line"> -->
                         <!-- <% } else { %> -->
