@@ -414,6 +414,10 @@ nav {
     justify-content: center;
 }
 
+.admin_wrapper a {
+    width: 1030px;
+}
+
 .admin_part {
     width: 1030px;
     background-color: #f5f5f5;
