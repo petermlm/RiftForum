@@ -37,6 +37,22 @@ func GetUsers() []*User {
     return users
 }
 
+func UserTypeSet(username string, new_type UserTypes) {
+    db := GetDBCon()
+
+    user := new(User)
+    err := db.Model(user).
+        Where("\"user\".username = ?", username).
+        Select()
+
+    if err != nil {
+        return
+    }
+
+    user.Usertype = new_type
+    db.Update(user)
+}
+
 func SaveUser(user *User) {
     db := GetDBCon()
     err := db.Insert(user)
@@ -91,7 +107,6 @@ func InviteSet(invite_key string, new_status InviteStatus) {
     }
 
     invite.Status = new_status
-
     db.Update(invite)
 }
 

@@ -91,6 +91,29 @@ func admin_cancel_all_post(writer http.ResponseWriter, r *http.Request) {
     http.Redirect(writer, r, "/admin/invites", http.StatusSeeOther)
 }
 
+func admin_users_change_type_get(writer http.ResponseWriter, r *http.Request) {
+    vars := mux.Vars(r)
+    username := vars["username"]
+    new_type_str := r.URL.Query().Get("new_type")
+
+    var new_type UserTypes
+    set := false
+
+    if new_type_str == "basic" {
+        new_type = Basic
+        set = true
+    } else if new_type_str == "moderator" {
+        new_type = Moderator
+        set = true
+    }
+
+    if set {
+        UserTypeSet(username, new_type)
+    }
+
+    http.Redirect(writer, r, "/users", http.StatusSeeOther)
+}
+
 func topics_post(writer http.ResponseWriter, r *http.Request) {
     var err error
     db := GetDBCon()
@@ -289,6 +312,7 @@ func CreateRouter() *mux.Router {
     admin_routes.HandleFunc("/invites_new", admin_invites_post).Methods("GET")
     admin_routes.HandleFunc("/invites_cancel/{key:[a-zA-Z0-9]+}", admin_invites_cancel_get).Methods("GET")
     admin_routes.HandleFunc("/invites_cancel_all", admin_cancel_all_post).Methods("GET")
+    admin_routes.HandleFunc("/users/{username:[a-zA-Z0-9]+}/change_type", admin_users_change_type_get).Methods("GET")
     admin_routes.Use(admin_middleware)
 
     router.
