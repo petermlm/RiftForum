@@ -21,6 +21,22 @@ func GetUser(username string) (*User, error) {
     return user, nil
 }
 
+func GetUsers() []*User {
+    db := GetDBCon()
+    var users []*User
+
+    err := db.Model(&users).
+        Order("user.created_at DESC").
+        Limit(10).
+        Select()
+
+    if err != nil {
+        panic(err)
+    }
+
+    return users
+}
+
 func SaveUser(user *User) {
     db := GetDBCon()
     err := db.Insert(user)

@@ -198,6 +198,12 @@ func topic_post(writer http.ResponseWriter, r *http.Request) {
     http.Redirect(writer, r, redirect_path, http.StatusSeeOther)
 }
 
+func users_get(writer http.ResponseWriter, r *http.Request) {
+    users := GetUsers()
+    data := SerializeUsers(users)
+    Render(&writer, r, "users.html", data)
+}
+
 func save_user_info(next http.Handler) http.Handler {
     return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
         cookie, err := r.Cookie("jwt")
@@ -274,6 +280,7 @@ func CreateRouter() *mux.Router {
     auth_routes.HandleFunc("/topics", topics_post).Methods("POST")
     auth_routes.HandleFunc("/topics/{id:[0-9]+}", topic_get).Methods("GET")
     auth_routes.HandleFunc("/topics/{id:[0-9]+}", topic_post).Methods("POST")
+    auth_routes.HandleFunc("/users", users_get).Methods("GET")
     auth_routes.Use(auth_middleware)
 
     admin_routes := auth_routes.PathPrefix("/admin").Subrouter()

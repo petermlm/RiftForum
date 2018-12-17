@@ -43,6 +43,17 @@ type EmptyData struct {
     RiftData
 }
 
+type UserListData struct {
+    Username string
+    Usertype string
+    CreatedAt string
+}
+
+type UsersListData struct {
+    RiftData
+    Users []UserListData
+}
+
 type RegisterData struct {
     RiftData
     Key string
@@ -101,6 +112,22 @@ type TopicData struct {
 
 func SerializeEmpty() *EmptyData {
     return new(EmptyData)
+}
+
+func SerializeUsers(users []*User) *UsersListData {
+    ser_users := new(UsersListData)
+
+    for _, user := range users {
+        ser_user := UserListData {
+            Username: user.Username,
+            Usertype: user.GetUserType(),
+            CreatedAt: user.CreatedAt.Format("2006-01-02 15:04:05"),
+        }
+
+        ser_users.Users = append(ser_users.Users, ser_user)
+    }
+
+    return ser_users
 }
 
 func SerializeRegister(key string) *RegisterData {
