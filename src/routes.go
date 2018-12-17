@@ -227,6 +227,40 @@ func users_get(writer http.ResponseWriter, r *http.Request) {
     Render(&writer, r, "users.html", data)
 }
 
+func user_get(writer http.ResponseWriter, r *http.Request) {
+    vars := mux.Vars(r)
+    username := vars["username"]
+
+    user, err := GetUser(username)
+
+    if err != nil {
+        return
+    }
+
+    data := SerializeUser(user)
+    Render(&writer, r, "user.html", data)
+}
+
+func user_about_post(writer http.ResponseWriter, r *http.Request) {
+    vars := mux.Vars(r)
+    username := vars["username"]
+    form_new_about := r.PostFormValue("about")
+
+    UserSetAbout(username, form_new_about)
+    redirect_path := fmt.Sprintf("/users/%s", username)
+    http.Redirect(writer, r, redirect_path, http.StatusSeeOther)
+}
+
+func user_signature_post(writer http.ResponseWriter, r *http.Request) {
+    vars := mux.Vars(r)
+    username := vars["username"]
+    form_new_signature := r.PostFormValue("signature")
+
+    UserSetSignature(username, form_new_signature)
+    redirect_path := fmt.Sprintf("/users/%s", username)
+    http.Redirect(writer, r, redirect_path, http.StatusSeeOther)
+}
+
 func save_user_info(next http.Handler) http.Handler {
     return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
         cookie, err := r.Cookie("jwt")
@@ -304,6 +338,9 @@ func CreateRouter() *mux.Router {
     auth_routes.HandleFunc("/topics/{id:[0-9]+}", topic_get).Methods("GET")
     auth_routes.HandleFunc("/topics/{id:[0-9]+}", topic_post).Methods("POST")
     auth_routes.HandleFunc("/users", users_get).Methods("GET")
+    auth_routes.HandleFunc("/users/{username:[a-zA-Z0-9]+}", user_get).Methods("GET")
+    auth_routes.HandleFunc("/users/{username:[a-zA-Z0-9]+}/about", user_about_post).Methods("POST")
+    auth_routes.HandleFunc("/users/{username:[a-zA-Z0-9]+}/signature", user_signature_post).Methods("POST")
     auth_routes.Use(auth_middleware)
 
     admin_routes := auth_routes.PathPrefix("/admin").Subrouter()

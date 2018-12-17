@@ -376,14 +376,6 @@ nav {
     font-size: 10pt;
 }
 
-#user_info_about_form {
-    display: none;
-}
-
-#user_info_signature_form {
-    display: none;
-}
-
 #user_info_password_form form input {
     margin-bottom: 20px;
 }

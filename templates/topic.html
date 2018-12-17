@@ -37,14 +37,13 @@
                         <div class="message_list_author_message_text">
                             {{.Message}}
                         </div>
-                        <!-- TODO -->
-                        <!-- <% if(message.SignatureF.length > 0) { %> -->
-                        <!--     <div class="message_list_author_message_sig message_list_author_message_sig_line"> -->
-                        <!-- <% } else { %> -->
-                        <!--     <div class="message_list_author_message_sig"> -->
-                        <!-- <% } %> -->
-                        <!--     <%&#45; message.SignatureF %> -->
-                        <!-- </div> -->
+                        {{$length := len .SignatureF }}{{if eq $length 0}}
+                        <div class="message_list_author_message_sig">
+                        {{else}}
+                        <div class="message_list_author_message_sig message_list_author_message_sig_line">
+                        {{end}}
+                            {{.SignatureF}}
+                        </div>
                     </div>
                 </div>
             </div>

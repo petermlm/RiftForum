@@ -54,6 +54,17 @@ type UsersListData struct {
     Users []UserListData
 }
 
+type UserData struct {
+    RiftData
+    Username string
+    Usertype string
+    CreatedAt string
+    About string
+    AboutF string
+    Signature string
+    SignatureF string
+}
+
 type RegisterData struct {
     RiftData
     Key string
@@ -100,6 +111,7 @@ type MessageData struct {
     AuthorId uint
     AuthorUsername string
     AuthorUsertype string
+    SignatureF string
     CreatedAt string
     Message string
 }
@@ -129,6 +141,20 @@ func SerializeUsers(users []*User) *UsersListData {
     }
 
     return ser_users
+}
+
+func SerializeUser(user *User) *UserData {
+    ser_user := new(UserData)
+
+    ser_user.Username = user.Username
+    ser_user.Usertype = user.GetUserType()
+    ser_user.CreatedAt = user.CreatedAt.Format("2006-01-02 15:04:05")
+    ser_user.AboutF = user.About
+    ser_user.About = user.About
+    ser_user.SignatureF = user.Signature
+    ser_user.Signature = user.Signature
+
+    return ser_user
 }
 
 func SerializeRegister(key string) *RegisterData {
@@ -192,6 +218,7 @@ func SerializeTopic(topic *Topic) *TopicData {
             AuthorId: message.Author.Id,
             AuthorUsername: message.Author.Username,
             AuthorUsertype: message.Author.GetUserType(),
+            SignatureF: message.Author.Signature,
             CreatedAt: message.CreatedAt.Format("2006-01-02 15:04:05"),
             Message: message.Message,
         }

@@ -53,6 +53,38 @@ func UserTypeSet(username string, new_type UserTypes) {
     db.Update(user)
 }
 
+func UserSetAbout(username string, new_about string) {
+    db := GetDBCon()
+
+    user := new(User)
+    err := db.Model(user).
+        Where("\"user\".username = ?", username).
+        Select()
+
+    if err != nil {
+        return
+    }
+
+    user.About = new_about
+    db.Update(user)
+}
+
+func UserSetSignature(username string, new_signature string) {
+    db := GetDBCon()
+
+    user := new(User)
+    err := db.Model(user).
+        Where("\"user\".username = ?", username).
+        Select()
+
+    if err != nil {
+        return
+    }
+
+    user.Signature = new_signature
+    db.Update(user)
+}
+
 func SaveUser(user *User) {
     db := GetDBCon()
     err := db.Insert(user)
