@@ -91,7 +91,9 @@ func GetTopics() []*Topic {
 
     err := db.Model(&topics).
         Relation("Author").
-        Relation("Messages").
+        Relation("Messages", func(q *orm.Query) (*orm.Query, error) {
+            return q.Order("message.created_at ASC"), nil
+        }).
         Relation("Messages.Author").
         Order("topic.updated_at DESC").
         Limit(50).

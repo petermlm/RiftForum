@@ -99,7 +99,9 @@ func topics_post(writer http.ResponseWriter, r *http.Request) {
 
     // Author
     user := new(User)
-    err = db.Model(user).Where("Username = ?", "admin").Select()
+    ctx := r.Context()
+    user_info := ctx.Value("UserInfo").(*UserInfo)
+    err = db.Model(user).Where("Username = ?", user_info.Username).Select()
 
     if err != nil {
         panic(err)
@@ -157,7 +159,9 @@ func topic_post(writer http.ResponseWriter, r *http.Request) {
 
     // Author
     user := new(User)
-    err = db.Model(user).Where("Username = ?", "admin").Select()
+    ctx := r.Context()
+    user_info := ctx.Value("UserInfo").(*UserInfo)
+    err = db.Model(user).Where("Username = ?", user_info.Username).Select()
 
     if err != nil {
         panic(err)
@@ -225,9 +229,18 @@ func save_user_info(next http.Handler) http.Handler {
 func auth_middleware(next http.Handler) http.Handler {
     return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
         ctx := r.Context()
-        user_info := ctx.Value("UserInfo").(*UserInfo)
+        user_info_value := ctx.Value("UserInfo")
+        is_auth := false
 
-        if user_info != nil {
+        if user_info_value != nil {
+            user_info := user_info_value.(*UserInfo)
+
+            if user_info != nil {
+                is_auth = true
+            }
+        }
+
+        if is_auth {
             next.ServeHTTP(w, r.WithContext(ctx))
         } else {
             http.Error(w, "Forbidden", http.StatusForbidden)
