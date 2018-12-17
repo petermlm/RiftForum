@@ -50,7 +50,7 @@ func GenerateHash(password string) (string, error) {
     return hash, nil
 }
 
-func NewUser(username string, user_type int, password string) *User {
+func NewUser(username string, user_type UserTypes, password string) *User {
     hash, err := GenerateHash(password)
 
     if err != nil {
@@ -60,7 +60,7 @@ func NewUser(username string, user_type int, password string) *User {
     user := &User{
         Username: username,
         PasswordHash: hash,
-        Usertype: Administrator,
+        Usertype: user_type,
     }
 
     return user
@@ -131,7 +131,7 @@ type Invite struct {
 
 func (i Invite) GetInviteStatus() string {
     if i.Status == Unused {
-        return "Unnused"
+        return "Unused"
     } else if i.Status == Used {
         return "Used"
     } else if i.Status == Canceled {

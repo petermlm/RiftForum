@@ -85,6 +85,11 @@ func InviteSet(invite_key string, new_status InviteStatus) {
         return
     }
 
+    if !(invite.Status == Unused && new_status == Canceled) &&
+        !(invite.Status == Unused && new_status == Used) {
+        return
+    }
+
     invite.Status = new_status
 
     db.Update(invite)

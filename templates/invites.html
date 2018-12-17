@@ -38,7 +38,11 @@
                     <td class="invites_list_key">{{.Key}}</td>
                     <td class="invites_list_status">{{.Status}}</td>
                     <td class="invites_list_created_at">{{.CreatedAt}}</td>
+                    {{if eq .Status "Unused"}}
                     <td class="invites_list_actions"><a href="/admin/invites_cancel/{{.Key}}">Cancel</a></td>
+                    {{else}}
+                    <td class="invites_list_actions">-</td>
+                    {{end}}
                 </tr>
                 {{end}}
             </tbody>
