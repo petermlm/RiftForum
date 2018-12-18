@@ -16,7 +16,20 @@ func index(res http.ResponseWriter, req *http.Request) {
     Render(&res, req, "index.html", data)
 }
 
-func login(res http.ResponseWriter, req *http.Request) {
+func login_get(res http.ResponseWriter, req *http.Request) {
+    ctx := req.Context()
+    user_info := ctx.Value("UserInfo")
+
+    if user_info != nil {
+        Redirect(&res, req, "/")
+        return
+    }
+
+    data := SerializeEmpty()
+    Render(&res, req, "login.html", data)
+}
+
+func login_post(res http.ResponseWriter, req *http.Request) {
     form_username := req.PostFormValue("username")
     form_password := req.PostFormValue("password")
 
@@ -327,7 +340,8 @@ func admin_middleware(next http.Handler) http.Handler {
 func CreateRouter() *mux.Router {
     router := mux.NewRouter()
     router.HandleFunc("/", index).Methods("GET")
-    router.HandleFunc("/login", login).Methods("POST")
+    router.HandleFunc("/login", login_get).Methods("GET")
+    router.HandleFunc("/login", login_post).Methods("POST")
     router.HandleFunc("/logout", logout).Methods("POST")
     router.HandleFunc("/register", register_get).Methods("GET")
     router.HandleFunc("/register", register_post).Methods("POST")
