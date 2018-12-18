@@ -30,7 +30,7 @@ func login(writer http.ResponseWriter, r *http.Request) {
         http.SetCookie(writer, &cookie)
     }
 
-    http.Redirect(writer, r, "/", http.StatusSeeOther)
+    Redirect(&writer, r, "/")
 }
 
 func logout(writer http.ResponseWriter, r *http.Request) {
@@ -40,7 +40,7 @@ func logout(writer http.ResponseWriter, r *http.Request) {
     }
     http.SetCookie(writer, &cookie)
 
-    http.Redirect(writer, r, "/", http.StatusSeeOther)
+    Redirect(&writer, r, "/")
 }
 
 func register_get(writer http.ResponseWriter, r *http.Request) {
@@ -57,7 +57,7 @@ func register_post(writer http.ResponseWriter, r *http.Request) {
 
     Register(form_invite_key, form_username, form_password, form_password2)
 
-    http.Redirect(writer, r, "/", http.StatusSeeOther)
+    Redirect(&writer, r, "/")
 }
 
 func admin_get(writer http.ResponseWriter, r *http.Request) {
@@ -83,12 +83,12 @@ func admin_invites_cancel_get(writer http.ResponseWriter, r *http.Request) {
 
     InviteSet(key, Canceled)
 
-    http.Redirect(writer, r, "/admin/invites", http.StatusSeeOther)
+    Redirect(&writer, r, "/admin/invites")
 }
 
 func admin_cancel_all_post(writer http.ResponseWriter, r *http.Request) {
     InviteCancelAll()
-    http.Redirect(writer, r, "/admin/invites", http.StatusSeeOther)
+    Redirect(&writer, r, "/admin/invites")
 }
 
 func admin_users_change_type_get(writer http.ResponseWriter, r *http.Request) {
@@ -111,7 +111,7 @@ func admin_users_change_type_get(writer http.ResponseWriter, r *http.Request) {
         UserTypeSet(username, new_type)
     }
 
-    http.Redirect(writer, r, "/users", http.StatusSeeOther)
+    Redirect(&writer, r, "/users")
 }
 
 func topics_post(writer http.ResponseWriter, r *http.Request) {
@@ -158,7 +158,7 @@ func topics_post(writer http.ResponseWriter, r *http.Request) {
         panic(err)
     }
 
-    http.Redirect(writer, r, "/", http.StatusSeeOther)
+    Redirect(&writer, r, "/")
 }
 
 func topic_get(writer http.ResponseWriter, r *http.Request) {
@@ -218,7 +218,7 @@ func topic_post(writer http.ResponseWriter, r *http.Request) {
     }
 
     redirect_path := fmt.Sprintf("/topics/%d", topic_id)
-    http.Redirect(writer, r, redirect_path, http.StatusSeeOther)
+    Redirect(&writer, r, redirect_path)
 }
 
 func users_get(writer http.ResponseWriter, r *http.Request) {
@@ -248,7 +248,7 @@ func user_about_post(writer http.ResponseWriter, r *http.Request) {
 
     UserSetAbout(username, form_new_about)
     redirect_path := fmt.Sprintf("/users/%s", username)
-    http.Redirect(writer, r, redirect_path, http.StatusSeeOther)
+    Redirect(&writer, r, redirect_path)
 }
 
 func user_signature_post(writer http.ResponseWriter, r *http.Request) {
@@ -258,7 +258,7 @@ func user_signature_post(writer http.ResponseWriter, r *http.Request) {
 
     UserSetSignature(username, form_new_signature)
     redirect_path := fmt.Sprintf("/users/%s", username)
-    http.Redirect(writer, r, redirect_path, http.StatusSeeOther)
+    Redirect(&writer, r, redirect_path)
 }
 
 func save_user_info(next http.Handler) http.Handler {

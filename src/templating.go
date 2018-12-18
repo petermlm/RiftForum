@@ -56,3 +56,7 @@ func Render(writer *http.ResponseWriter, r *http.Request, tpl_name string, data 
         log.Fatal(err)
     }
 }
+
+func Redirect(writer *http.ResponseWriter, r *http.Request, url string) {
+    http.Redirect(*writer, r, url, http.StatusSeeOther)
+}
