@@ -41,15 +41,15 @@ func InitTmpl() {
     }
 }
 
-func Render(writer *http.ResponseWriter, r *http.Request, tpl_name string, data RiftDataI) {
-    ctx := r.Context()
+func Render(res *http.ResponseWriter, req *http.Request, tpl_name string, data RiftDataI) {
+    ctx := req.Context()
     user_info, ok := ctx.Value("UserInfo").(*UserInfo)
 
     if ok {
         data.SetUserInfo(user_info)
     }
 
-    err := templates.ExecuteTemplate(*writer, tpl_name, data)
+    err := templates.ExecuteTemplate(*res, tpl_name, data)
 
     if err != nil {
         log.Println("Can't execute template")
@@ -57,6 +57,6 @@ func Render(writer *http.ResponseWriter, r *http.Request, tpl_name string, data 
     }
 }
 
-func Redirect(writer *http.ResponseWriter, r *http.Request, url string) {
-    http.Redirect(*writer, r, url, http.StatusSeeOther)
+func Redirect(res *http.ResponseWriter, req *http.Request, url string) {
+    http.Redirect(*res, req, url, http.StatusSeeOther)
 }

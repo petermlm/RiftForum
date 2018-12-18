@@ -10,15 +10,15 @@ import (
     "github.com/gorilla/mux"
 )
 
-func index(writer http.ResponseWriter, r *http.Request) {
+func index(res http.ResponseWriter, req *http.Request) {
     topics := GetTopics()
     data := SerializeTopics(topics)
-    Render(&writer, r, "index.html", data)
+    Render(&res, req, "index.html", data)
 }
 
-func login(writer http.ResponseWriter, r *http.Request) {
-    form_username := r.PostFormValue("username")
-    form_password := r.PostFormValue("password")
+func login(res http.ResponseWriter, req *http.Request) {
+    form_username := req.PostFormValue("username")
+    form_password := req.PostFormValue("password")
 
     token, err := CreateToken(form_username, form_password)
 
@@ -27,74 +27,74 @@ func login(writer http.ResponseWriter, r *http.Request) {
             Name: "jwt",
             Value: token,
         }
-        http.SetCookie(writer, &cookie)
+        http.SetCookie(res, &cookie)
     }
 
-    Redirect(&writer, r, "/")
+    Redirect(&res, req, "/")
 }
 
-func logout(writer http.ResponseWriter, r *http.Request) {
+func logout(res http.ResponseWriter, req *http.Request) {
     cookie := http.Cookie{
         Name: "jwt",
         Value: "",
     }
-    http.SetCookie(writer, &cookie)
+    http.SetCookie(res, &cookie)
 
-    Redirect(&writer, r, "/")
+    Redirect(&res, req, "/")
 }
 
-func register_get(writer http.ResponseWriter, r *http.Request) {
-    key := r.URL.Query().Get("key")
+func register_get(res http.ResponseWriter, req *http.Request) {
+    key := req.URL.Query().Get("key")
     data := SerializeRegister(key)
-    Render(&writer, r, "register.html", data)
+    Render(&res, req, "register.html", data)
 }
 
-func register_post(writer http.ResponseWriter, r *http.Request) {
-    form_invite_key := r.PostFormValue("invite_key")
-    form_username := r.PostFormValue("username")
-    form_password := r.PostFormValue("password")
-    form_password2 := r.PostFormValue("password2")
+func register_post(res http.ResponseWriter, req *http.Request) {
+    form_invite_key := req.PostFormValue("invite_key")
+    form_username := req.PostFormValue("username")
+    form_password := req.PostFormValue("password")
+    form_password2 := req.PostFormValue("password2")
 
     Register(form_invite_key, form_username, form_password, form_password2)
 
-    Redirect(&writer, r, "/")
+    Redirect(&res, req, "/")
 }
 
-func admin_get(writer http.ResponseWriter, r *http.Request) {
+func admin_get(res http.ResponseWriter, req *http.Request) {
     data := SerializeEmpty()
-    Render(&writer, r, "admin.html", data)
+    Render(&res, req, "admin.html", data)
 }
 
-func admin_invites_get(writer http.ResponseWriter, r *http.Request) {
+func admin_invites_get(res http.ResponseWriter, req *http.Request) {
     invites := GetInvites()
     data := SerializeInvites(invites)
-    Render(&writer, r, "invites.html", data)
+    Render(&res, req, "invites.html", data)
 }
 
-func admin_invites_post(writer http.ResponseWriter, r *http.Request) {
+func admin_invites_post(res http.ResponseWriter, req *http.Request) {
     new_invite := make_new_invite()
     data := SerializeInviteNew(new_invite)
-    Render(&writer, r, "invite_new.html", data)
+    Render(&res, req, "invite_new.html", data)
 }
 
-func admin_invites_cancel_get(writer http.ResponseWriter, r *http.Request) {
-    vars := mux.Vars(r)
+func admin_invites_cancel_get(res http.ResponseWriter, req *http.Request) {
+    vars := mux.Vars(req)
     key := vars["key"]
 
     InviteSet(key, Canceled)
 
-    Redirect(&writer, r, "/admin/invites")
+    Redirect(&res, req, "/admin/invites")
 }
 
-func admin_cancel_all_post(writer http.ResponseWriter, r *http.Request) {
+func admin_cancel_all_post(res http.ResponseWriter, req *http.Request) {
     InviteCancelAll()
-    Redirect(&writer, r, "/admin/invites")
+    Redirect(&res, req, "/admin/invites")
 }
 
-func admin_users_change_type_get(writer http.ResponseWriter, r *http.Request) {
-    vars := mux.Vars(r)
+func admin_users_change_type_get(res http.ResponseWriter, req *http.Request) {
+    vars := mux.Vars(req)
     username := vars["username"]
-    new_type_str := r.URL.Query().Get("new_type")
+    new_type_str := req.URL.Query().Get("new_type")
 
     var new_type UserTypes
     set := false
@@ -111,18 +111,18 @@ func admin_users_change_type_get(writer http.ResponseWriter, r *http.Request) {
         UserTypeSet(username, new_type)
     }
 
-    Redirect(&writer, r, "/users")
+    Redirect(&res, req, "/users")
 }
 
-func topics_post(writer http.ResponseWriter, r *http.Request) {
+func topics_post(res http.ResponseWriter, req *http.Request) {
     var err error
     db := GetDBCon()
-    form_title := r.PostFormValue("title")
-    form_message := r.PostFormValue("message")
+    form_title := req.PostFormValue("title")
+    form_message := req.PostFormValue("message")
 
     // Author
     user := new(User)
-    ctx := r.Context()
+    ctx := req.Context()
     user_info := ctx.Value("UserInfo").(*UserInfo)
     err = db.Model(user).Where("Username = ?", user_info.Username).Select()
 
@@ -158,11 +158,11 @@ func topics_post(writer http.ResponseWriter, r *http.Request) {
         panic(err)
     }
 
-    Redirect(&writer, r, "/")
+    Redirect(&res, req, "/")
 }
 
-func topic_get(writer http.ResponseWriter, r *http.Request) {
-    vars := mux.Vars(r)
+func topic_get(res http.ResponseWriter, req *http.Request) {
+    vars := mux.Vars(req)
     topic_id_parsed, err := strconv.ParseUint(vars["id"], 10, 32)
 
     if err != nil {
@@ -172,17 +172,17 @@ func topic_get(writer http.ResponseWriter, r *http.Request) {
     topic_id := uint(topic_id_parsed)
     topic := GetTopic(topic_id)
     data := SerializeTopic(topic)
-    Render(&writer, r, "topic.html", data)
+    Render(&res, req, "topic.html", data)
 }
 
-func topic_post(writer http.ResponseWriter, r *http.Request) {
+func topic_post(res http.ResponseWriter, req *http.Request) {
     var err error
     db := GetDBCon()
-    form_message := r.PostFormValue("message")
+    form_message := req.PostFormValue("message")
 
     // Author
     user := new(User)
-    ctx := r.Context()
+    ctx := req.Context()
     user_info := ctx.Value("UserInfo").(*UserInfo)
     err = db.Model(user).Where("Username = ?", user_info.Username).Select()
 
@@ -191,7 +191,7 @@ func topic_post(writer http.ResponseWriter, r *http.Request) {
     }
 
     // Topic
-    vars := mux.Vars(r)
+    vars := mux.Vars(req)
     topic_id_parsed, err := strconv.ParseUint(vars["id"], 10, 32)
 
     if err != nil {
@@ -218,17 +218,17 @@ func topic_post(writer http.ResponseWriter, r *http.Request) {
     }
 
     redirect_path := fmt.Sprintf("/topics/%d", topic_id)
-    Redirect(&writer, r, redirect_path)
+    Redirect(&res, req, redirect_path)
 }
 
-func users_get(writer http.ResponseWriter, r *http.Request) {
+func users_get(res http.ResponseWriter, req *http.Request) {
     users := GetUsers()
     data := SerializeUsers(users)
-    Render(&writer, r, "users.html", data)
+    Render(&res, req, "users.html", data)
 }
 
-func user_get(writer http.ResponseWriter, r *http.Request) {
-    vars := mux.Vars(r)
+func user_get(res http.ResponseWriter, req *http.Request) {
+    vars := mux.Vars(req)
     username := vars["username"]
 
     user, err := GetUser(username)
@@ -238,33 +238,33 @@ func user_get(writer http.ResponseWriter, r *http.Request) {
     }
 
     data := SerializeUser(user)
-    Render(&writer, r, "user.html", data)
+    Render(&res, req, "user.html", data)
 }
 
-func user_about_post(writer http.ResponseWriter, r *http.Request) {
-    vars := mux.Vars(r)
+func user_about_post(res http.ResponseWriter, req *http.Request) {
+    vars := mux.Vars(req)
     username := vars["username"]
-    form_new_about := r.PostFormValue("about")
+    form_new_about := req.PostFormValue("about")
 
     UserSetAbout(username, form_new_about)
     redirect_path := fmt.Sprintf("/users/%s", username)
-    Redirect(&writer, r, redirect_path)
+    Redirect(&res, req, redirect_path)
 }
 
-func user_signature_post(writer http.ResponseWriter, r *http.Request) {
-    vars := mux.Vars(r)
+func user_signature_post(res http.ResponseWriter, req *http.Request) {
+    vars := mux.Vars(req)
     username := vars["username"]
-    form_new_signature := r.PostFormValue("signature")
+    form_new_signature := req.PostFormValue("signature")
 
     UserSetSignature(username, form_new_signature)
     redirect_path := fmt.Sprintf("/users/%s", username)
-    Redirect(&writer, r, redirect_path)
+    Redirect(&res, req, redirect_path)
 }
 
 func save_user_info(next http.Handler) http.Handler {
-    return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-        cookie, err := r.Cookie("jwt")
-        ctx := r.Context()
+    return http.HandlerFunc(func(w http.ResponseWriter, req *http.Request) {
+        cookie, err := req.Cookie("jwt")
+        ctx := req.Context()
         authenticated := false
 
         if err == nil {
@@ -285,13 +285,13 @@ func save_user_info(next http.Handler) http.Handler {
             ctx = context.WithValue(ctx, "UserInfo", nil)
         }
 
-        next.ServeHTTP(w, r.WithContext(ctx))
+        next.ServeHTTP(w, req.WithContext(ctx))
     })
 }
 
 func auth_middleware(next http.Handler) http.Handler {
-    return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-        ctx := r.Context()
+    return http.HandlerFunc(func(w http.ResponseWriter, req *http.Request) {
+        ctx := req.Context()
         user_info_value := ctx.Value("UserInfo")
         is_auth := false
 
@@ -304,7 +304,7 @@ func auth_middleware(next http.Handler) http.Handler {
         }
 
         if is_auth {
-            next.ServeHTTP(w, r.WithContext(ctx))
+            next.ServeHTTP(w, req.WithContext(ctx))
         } else {
             http.Error(w, "Forbidden", http.StatusForbidden)
         }
@@ -312,12 +312,12 @@ func auth_middleware(next http.Handler) http.Handler {
 }
 
 func admin_middleware(next http.Handler) http.Handler {
-    return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-        ctx := r.Context()
+    return http.HandlerFunc(func(w http.ResponseWriter, req *http.Request) {
+        ctx := req.Context()
         user_info := ctx.Value("UserInfo").(*UserInfo)
 
         if user_info != nil {
-            next.ServeHTTP(w, r.WithContext(ctx))
+            next.ServeHTTP(w, req.WithContext(ctx))
         } else {
             http.Error(w, "Forbidden", http.StatusForbidden)
         }
