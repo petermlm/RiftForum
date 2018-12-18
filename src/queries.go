@@ -188,7 +188,8 @@ func GetTopic(topic_id uint) *Topic {
         Select()
 
     if err != nil {
-        panic(err)
+        // panic(err)
+        return nil
     }
 
     return topic

@@ -179,11 +179,18 @@ func topic_get(res http.ResponseWriter, req *http.Request) {
     topic_id_parsed, err := strconv.ParseUint(vars["id"], 10, 32)
 
     if err != nil {
-        // TODO
+        NotFound(&res, req)
+        return
     }
 
     topic_id := uint(topic_id_parsed)
     topic := GetTopic(topic_id)
+
+    if topic == nil {
+        NotFound(&res, req)
+        return
+    }
+
     data := SerializeTopic(topic)
     Render(&res, req, "topic.html", data)
 }

@@ -60,3 +60,7 @@ func Render(res *http.ResponseWriter, req *http.Request, tpl_name string, data R
 func Redirect(res *http.ResponseWriter, req *http.Request, url string) {
     http.Redirect(*res, req, url, http.StatusSeeOther)
 }
+
+func NotFound(res *http.ResponseWriter, req *http.Request) {
+    Render(res, req, "404.html", SerializeEmpty())
+}
