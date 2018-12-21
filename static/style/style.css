@@ -52,7 +52,7 @@ nav {
 }
 
 /* ============================================================================
- * Page title
+ * Page title and Page Content
  * ============================================================================
  */
 
@@ -68,20 +68,20 @@ nav {
     border-bottom: 1px solid #e7e7e7;
 }
 
-/* ============================================================================
- * Invite List
- * ============================================================================
- */
-
-.invites_bulk_actions {
+.page_content_wrapper {
     width: 100%;
     display: flex;
     justify-content: center;
 }
 
-.invites_bulk_actions_text {
+.page_content_wrapper_in {
     width: 1030px;
 }
+
+/* ============================================================================
+ * Invite List
+ * ============================================================================
+ */
 
 .invites_bulk_actions_text_subtitle {
     font-weight: bold;
@@ -89,16 +89,6 @@ nav {
 
 .invites_bulk_actions_text_middot {
     font-weight: bold;
-}
-
-.invites_list_wrapper {
-    width: 100%;
-    display: flex;
-    justify-content: center;
-}
-
-.invites_list_wrapper table {
-    width: 1030px;
 }
 
 .invites_list_actions_head {
@@ -117,16 +107,6 @@ nav {
  * Topic list
  * ============================================================================
  */
-
-.topics_list_wrapper {
-    width: 100%;
-    display: flex;
-    justify-content: center;
-}
-
-.topics_list_wrapper table {
-    width: 1030px;
-}
 
 .topics_list_title a {
     font-size: 12pt;
@@ -197,16 +177,6 @@ nav {
  * Messages List
  * ============================================================================
  */
-
-.message_list_wrapper {
-    width: 100%;
-    display: flex;
-    justify-content: center;
-}
-
-.message_list_messages {
-    width: 1030px;
-}
 
 .message_list_message {
     width: 100%;
@@ -307,16 +277,6 @@ nav {
  * ============================================================================
  */
 
-.users_list_wrapper {
-    width: 100%;
-    display: flex;
-    justify-content: center;
-}
-
-.users_list_wrapper table {
-    width: 1030px;
-}
-
 .users_list_creation_date {
     text-align: right;
 }
@@ -330,19 +290,11 @@ nav {
  * ============================================================================
  */
 
-.user_info_wrapper {
-    width: 100%;
-    display: flex;
-    justify-content: center;
-}
-
 .user_info_user_type {
-    width: 1030px;
     margin-bottom: 20px;
 }
 
 .user_info_part {
-    width: 1030px;
     background-color: #f5f5f5;
     padding-top: 0;
     padding-bottom: 20px;
@@ -408,16 +360,6 @@ nav {
  * Admin
  * ============================================================================
  */
-
-.admin_wrapper {
-    width: 100%;
-    display: flex;
-    justify-content: center;
-}
-
-.admin_wrapper a {
-    width: 1030px;
-}
 
 .admin_part {
     width: 1030px;
