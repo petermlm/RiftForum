@@ -282,7 +282,7 @@ func user_signature_post(res http.ResponseWriter, req *http.Request) {
 }
 
 func save_user_info(next http.Handler) http.Handler {
-    return http.HandlerFunc(func(w http.ResponseWriter, req *http.Request) {
+    return http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
         cookie, err := req.Cookie("jwt")
         ctx := req.Context()
         authenticated := false
@@ -305,12 +305,12 @@ func save_user_info(next http.Handler) http.Handler {
             ctx = context.WithValue(ctx, "UserInfo", nil)
         }
 
-        next.ServeHTTP(w, req.WithContext(ctx))
+        next.ServeHTTP(res, req.WithContext(ctx))
     })
 }
 
 func auth_middleware(next http.Handler) http.Handler {
-    return http.HandlerFunc(func(w http.ResponseWriter, req *http.Request) {
+    return http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
         ctx := req.Context()
         user_info_value := ctx.Value("UserInfo")
         is_auth := false
@@ -324,22 +324,22 @@ func auth_middleware(next http.Handler) http.Handler {
         }
 
         if is_auth {
-            next.ServeHTTP(w, req.WithContext(ctx))
+            next.ServeHTTP(res, req.WithContext(ctx))
         } else {
-            http.Error(w, "Forbidden", http.StatusForbidden)
+            Login(&res, req)
         }
     })
 }
 
 func admin_middleware(next http.Handler) http.Handler {
-    return http.HandlerFunc(func(w http.ResponseWriter, req *http.Request) {
+    return http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
         ctx := req.Context()
         user_info := ctx.Value("UserInfo").(*UserInfo)
 
-        if user_info != nil {
-            next.ServeHTTP(w, req.WithContext(ctx))
+        if user_info != nil && user_info.Usertype == Administrator {
+            next.ServeHTTP(res, req.WithContext(ctx))
         } else {
-            http.Error(w, "Forbidden", http.StatusForbidden)
+            AdminOnly(&res, req)
         }
     })
 }

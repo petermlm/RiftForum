@@ -61,6 +61,15 @@ func Redirect(res *http.ResponseWriter, req *http.Request, url string) {
     http.Redirect(*res, req, url, http.StatusSeeOther)
 }
 
+func Login(res *http.ResponseWriter, req *http.Request) {
+    redirect := "/login"
+    Redirect(res, req, redirect)
+}
+
 func NotFound(res *http.ResponseWriter, req *http.Request) {
     Render(res, req, "404.html", SerializeEmpty())
+}
+
+func AdminOnly(res *http.ResponseWriter, req *http.Request) {
+    Render(res, req, "admin_only.html", SerializeEmpty())
 }
