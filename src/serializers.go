@@ -104,6 +104,9 @@ type TopicListData struct {
 
 type TopicsListData struct {
     RiftData
+    PageNum int
+    PageSize int
+    PageMax int
     Topics []TopicListData
 }
 
@@ -186,8 +189,12 @@ func SerializeInviteNew(new_invite *Invite) *InviteNewData {
     }
 }
 
-func SerializeTopics(topics []*Topic) *TopicsListData {
+func SerializeTopics(topics []*Topic, page Page) *TopicsListData {
     ser_topics := new(TopicsListData)
+
+    ser_topics.PageNum = page.get_num()
+    ser_topics.PageSize = page.get_size()
+    ser_topics.PageMax = CountTopicsPages(page)
 
     for _, topic := range topics {
         msg_count := len(topic.Messages)

@@ -2,6 +2,7 @@ package main
 
 import (
     "log"
+    "fmt"
 
     "github.com/go-pg/pg"
     "github.com/go-pg/pg/orm"
@@ -82,31 +83,35 @@ func createDefaultData() error {
     }
 
     // Topic
-    topic := &Topic{
-        Title: "Test Topic",
-        Author: user_admin,
-        AuthorId: user_admin.Id,
-    }
+    for i:=0; i<100; i++ {
+        title := fmt.Sprintf("Test Topic %d", i)
 
-    err = db.Insert(topic)
+        topic := &Topic{
+            Title: title,
+            Author: user_admin,
+            AuthorId: user_admin.Id,
+        }
 
-    if err != nil {
-        return err
-    }
+        err = db.Insert(topic)
 
-    // Message
-    message := &Message{
-        Message: "Test message",
-        Author: user_admin,
-        AuthorId: user_admin.Id,
-        Topic: topic,
-        TopicId: topic.Id,
-    }
+        if err != nil {
+            return err
+        }
 
-    err = db.Insert(message)
+        // Message
+        message := &Message{
+            Message: "Test message",
+            Author: user_admin,
+            AuthorId: user_admin.Id,
+            Topic: topic,
+            TopicId: topic.Id,
+        }
 
-    if err != nil {
-        return err
+        err = db.Insert(message)
+
+        if err != nil {
+            return err
+        }
     }
 
     return nil

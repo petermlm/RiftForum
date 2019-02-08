@@ -20,6 +20,15 @@ func InitTmpl() {
     var files []os.FileInfo
     var err error
 
+    funcMap := template.FuncMap{
+        "add": func(a, b int) int {
+            return a + b
+        },
+        "sub": func(a, b int) int {
+            return a - b
+        },
+    }
+
     files, err = ioutil.ReadDir("../templates")
     if err != nil {
         log.Println("can't read directory with templates")
@@ -33,7 +42,10 @@ func InitTmpl() {
         }
     }
 
-    templates, err = template.New("webpage").ParseFiles(all_files...)
+    templates, err = template.
+        New("webpage").
+        Funcs(funcMap).
+        ParseFiles(all_files...)
 
     if err != nil {
         log.Println("Can't parse template files")

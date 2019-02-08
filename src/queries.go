@@ -153,7 +153,7 @@ func InviteCancelAll() {
     `)
 }
 
-func GetTopics() []*Topic {
+func GetTopics(page Page) []*Topic {
     db := GetDBCon()
     var topics []*Topic
 
@@ -164,7 +164,8 @@ func GetTopics() []*Topic {
         }).
         Relation("Messages.Author").
         Order("topic.updated_at DESC").
-        Limit(50).
+        Limit(page.limit).
+        Offset(page.offset).
         Select()
 
     if err != nil {
@@ -174,14 +175,28 @@ func GetTopics() []*Topic {
     return topics
 }
 
-func GetTopic(topic_id uint) *Topic {
+func CountTopicsPages(page Page) int {
+    db := GetDBCon()
+    count, err := db.Model(&Topic{}).Count()
+
+    if err != nil {
+        panic(err)
+    }
+
+    return count / page.get_size() - 1
+}
+
+func GetTopic(topic_id uint, page Page) *Topic {
     db := GetDBCon()
 
     topic := new(Topic)
     err := db.Model(topic).
         Relation("Author").
         Relation("Messages", func(q *orm.Query) (*orm.Query, error) {
-            return q.Order("message.created_at ASC"), nil
+            return q.Order("message.created_at ASC").
+                Limit(page.limit).
+                Offset(page.offset),
+                nil
         }).
         Relation("Messages.Author").
         Where("topic.id = ?", topic_id).
