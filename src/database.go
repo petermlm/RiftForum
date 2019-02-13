@@ -98,16 +98,30 @@ func createDefaultData() error {
             return err
         }
 
-        // Message
-        message := &Message{
-            Message: "Test message",
-            Author: user_admin,
-            AuthorId: user_admin.Id,
-            Topic: topic,
-            TopicId: topic.Id,
-        }
+        // Messages
+        if i == 99 {
+            for j:=0; j<100; j++ {
+                message := &Message{
+                    Message: fmt.Sprintf("Test message %d", j),
+                    Author: user_admin,
+                    AuthorId: user_admin.Id,
+                    Topic: topic,
+                    TopicId: topic.Id,
+                }
 
-        err = db.Insert(message)
+                err = db.Insert(message)
+            }
+        } else {
+            message := &Message{
+                Message: "Test message",
+                Author: user_admin,
+                AuthorId: user_admin.Id,
+                Topic: topic,
+                TopicId: topic.Id,
+            }
+
+            err = db.Insert(message)
+        }
 
         if err != nil {
             return err

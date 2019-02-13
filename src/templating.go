@@ -61,6 +61,8 @@ func Render(res *http.ResponseWriter, req *http.Request, tpl_name string, data R
         data.SetUserInfo(user_info)
     }
 
+    data.SetPath(req.URL.Path)
+
     err := templates.ExecuteTemplate(*res, tpl_name, data)
 
     if err != nil {

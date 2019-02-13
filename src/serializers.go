@@ -7,16 +7,22 @@ type UserInfo struct {
 
 type RiftDataI interface {
     SetUserInfo(UserInfo *UserInfo)
+    SetPath(path string)
     HasUser() bool
     IsAdmin() bool
 }
 
 type RiftData struct {
     UserInfo *UserInfo
+    Path string
 }
 
 func (r *RiftData) SetUserInfo(UserInfo *UserInfo) {
     r.UserInfo = UserInfo
+}
+
+func (r *RiftData) SetPath(path string) {
+    r.Path = path
 }
 
 func (r *RiftData) HasUser() bool {
@@ -124,6 +130,9 @@ type TopicData struct {
     TopicId uint
     Title string
     Messages []*MessageData
+    PageNum int
+    PageSize int
+    PageMax int
 }
 
 func SerializeEmpty() *EmptyData {
@@ -217,7 +226,7 @@ func SerializeTopics(topics []*Topic, page Page) *TopicsListData {
     return ser_topics
 }
 
-func SerializeTopic(topic *Topic) *TopicData {
+func SerializeTopic(topic *Topic, page Page) *TopicData {
     var messages []*MessageData
 
     for _, message := range topic.Messages {
@@ -237,6 +246,9 @@ func SerializeTopic(topic *Topic) *TopicData {
         TopicId: topic.Id,
         Title: topic.Title,
         Messages: messages,
+        PageNum: page.get_num(),
+        PageSize: page.get_size(),
+        PageMax: CountTopicsPages(page),
     }
 
     return ser_topic

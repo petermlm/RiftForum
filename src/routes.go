@@ -193,7 +193,7 @@ func topic_get(res http.ResponseWriter, req *http.Request) {
         return
     }
 
-    data := SerializeTopic(topic)
+    data := SerializeTopic(topic, page)
     Render(&res, req, "topic.html", data)
 }
 

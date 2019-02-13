@@ -52,58 +52,9 @@
                 {{end}}
             </tbody>
         </table>
-
     </div>
 
-    <div class="page_content_wrapper">
-        <nav aria-label="Page navigation example">
-            <ul class="pagination">
-                {{if gt $.PageNum 0}}
-                <li class="page-item">
-                    <a class="page-link" href="/?page_size={{$.PageSize}}&page_num={{sub $.PageNum 1}}">
-                        Previous
-                    </a>
-                </li>
-                {{if gt (sub $.PageNum 1) 0}}
-                <li class="page-item">
-                    <a class="page-link" href="/?page_size={{$.PageSize}}&page_num={{sub $.PageNum 2}}">
-                        {{sub $.PageNum 2}}
-                    </a>
-                </li>
-                {{end}}
-                <li class="page-item">
-                    <a class="page-link" href="/?page_size={{$.PageSize}}&page_num={{sub $.PageNum 1}}">
-                        {{sub $.PageNum 1}}
-                    </a>
-                </li>
-                {{end}}
-                <li class="page-item current-page-item">
-                    <a class="page-link" href="/?page_size={{$.PageSize}}&page_num={{$.PageNum}}">
-                        {{$.PageNum}}
-                    </a>
-                </li>
-                {{if lt $.PageNum $.PageMax}}
-                <li class="page-item">
-                    <a class="page-link" href="/?page_size={{$.PageSize}}&page_num={{add $.PageNum 1}}">
-                        {{add $.PageNum 1}}
-                    </a>
-                </li>
-                {{if lt (add $.PageNum 1) $.PageMax}}
-                <li class="page-item">
-                    <a class="page-link" href="/?page_size={{$.PageSize}}&page_num={{add $.PageNum 2}}">
-                        {{add $.PageNum 2}}
-                    </a>
-                </li>
-                {{end}}
-                <li class="page-item">
-                    <a class="page-link" href="/?page_size={{$.PageSize}}&page_num={{add $.PageNum 1}}">
-                        Next
-                    </a>
-                </li>
-                {{end}}
-            </ul>
-        </nav>
-    </div>
+    {{template "pages" .}}
 
     {{if .HasUser}}
     <div class="new_topic_form_wrapper">
