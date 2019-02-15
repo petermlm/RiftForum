@@ -1,4 +1,5 @@
 {{define "pages"}}
+{{if ge $.PageMax 0}}
 <div class="page_content_wrapper">
     <nav aria-label="Page navigation example">
         <ul class="pagination">
@@ -48,4 +49,5 @@
         </ul>
     </nav>
 </div>
+{{end}}
 {{end}}

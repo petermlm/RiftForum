@@ -21,13 +21,14 @@ func GetUser(username string) (*User, error) {
     return user, nil
 }
 
-func GetUsers() []*User {
+func GetUsers(page Page) []*User {
     db := GetDBCon()
     var users []*User
 
     err := db.Model(&users).
         Order("user.created_at DESC").
-        Limit(10).
+        Limit(page.limit).
+        Offset(page.offset).
         Select()
 
     if err != nil {
@@ -35,6 +36,17 @@ func GetUsers() []*User {
     }
 
     return users
+}
+
+func CountUsersPages(page Page) int {
+    db := GetDBCon()
+    count, err := db.Model(&User{}).Count()
+
+    if err != nil {
+        panic(err)
+    }
+
+    return count / page.get_size() - 1
 }
 
 func UserTypeSet(username string, new_type UserTypes) {
@@ -94,13 +106,14 @@ func SaveUser(user *User) {
     }
 }
 
-func GetInvites() []*Invite {
+func GetInvites(page Page) []*Invite {
     db := GetDBCon()
     var invites []*Invite
 
     err := db.Model(&invites).
         Order("invite.created_at DESC").
-        Limit(10).
+        Limit(page.limit).
+        Offset(page.offset).
         Select()
 
     if err != nil {
@@ -108,6 +121,17 @@ func GetInvites() []*Invite {
     }
 
     return invites
+}
+
+func CountInvitesPages(page Page) int {
+    db := GetDBCon()
+    count, err := db.Model(&Invite{}).Count()
+
+    if err != nil {
+        panic(err)
+    }
+
+    return count / page.get_size() - 1
 }
 
 func InviteExists(invite_key string) bool {
@@ -208,6 +232,17 @@ func GetTopic(topic_id uint, page Page) *Topic {
     }
 
     return topic
+}
+
+func CountMessagePages(topic_id uint, page Page) int {
+    db := GetDBCon()
+    count, err := db.Model(&Message{}).Where("topic_id = ?", topic_id).Count()
+
+    if err != nil {
+        panic(err)
+    }
+
+    return count / page.get_size() - 1
 }
 
 func UpdateTopic(topic *Topic) {

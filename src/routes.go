@@ -80,8 +80,9 @@ func admin_get(res http.ResponseWriter, req *http.Request) {
 }
 
 func admin_invites_get(res http.ResponseWriter, req *http.Request) {
-    invites := GetInvites()
-    data := SerializeInvites(invites)
+    page := PageFromRequest(req)
+    invites := GetInvites(page)
+    data := SerializeInvites(invites, page)
     Render(&res, req, "invites.html", data)
 }
 
@@ -245,8 +246,9 @@ func topic_post(res http.ResponseWriter, req *http.Request) {
 }
 
 func users_get(res http.ResponseWriter, req *http.Request) {
-    users := GetUsers()
-    data := SerializeUsers(users)
+    page := PageFromRequest(req)
+    users := GetUsers(page)
+    data := SerializeUsers(users, page)
     Render(&res, req, "users.html", data)
 }
 

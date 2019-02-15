@@ -57,6 +57,9 @@ type UserListData struct {
 
 type UsersListData struct {
     RiftData
+    PageNum int
+    PageSize int
+    PageMax int
     Users []UserListData
 }
 
@@ -88,6 +91,9 @@ type InviteListData struct {
 
 type InvitesListData struct {
     RiftData
+    PageNum int
+    PageSize int
+    PageMax int
     Invites []InviteListData
 }
 
@@ -139,8 +145,12 @@ func SerializeEmpty() *EmptyData {
     return new(EmptyData)
 }
 
-func SerializeUsers(users []*User) *UsersListData {
+func SerializeUsers(users []*User, page Page) *UsersListData {
     ser_users := new(UsersListData)
+
+    ser_users.PageNum = page.get_num()
+    ser_users.PageSize = page.get_size()
+    ser_users.PageMax = CountUsersPages(page)
 
     for _, user := range users {
         ser_user := UserListData {
@@ -175,8 +185,12 @@ func SerializeRegister(key string) *RegisterData {
     return ser_register
 }
 
-func SerializeInvites(invites []*Invite) *InvitesListData {
+func SerializeInvites(invites []*Invite, page Page) *InvitesListData {
     ser_invites := new(InvitesListData)
+
+    ser_invites.PageNum = page.get_num()
+    ser_invites.PageSize = page.get_size()
+    ser_invites.PageMax = CountInvitesPages(page)
 
     for _, invite := range invites {
         ser_invite := InviteListData {
@@ -248,7 +262,7 @@ func SerializeTopic(topic *Topic, page Page) *TopicData {
         Messages: messages,
         PageNum: page.get_num(),
         PageSize: page.get_size(),
-        PageMax: CountTopicsPages(page),
+        PageMax: CountMessagePages(topic.Id, page),
     }
 
     return ser_topic
