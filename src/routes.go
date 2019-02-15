@@ -8,6 +8,7 @@ import (
     "net/http"
 
     "github.com/gorilla/mux"
+    "github.com/jasonlvhit/gocron"
 )
 
 func index(res http.ResponseWriter, req *http.Request) {
@@ -127,6 +128,19 @@ func admin_users_change_type_get(res http.ResponseWriter, req *http.Request) {
     }
 
     Redirect(&res, req, "/users")
+}
+
+func admin_bots_get(res http.ResponseWriter, req *http.Request) {
+    fmt.Println("here")
+    gocron.Every(5).Seconds().Do(BasicBot)
+    gocron.Start()
+    Redirect(&res, req, "/")
+}
+
+func admin_bots2_get(res http.ResponseWriter, req *http.Request) {
+    fmt.Println("There")
+    gocron.Remove(BasicBot)
+    Redirect(&res, req, "/")
 }
 
 func topics_post(res http.ResponseWriter, req *http.Request) {
@@ -396,6 +410,8 @@ func CreateRouter() *mux.Router {
     admin_routes.HandleFunc("/invites_cancel/{key:[a-zA-Z0-9]+}", admin_invites_cancel_get).Methods("GET")
     admin_routes.HandleFunc("/invites_cancel_all", admin_cancel_all_post).Methods("GET")
     admin_routes.HandleFunc("/users/{username:[a-zA-Z0-9]+}/change_type", admin_users_change_type_get).Methods("GET")
+    admin_routes.HandleFunc("/bots", admin_bots_get).Methods("GET")
+    admin_routes.HandleFunc("/bots2", admin_bots2_get).Methods("GET")
     admin_routes.Use(admin_middleware)
 
     router.
