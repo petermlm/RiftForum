@@ -87,3 +87,7 @@ func NotFound(res *http.ResponseWriter, req *http.Request) {
 func AdminOnly(res *http.ResponseWriter, req *http.Request) {
     Render(res, req, "admin_only.html", SerializeEmpty())
 }
+
+func OperationNotAllowed(res *http.ResponseWriter, req *http.Request) {
+    Render(res, req, "operation_not_allowed.html", SerializeEmpty())
+}

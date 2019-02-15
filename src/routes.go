@@ -259,7 +259,7 @@ func user_get(res http.ResponseWriter, req *http.Request) {
     user, err := GetUser(username)
 
     if err != nil {
-        return
+        NotFound(&res, req)
     }
 
     data := SerializeUser(user)
@@ -267,9 +267,17 @@ func user_get(res http.ResponseWriter, req *http.Request) {
 }
 
 func user_about_post(res http.ResponseWriter, req *http.Request) {
+    ctx := req.Context()
+    user_info := ctx.Value("UserInfo").(*UserInfo)
+
     vars := mux.Vars(req)
     username := vars["username"]
     form_new_about := req.PostFormValue("about")
+
+    if check_permission(username, user_info) {
+        OperationNotAllowed(&res, req)
+        return
+    }
 
     UserSetAbout(username, form_new_about)
     redirect_path := fmt.Sprintf("/users/%s", username)
@@ -277,9 +285,17 @@ func user_about_post(res http.ResponseWriter, req *http.Request) {
 }
 
 func user_signature_post(res http.ResponseWriter, req *http.Request) {
+    ctx := req.Context()
+    user_info := ctx.Value("UserInfo").(*UserInfo)
+
     vars := mux.Vars(req)
     username := vars["username"]
     form_new_signature := req.PostFormValue("signature")
+
+    if check_permission(username, user_info) {
+        OperationNotAllowed(&res, req)
+        return
+    }
 
     UserSetSignature(username, form_new_signature)
     redirect_path := fmt.Sprintf("/users/%s", username)
@@ -347,6 +363,10 @@ func admin_middleware(next http.Handler) http.Handler {
             AdminOnly(&res, req)
         }
     })
+}
+
+func check_permission(username string, user_info *UserInfo) bool {
+    return username == user_info.Username || user_info.IsMod()
 }
 
 func CreateRouter() *mux.Router {

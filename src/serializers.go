@@ -5,6 +5,14 @@ type UserInfo struct {
     Usertype UserTypes
 }
 
+func (u *UserInfo) IsAdmin() bool {
+    return u.Usertype == Administrator
+}
+
+func (u *UserInfo) IsMod() bool {
+    return u.Usertype == Administrator || u.Usertype == Moderator
+}
+
 type RiftDataI interface {
     SetUserInfo(UserInfo *UserInfo)
     SetPath(path string)
@@ -34,7 +42,7 @@ func (r *RiftData) IsAdmin() bool {
         return false
     }
 
-    return r.UserInfo.Usertype == Administrator
+    return r.UserInfo.IsAdmin()
 }
 
 func (r *RiftData) IsMod() bool {
@@ -42,7 +50,7 @@ func (r *RiftData) IsMod() bool {
         return false
     }
 
-    return r.UserInfo.Usertype == Administrator || r.UserInfo.Usertype == Moderator
+    return r.UserInfo.IsMod()
 }
 
 type EmptyData struct {
