@@ -46,7 +46,7 @@ func CountUsersPages(page Page) int {
         panic(err)
     }
 
-    return count / page.get_size() - 1
+    return count_pages(page, count)
 }
 
 func UserTypeSet(username string, new_type UserTypes) {
@@ -131,7 +131,7 @@ func CountInvitesPages(page Page) int {
         panic(err)
     }
 
-    return count / page.get_size() - 1
+    return count_pages(page, count)
 }
 
 func InviteExists(invite_key string) bool {
@@ -207,7 +207,7 @@ func CountTopicsPages(page Page) int {
         panic(err)
     }
 
-    return count / page.get_size() - 1
+    return count_pages(page, count)
 }
 
 func GetTopic(topic_id uint, page Page) *Topic {
@@ -242,7 +242,7 @@ func CountMessagePages(topic_id uint, page Page) int {
         panic(err)
     }
 
-    return count / page.get_size() - 1
+    return count_pages(page, count)
 }
 
 func UpdateTopic(topic *Topic) {
@@ -252,4 +252,8 @@ func UpdateTopic(topic *Topic) {
     if err != nil {
         panic(err)
     }
+}
+
+func count_pages(page Page, count int) int {
+    return (count - 1) / page.get_size()
 }
