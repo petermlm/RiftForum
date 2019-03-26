@@ -2,7 +2,6 @@ package main
 
 import (
     "log"
-    "fmt"
 
     "github.com/go-pg/pg"
     "github.com/go-pg/pg/orm"
@@ -82,50 +81,11 @@ func createDefaultData() error {
         return err
     }
 
-    // Topic
-    for i:=0; i<100; i++ {
-        title := fmt.Sprintf("Test Topic %d", i)
+    rift_bot := NewUser("RiftBot", Basic, "pl")
+    err = db.Insert(rift_bot)
 
-        topic := &Topic{
-            Title: title,
-            Author: user_admin,
-            AuthorId: user_admin.Id,
-        }
-
-        err = db.Insert(topic)
-
-        if err != nil {
-            return err
-        }
-
-        // Messages
-        if i == 99 {
-            for j:=0; j<100; j++ {
-                message := &Message{
-                    Message: fmt.Sprintf("Test message %d", j),
-                    Author: user_admin,
-                    AuthorId: user_admin.Id,
-                    Topic: topic,
-                    TopicId: topic.Id,
-                }
-
-                err = db.Insert(message)
-            }
-        } else {
-            message := &Message{
-                Message: "Test message",
-                Author: user_admin,
-                AuthorId: user_admin.Id,
-                Topic: topic,
-                TopicId: topic.Id,
-            }
-
-            err = db.Insert(message)
-        }
-
-        if err != nil {
-            return err
-        }
+    if err != nil {
+        return err
     }
 
     return nil

@@ -132,14 +132,16 @@ func admin_users_change_type_get(res http.ResponseWriter, req *http.Request) {
 
 func admin_bots_get(res http.ResponseWriter, req *http.Request) {
     fmt.Println("here")
-    gocron.Every(5).Seconds().Do(BasicBot)
+    // gocron.Every(5).Seconds().Do(BasicBot)
+    gocron.Every(5).Seconds().Do(HelloBot)
     gocron.Start()
     Redirect(&res, req, "/")
 }
 
 func admin_bots2_get(res http.ResponseWriter, req *http.Request) {
     fmt.Println("There")
-    gocron.Remove(BasicBot)
+    // gocron.Remove(BasicBot)
+    gocron.Remove(HelloBot)
     Redirect(&res, req, "/")
 }
 
@@ -159,33 +161,7 @@ func topics_post(res http.ResponseWriter, req *http.Request) {
         panic(err)
     }
 
-    // Topic
-    topic := &Topic{
-        Title: form_title,
-        Author: user,
-        AuthorId: user.Id,
-    }
-
-    err = db.Insert(topic)
-
-    if err != nil {
-        panic(err)
-    }
-
-    // Message
-    message := &Message{
-        Message: form_message,
-        Author: user,
-        AuthorId: user.Id,
-        Topic: topic,
-        TopicId: topic.Id,
-    }
-
-    err = db.Insert(message)
-
-    if err != nil {
-        panic(err)
-    }
+    NewTopic(user, form_title, form_message)
 
     Redirect(&res, req, "/")
 }

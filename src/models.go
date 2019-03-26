@@ -94,6 +94,38 @@ type Topic struct {
     Messages []*Message
 }
 
+func NewTopic(user *User, title_text string, message_text string) {
+    var err error
+
+    // Topic
+    topic := &Topic{
+        Title: title_text,
+        Author: user,
+        AuthorId: user.Id,
+    }
+
+    err = db.Insert(topic)
+
+    if err != nil {
+        panic(err)
+    }
+
+    // Message
+    message := &Message{
+        Message: message_text,
+        Author: user,
+        AuthorId: user.Id,
+        Topic: topic,
+        TopicId: topic.Id,
+    }
+
+    err = db.Insert(message)
+
+    if err != nil {
+        panic(err)
+    }
+}
+
 /* ============================================================================
  * Message
  * ============================================================================
