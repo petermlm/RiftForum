@@ -8,9 +8,8 @@ services:
       - "8080:8080"
     depends_on:
       - postgres
-    entrypoint: docker/entry-dev.sh
     volumes:
-      - ../:/app
+      - ../:/go/src/app
   postgres:
     build:
       context: ..

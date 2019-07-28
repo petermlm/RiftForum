@@ -1,22 +1,15 @@
-FROM ubuntu:18.04
+FROM golang:1.12
 
-# Install Go
-RUN apt update --fix-missing && \
-    apt -qq -y install golang git
 
-# Install Go Dependencies
-RUN go get github.com/gorilla/mux
-RUN go get github.com/go-pg/pg
-RUN go get github.com/go-pg/pg/orm
-RUN go get github.com/dgrijalva/jwt-go
-RUN go get github.com/jasonlvhit/gocron
+WORKDIR /go/src/app
+COPY . .
 
-# Working directory is the project's directory
-RUN mkdir -p /app
-WORKDIR /app
+RUN go get -d -v ./...
+RUN go install -v ./...
 
-# # Add project, and install packages
-ADD . /app
-# RUN mkdir /package
-# RUN cp /app/package.json /package/package.json
-# RUN npm install --prefix /package
+RUN mkdir -p /air_run
+RUN apt install curl
+RUN curl -fLo /air_run/air https://raw.githubusercontent.com/cosmtrek/air/master/bin/linux/air
+RUN chmod +x /air_run/air
+
+CMD ["/air_run/air", "-c", "air.conf"]

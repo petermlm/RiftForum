@@ -10,9 +10,10 @@ import (
 )
 
 var templates *template.Template
+const templates_dir = "templates"
 
 func tpl_dir(tpl_name string) string {
-    return "../templates/" + tpl_name
+    return templates_dir + "/" + tpl_name
 }
 
 func InitTmpl() {
@@ -29,7 +30,7 @@ func InitTmpl() {
         },
     }
 
-    files, err = ioutil.ReadDir("../templates")
+    files, err = ioutil.ReadDir(templates_dir)
     if err != nil {
         log.Println("can't read directory with templates")
         log.Fatal(err)
@@ -38,7 +39,7 @@ func InitTmpl() {
     for _, file := range files {
         filename := file.Name()
         if strings.HasSuffix(filename, ".html") {
-            all_files = append(all_files, "../templates/" + filename)
+            all_files = append(all_files, tpl_dir(filename))
         }
     }
 
