@@ -11,8 +11,10 @@ services:
     volumes:
       - ../:/go/src/app
   postgres:
-    build:
-      context: ..
-      dockerfile: docker/postgres.docker
+    image: postgres:9.6
+    environment:
+      - POSTGRES_DB=riftforum_db
+      - POSTGRES_USER=riftforum_user
+      - POSTGRES_PASSWORD=riftforum_pass
     ports:
       - "8090:5432"

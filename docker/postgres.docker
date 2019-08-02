@@ -1,5 +1,0 @@
-FROM postgres:9.6
-
-ENV POSTGRES_DB=riftforum_db
-ENV POSTGRES_USER=riftforum_user
-ENV POSTGRES_PASSWORD=riftforum_pass
