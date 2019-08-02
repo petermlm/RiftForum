@@ -392,7 +392,7 @@ func CreateRouter() *mux.Router {
 
     router.
         PathPrefix("/static/style/").
-        Handler(http.StripPrefix("/static/style/", http.FileServer(http.Dir("../static/style/"))))
+        Handler(http.StripPrefix("/static/style/", http.FileServer(http.Dir("static/style/"))))
 
     log.Println("Routers created")
     return router

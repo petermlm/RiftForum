@@ -8,12 +8,13 @@ services:
       - "8080:8080"
     depends_on:
       - postgres
-    entrypoint: docker/entry-dev.sh
     volumes:
-      - ../:/app
+      - ../:/go/src/app
   postgres:
-    build:
-      context: ..
-      dockerfile: docker/postgres.docker
+    image: postgres:9.6
+    environment:
+      - POSTGRES_DB=riftforum_db
+      - POSTGRES_USER=riftforum_user
+      - POSTGRES_PASSWORD=riftforum_pass
     ports:
       - "8090:5432"

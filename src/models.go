@@ -20,7 +20,7 @@ type DBObject struct {
 type UserTypes uint8
 
 const (
-    Administrator = iota
+    Administrator = iota + 1
     Moderator
     Basic
 )
