@@ -19,8 +19,8 @@ func (p Page) get_num() int {
 
 func PageDefault() Page {
     return Page{
-        limit: 20,
-        offset: 0,
+        limit: PageDefaultLimit,
+        offset: PageDefaultOffset,
     }
 }
 

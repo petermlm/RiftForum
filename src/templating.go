@@ -1,20 +1,16 @@
 package main
 
 import (
-    "strings"
-    "log"
-    "os"
-    "io/ioutil"
-    "net/http"
     "html/template"
+    "io/ioutil"
+    "log"
+    "net/http"
+    "os"
+    "path"
+    "strings"
 )
 
 var templates *template.Template
-const templates_dir = "templates"
-
-func tpl_dir(tpl_name string) string {
-    return templates_dir + "/" + tpl_name
-}
 
 func InitTmpl() {
     var all_files []string
@@ -30,10 +26,9 @@ func InitTmpl() {
         },
     }
 
-    files, err = ioutil.ReadDir(templates_dir)
+    files, err = ioutil.ReadDir(TemplatesDir)
     if err != nil {
-        log.Println("can't read directory with templates")
-        log.Fatal(err)
+        RiftForumPanic("can't read directory with templates", err)
     }
 
     for _, file := range files {
@@ -49,9 +44,10 @@ func InitTmpl() {
         ParseFiles(all_files...)
 
     if err != nil {
-        log.Println("Can't parse template files")
-        log.Fatal(err)
+        RiftForumPanic("Can't parse template files", err)
     }
+
+    log.Println("Templating initialized")
 }
 
 func Render(res *http.ResponseWriter, req *http.Request, tpl_name string, data RiftDataI) {
@@ -67,8 +63,7 @@ func Render(res *http.ResponseWriter, req *http.Request, tpl_name string, data R
     err := templates.ExecuteTemplate(*res, tpl_name, data)
 
     if err != nil {
-        log.Println("Can't execute template")
-        log.Fatal(err)
+        RiftForumPanic("Can't execute template", err)
     }
 }
 
@@ -77,8 +72,7 @@ func Redirect(res *http.ResponseWriter, req *http.Request, url string) {
 }
 
 func Login(res *http.ResponseWriter, req *http.Request) {
-    redirect := "/login"
-    Redirect(res, req, redirect)
+    Redirect(res, req, "/login")
 }
 
 func NotFound(res *http.ResponseWriter, req *http.Request) {
@@ -91,4 +85,8 @@ func AdminOnly(res *http.ResponseWriter, req *http.Request) {
 
 func OperationNotAllowed(res *http.ResponseWriter, req *http.Request) {
     Render(res, req, "operation_not_allowed.html", SerializeEmpty())
+}
+
+func tpl_dir(tpl_name string) string {
+    return path.Join(TemplatesDir, tpl_name)
 }

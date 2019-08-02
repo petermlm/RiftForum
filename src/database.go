@@ -11,21 +11,18 @@ import (
 var db *pg.DB
 
 func InitDB() {
-    var n int
-    var err error
-
+    // Connect to database, waits one second between attempts
     for i:=0; i<DatabaseConnRetries; i++ {
         db = pg.Connect(&pg.Options{
-            Addr: "postgres:5432",
-            Database: "riftforum_db",
-            User: "riftforum_user",
-            Password: "riftforum_pass",
-
+            Addr: DatabaseAddr,
+            Database: DatabaseDatabase,
+            User: DatabaseUser,
+            Password: DatabasePassword,
         })
 
-        _, err := db.QueryOne(pg.Scan(&n), "SELECT 1")
+        db_con_good := isDbConGood()
 
-        if err == nil {
+        if db_con_good {
             break
         }
 
@@ -34,20 +31,12 @@ func InitDB() {
     }
 
     if db == nil {
-        panic("Can't reach database")
+        panic("Can't connect with database")
     }
 
-    err = createSchema()
-
-    if err != nil {
-        panic(err)
-    }
-
-    err = createDefaultData()
-
-    if err != nil {
-        panic(err)
-    }
+    // Create schema and default data
+    createSchema()
+    createDefaultData()
 
     log.Println("Database connection astablished")
 }
@@ -61,7 +50,13 @@ func GetDBCon() *pg.DB {
     return db
 }
 
-func createSchema() error {
+func isDbConGood() bool {
+    var n int
+    _, err := db.QueryOne(pg.Scan(&n), "SELECT 1")
+    return err == nil
+}
+
+func createSchema() {
     for _, model := range []interface{}{
         (*User)(nil),
         (*Topic)(nil),
@@ -69,18 +64,16 @@ func createSchema() error {
         (*Invite)(nil),
     } {
         err := db.CreateTable(model, &orm.CreateTableOptions{
-            Temp: true,
+            Temp: DatabaseTemp,
         })
 
         if err != nil {
-            return err
+            panic("Can't create database schema")
         }
     }
-
-    return nil
 }
 
-func createDefaultData() error {
+func createDefaultData() {
     var err error
 
     // Users
@@ -88,22 +81,20 @@ func createDefaultData() error {
     err = db.Insert(user_admin)
 
     if err != nil {
-        return err
+        RiftForumPanic("Can't create admin", err)
     }
 
     user_basic := NewUser("petermlm", Moderator, "pl")
     err = db.Insert(user_basic)
 
     if err != nil {
-        return err
+        RiftForumPanic("Can't create petermlm", err)
     }
 
     rift_bot := NewUser("RiftBot", Basic, "pl")
     err = db.Insert(rift_bot)
 
     if err != nil {
-        return err
+        RiftForumPanic("Can't create RiftBot", err)
     }
-
-    return nil
 }

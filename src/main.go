@@ -6,14 +6,14 @@ import (
 )
 
 func main() {
-    log.Println("Rift Forum starting")
+    log.Println("Rift Forum Starting")
 
     InitDB()
     defer CloseDB()
     InitTmpl()
-    router := CreateRouter()
 
-    log.Println("Serving")
-    status := http.ListenAndServe(":8080", router)
+    log.Println("Starting Server")
+    router := CreateRouter()
+    status := http.ListenAndServe(HostAndPort, router)
     log.Fatal(status)
 }
