@@ -1,6 +1,7 @@
 package main
 
 import (
+    "time"
     "log"
 
     "github.com/go-pg/pg"
@@ -10,15 +11,31 @@ import (
 var db *pg.DB
 
 func InitDB() {
+    var n int
     var err error
 
-    db = pg.Connect(&pg.Options{
-        Addr: "postgres:5432",
-        Database: "riftforum_db",
-        User: "riftforum_user",
-        Password: "riftforum_pass",
+    for i:=0; i<DatabaseConnRetries; i++ {
+        db = pg.Connect(&pg.Options{
+            Addr: "postgres:5432",
+            Database: "riftforum_db",
+            User: "riftforum_user",
+            Password: "riftforum_pass",
 
-    })
+        })
+
+        _, err := db.QueryOne(pg.Scan(&n), "SELECT 1")
+
+        if err == nil {
+            break
+        }
+
+        db = nil
+        time.Sleep(time.Second)
+    }
+
+    if db == nil {
+        panic("Can't reach database")
+    }
 
     err = createSchema()
 
