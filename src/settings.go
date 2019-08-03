@@ -23,6 +23,7 @@ const (
     TemplatesDir = "templates"
 
     // Misc
+    InviteSize = 12
     PageDefaultLimit = 20
     PageDefaultOffset = 0
 )

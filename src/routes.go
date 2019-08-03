@@ -205,7 +205,7 @@ func topic_post(res http.ResponseWriter, req *http.Request) {
     err = db.Model(user).Where("Username = ?", user_info.Username).Select()
 
     if err != nil {
-        panic(err)
+        RiftForumPanic("Could not find user", err)
     }
 
     // Topic
@@ -213,7 +213,8 @@ func topic_post(res http.ResponseWriter, req *http.Request) {
     topic_id_parsed, err := strconv.ParseUint(vars["id"], 10, 32)
 
     if err != nil {
-        // TODO
+        NotFound(&res, req)
+        return
     }
 
     topic_id := uint(topic_id_parsed)

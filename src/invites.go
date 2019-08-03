@@ -4,15 +4,14 @@ import (
     "math/rand"
 )
 
-func make_new_invite() *Invite {
-    // TODO: This is horrible
-    var letter_runes = []rune("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789")
-    db := GetDBCon()
-    key := make([]rune, 64)
+var letter_runes = []rune("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789")
 
-    for i:=0; i<64; i++ {
-        rn := rand.Intn(len(letter_runes))
-        key[i] = letter_runes[rn]
+func make_new_invite() *Invite {
+    db := GetDBCon()
+    key := make([]rune, InviteSize)
+
+    for i:=0; i<InviteSize; i++ {
+        key[i] = letter_runes[rand.Intn(len(letter_runes))]
     }
 
     key_str := string(key)

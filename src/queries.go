@@ -1,6 +1,7 @@
 package main
 
 import (
+    "fmt"
     "errors"
     "time"
     "github.com/go-pg/pg/orm"
@@ -169,12 +170,11 @@ func InviteSet(invite_key string, new_status InviteStatus) {
 func InviteCancelAll() {
     db := GetDBCon()
 
-    // TODO: User ORM instead of direct SQL query
-    db.Model((*Invite)(nil)).Exec(`
+    db.Model((*Invite)(nil)).Exec(fmt.Sprintf(`
         UPDATE invites
-        SET status = 2
-        WHERE status = 0
-    `)
+        SET status = %d
+        WHERE status = %d
+    `, Canceled, Unused))
 }
 
 func GetTopics(page Page) []*Topic {
