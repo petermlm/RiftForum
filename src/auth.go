@@ -1,6 +1,8 @@
 package main
 
 import (
+    "log"
+    "crypto/rand"
     "errors"
     "fmt"
     "time"
@@ -9,17 +11,26 @@ import (
     "github.com/dgrijalva/jwt-go"
 )
 
+var secret []byte
+
 type Claims struct {
     jwt.StandardClaims
     Username string
     Usertype UserTypes
 }
 
-func verify_user_pass(user *User, password string) bool {
-    incoming := []byte(password)
-    existing := []byte(user.PasswordHash)
-    err := bcrypt.CompareHashAndPassword(existing, incoming)
-    return err == nil
+func InitAuth() {
+    if DebugMode {
+        secret = []byte("secret")
+    } else {
+        secret = make([]byte, 64)
+        _, err := rand.Read(secret)
+        if err != nil {
+            panic("Could not generate server secret.")
+        }
+    }
+
+    log.Println("Authentication initialized")
 }
 
 func CreateToken(form_username string, form_password string) (string, error) {
@@ -42,10 +53,7 @@ func CreateToken(form_username string, form_password string) (string, error) {
     }
 
     token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
-
-    my_signing_key := []byte("secret")
-    token_string, _ := token.SignedString(my_signing_key)
-
+    token_string, _ := token.SignedString(secret)
     return token_string, nil
 }
 
@@ -55,7 +63,7 @@ func VerifyToken(token_string string) *Claims {
             return nil, fmt.Errorf("Unexpected signing method: %v", token.Header["alg"])
         }
 
-        return []byte("secret"), nil
+        return secret, nil
     })
 
     if err != nil || !token.Valid {
@@ -63,4 +71,11 @@ func VerifyToken(token_string string) *Claims {
     }
 
     return token.Claims.(*Claims)
+}
+
+func verify_user_pass(user *User, password string) bool {
+    incoming := []byte(password)
+    existing := []byte(user.PasswordHash)
+    err := bcrypt.CompareHashAndPassword(existing, incoming)
+    return err == nil
 }

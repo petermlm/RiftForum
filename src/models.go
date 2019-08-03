@@ -1,6 +1,7 @@
 package main
 
 import (
+    "fmt"
     "time"
 
     "golang.org/x/crypto/bcrypt"
@@ -150,7 +151,7 @@ type Message struct {
 type InviteStatus uint8
 
 const (
-    Unused = iota
+    Unused = iota + 1
     Used
     Canceled
 )
@@ -174,5 +175,13 @@ func (i Invite) GetInviteStatus() string {
 }
 
 func (i Invite) GetKeyUrl() string {
-    return "TODO Key Url"
+    var protocol string
+
+    if Https {
+        protocol = "https"
+    } else {
+        protocol = "http"
+    }
+
+    return fmt.Sprintf("%s://%s/register?key=%s", protocol, BaseUrl, i.Key)
 }

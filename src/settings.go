@@ -1,8 +1,13 @@
 package main
 
 const (
+    // Debug Mode
+    DebugMode = true
+
     // Server settings
     HostAndPort = ":8080"
+    BaseUrl = "localhost:8080"
+    Https = false
 
     // Database settings
     DatabaseConnRetries = 5

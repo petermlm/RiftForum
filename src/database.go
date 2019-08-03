@@ -38,7 +38,7 @@ func InitDB() {
     createSchema()
     createDefaultData()
 
-    log.Println("Database connection astablished")
+    log.Println("Database connection established")
 }
 
 func CloseDB() {

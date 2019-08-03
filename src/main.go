@@ -11,6 +11,7 @@ func main() {
     InitDB()
     defer CloseDB()
     InitTmpl()
+    InitAuth()
 
     log.Println("Starting Server")
     router := CreateRouter()
