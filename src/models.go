@@ -95,7 +95,7 @@ type Topic struct {
     Messages []*Message
 }
 
-func NewTopic(user *User, title_text string, message_text string) {
+func NewTopic(user *User, title_text string, message_text string) uint {
     var err error
 
     // Topic
@@ -125,6 +125,8 @@ func NewTopic(user *User, title_text string, message_text string) {
     if err != nil {
         panic(err)
     }
+
+    return topic.Id
 }
 
 /* ============================================================================

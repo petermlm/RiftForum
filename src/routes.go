@@ -167,9 +167,8 @@ func topics_post(res http.ResponseWriter, req *http.Request) {
         panic(err)
     }
 
-    NewTopic(user, form_title, form_message)
-
-    Redirect(&res, req, "/")
+    topic_id := NewTopic(user, form_title, form_message)
+    Redirect(&res, req, fmt.Sprintf("/topics/%d", topic_id))
 }
 
 func topic_get(res http.ResponseWriter, req *http.Request) {
