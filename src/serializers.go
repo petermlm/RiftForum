@@ -57,6 +57,11 @@ type EmptyData struct {
     RiftData
 }
 
+type LoginData struct {
+    RiftData
+    NextPage string
+}
+
 type UserListData struct {
     Username string
     Usertype string
@@ -151,6 +156,18 @@ type TopicData struct {
 
 func SerializeEmpty() *EmptyData {
     return new(EmptyData)
+}
+
+func SerializeLogin(next_page string) *LoginData {
+    ser_login := new(LoginData)
+
+    if next_page == "" {
+        ser_login.NextPage = "/"
+    } else {
+        ser_login.NextPage = next_page
+    }
+
+    return ser_login
 }
 
 func SerializeUsers(users []*User, page Page) *UsersListData {

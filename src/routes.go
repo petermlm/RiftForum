@@ -27,13 +27,15 @@ func login_get(res http.ResponseWriter, req *http.Request) {
         return
     }
 
-    data := SerializeEmpty()
+    next_page := req.URL.Query().Get("next_page")
+    data := SerializeLogin(next_page)
     Render(&res, req, "login.html", data)
 }
 
 func login_post(res http.ResponseWriter, req *http.Request) {
     form_username := req.PostFormValue("username")
     form_password := req.PostFormValue("password")
+    next_page := req.PostFormValue("next_page")
 
     token, err := CreateToken(form_username, form_password)
 
@@ -45,7 +47,11 @@ func login_post(res http.ResponseWriter, req *http.Request) {
         http.SetCookie(res, &cookie)
     }
 
-    Redirect(&res, req, "/")
+    if next_page == "" {
+        next_page = "/"
+    }
+
+    Redirect(&res, req, next_page)
 }
 
 func logout(res http.ResponseWriter, req *http.Request) {
@@ -337,7 +343,7 @@ func auth_middleware(next http.Handler) http.Handler {
         if is_auth {
             next.ServeHTTP(res, req.WithContext(ctx))
         } else {
-            Login(&res, req)
+            Login(&res, req, req.URL.Path)
         }
     })
 }

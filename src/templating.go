@@ -1,6 +1,7 @@
 package main
 
 import (
+    "fmt"
     "html/template"
     "io/ioutil"
     "log"
@@ -71,8 +72,12 @@ func Redirect(res *http.ResponseWriter, req *http.Request, url string) {
     http.Redirect(*res, req, url, http.StatusSeeOther)
 }
 
-func Login(res *http.ResponseWriter, req *http.Request) {
-    Redirect(res, req, "/login")
+func Login(res *http.ResponseWriter, req *http.Request, path string) {
+    login_path := "/login"
+    if path != ""{
+        login_path = fmt.Sprintf("/login?next_page=%s", path)
+    }
+    Redirect(res, req, login_path)
 }
 
 func NotFound(res *http.ResponseWriter, req *http.Request) {
