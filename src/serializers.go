@@ -1,6 +1,19 @@
 package main
 
-import "strings"
+import (
+    "log"
+    "strings"
+
+    "github.com/frustra/bbcode"
+)
+
+var bbcode_compiler bbcode.Compiler
+
+func InitSers() {
+    // Booleans: autoCloseTags, ignoreUnmatchedClosingTags
+    bbcode_compiler = bbcode.NewCompiler(true, true)
+    log.Println("Serializers initialized")
+}
 
 type UserInfo struct {
     Username string
@@ -143,7 +156,7 @@ type MessageData struct {
     AuthorUsertype string
     SignatureF string
     CreatedAt string
-    Messages []string
+    MessageParagraphs []string
 }
 
 type TopicData struct {
@@ -271,13 +284,21 @@ func SerializeTopic(topic *Topic, page Page) *TopicData {
     var messages []*MessageData
 
     for _, message := range topic.Messages {
+        messages_pars := strings.Split(message.Message, "\r\n")
+
+        for i, msg_par := range messages_pars {
+            log.Println(i, msg_par)
+            log.Println(bbcode_compiler.Compile(msg_par))
+            messages_pars[i] = bbcode_compiler.Compile(msg_par)
+        }
+
         message_struct := &MessageData {
             AuthorId: message.Author.Id,
             AuthorUsername: message.Author.Username,
             AuthorUsertype: message.Author.GetUserType(),
             SignatureF: message.Author.Signature,
             CreatedAt: message.CreatedAt.Format("2006-01-02 15:04:05"),
-            Messages: strings.Split(message.Message, "\r\n"),
+            MessageParagraphs: messages_pars,
         }
 
         messages = append(messages, message_struct)

@@ -11,6 +11,7 @@ func main() {
     InitDB()
     defer CloseDB()
     InitTmpl()
+    InitSers()
     InitAuth()
 
     log.Println("Starting Server")
