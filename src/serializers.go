@@ -1,5 +1,7 @@
 package main
 
+import "strings"
+
 type UserInfo struct {
     Username string
     Usertype UserTypes
@@ -141,7 +143,7 @@ type MessageData struct {
     AuthorUsertype string
     SignatureF string
     CreatedAt string
-    Message string
+    Messages []string
 }
 
 type TopicData struct {
@@ -275,7 +277,7 @@ func SerializeTopic(topic *Topic, page Page) *TopicData {
             AuthorUsertype: message.Author.GetUserType(),
             SignatureF: message.Author.Signature,
             CreatedAt: message.CreatedAt.Format("2006-01-02 15:04:05"),
-            Message: message.Message,
+            Messages: strings.Split(message.Message, "\r\n"),
         }
 
         messages = append(messages, message_struct)

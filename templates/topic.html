@@ -35,7 +35,9 @@
                     </div>
                     <div class="col-sm-10 message_list_author_message">
                         <div class="message_list_author_message_text">
-                            {{.Message}}
+                            {{range $val := .Messages}}
+                            <p>{{$length := len $val }}{{if eq $length 0}}&nbsp;{{else}}{{$val}}{{end}}</p>
+                            {{end}}
                         </div>
                         {{$length := len .SignatureF }}{{if eq $length 0}}
                         <div class="message_list_author_message_sig">

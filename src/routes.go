@@ -6,6 +6,7 @@ import (
     "log"
     "strconv"
     "net/http"
+    "strings"
 
     "github.com/gorilla/mux"
     "github.com/jasonlvhit/gocron"
@@ -156,6 +157,10 @@ func topics_post(res http.ResponseWriter, req *http.Request) {
     db := GetDBCon()
     form_title := req.PostFormValue("title")
     form_message := req.PostFormValue("message")
+
+    form_title = strings.TrimSpace(form_title)
+    form_title = strings.ReplaceAll(form_title, "\r\n", " ")
+    form_message = strings.TrimSpace(form_message)
 
     // Author
     user := new(User)
