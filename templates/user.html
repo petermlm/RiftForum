@@ -24,7 +24,7 @@
             <div id="user_info_about_form">
                 <div id="user_info_about_text">{{.AboutF}}</div>
                 <form method="POST" action="/users/{{.Username}}/about">
-                    <textarea class="form-control" name="about" placeholder="About">{{.About}}</textarea>
+                    <textarea class="form-control" name="about" placeholder="About" required>{{.About}}</textarea>
                     <button type="submit" class="btn btn-default">Save</button>
                 </form>
             </div>
@@ -37,7 +37,7 @@
             <div id="user_info_signature_form">
                 <div id="user_info_signature_text">{{.SignatureF}}</div>
                 <form method="POST" action="/users/{{.Username}}/signature">
-                    <textarea class="form-control" name="signature" placeholder="Signature">{{.Signature}}</textarea>
+                    <textarea class="form-control" name="signature" placeholder="Signature" required>{{.Signature}}</textarea>
                     <button type="submit" class="btn btn-default">Save</button>
                 </form>
             </div>
@@ -49,8 +49,8 @@
             <h2>Change Password</h2>
             <div id="user_info_password_form">
                 <form method="POST" action="">
-                    <input class="form-control" name="password" placeholder="Password" type="password" />
-                    <input class="form-control" name="password2" placeholder="Confirm Password" type="password" />
+                    <input class="form-control" name="password" placeholder="Password" type="password" required />
+                    <input class="form-control" name="password2" placeholder="Confirm Password" type="password" required />
                     <button class="form-control btn btn-default" type="submit">Change</button>
                 </form>
             </div>

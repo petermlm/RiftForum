@@ -275,7 +275,7 @@ func user_about_post(res http.ResponseWriter, req *http.Request) {
     username := vars["username"]
     form_new_about := req.PostFormValue("about")
 
-    if check_permission(username, user_info) {
+    if !check_permission(username, user_info) {
         OperationNotAllowed(&res, req)
         return
     }
@@ -293,7 +293,7 @@ func user_signature_post(res http.ResponseWriter, req *http.Request) {
     username := vars["username"]
     form_new_signature := req.PostFormValue("signature")
 
-    if check_permission(username, user_info) {
+    if !check_permission(username, user_info) {
         OperationNotAllowed(&res, req)
         return
     }
