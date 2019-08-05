@@ -78,7 +78,6 @@ func register_post(res http.ResponseWriter, req *http.Request) {
     form_password2 := req.PostFormValue("password2")
 
     Register(form_invite_key, form_username, form_password, form_password2)
-
     Redirect(&res, req, "/")
 }
 
@@ -135,6 +134,35 @@ func admin_users_change_type_get(res http.ResponseWriter, req *http.Request) {
     }
 
     Redirect(&res, req, "/users")
+}
+
+func admin_users_change_password_get(res http.ResponseWriter, req *http.Request) {
+    render_change_password(res, req, true, false)
+}
+
+func admin_users_change_password_post(res http.ResponseWriter, req *http.Request) {
+    vars := mux.Vars(req)
+    username := vars["username"]
+    form_new_password := req.PostFormValue("new_password")
+    form_new_password2 := req.PostFormValue("new_password2")
+
+    user, err := GetUser(username)
+
+    if err != nil {
+        NotFound(&res, req)
+    }
+
+    err = ChangePassword(user, form_new_password, form_new_password2)
+
+    if err != nil {
+        render_change_password(res, req, false, true)
+        return
+    }
+
+    Redirect(&res, req, fmt.Sprintf("/users/%s", username))
+}
+
+func admin_routes(res http.ResponseWriter, req *http.Request) {
 }
 
 func admin_bots_get(res http.ResponseWriter, req *http.Request) {
@@ -303,6 +331,38 @@ func user_signature_post(res http.ResponseWriter, req *http.Request) {
     Redirect(&res, req, redirect_path)
 }
 
+func user_change_password_get(res http.ResponseWriter, req *http.Request) {
+    render_change_password(res, req, false, false)
+}
+
+func user_change_password_post(res http.ResponseWriter, req *http.Request) {
+    vars := mux.Vars(req)
+    username := vars["username"]
+    form_old_password := req.PostFormValue("old_password")
+    form_new_password := req.PostFormValue("new_password")
+    form_new_password2 := req.PostFormValue("new_password2")
+
+    user, err := GetUser(username)
+
+    if err != nil {
+        NotFound(&res, req)
+    }
+
+    if !VerifyUserPass(user, form_old_password) {
+        render_change_password(res, req, false, true)
+        return
+    }
+
+    err = ChangePassword(user, form_new_password, form_new_password2)
+
+    if err != nil {
+        render_change_password(res, req, false, true)
+        return
+    }
+
+    Redirect(&res, req, fmt.Sprintf("/users/%s", username))
+}
+
 func save_user_info(next http.Handler) http.Handler {
     return http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
         cookie, err := req.Cookie("jwt")
@@ -370,6 +430,20 @@ func check_permission(username string, user_info *UserInfo) bool {
     return username == user_info.Username || user_info.IsMod()
 }
 
+func render_change_password(res http.ResponseWriter, req *http.Request, is_for_admin bool, render_error bool) {
+    vars := mux.Vars(req)
+    username := vars["username"]
+
+    user, err := GetUser(username)
+
+    if err != nil {
+        NotFound(&res, req)
+    }
+
+    data := SerializeChangePassword(user, is_for_admin, render_error)
+    Render(&res, req, "change_password.html", data)
+}
+
 func CreateRouter() *mux.Router {
     router := mux.NewRouter()
     router.HandleFunc("/", index).Methods("GET")
@@ -388,6 +462,8 @@ func CreateRouter() *mux.Router {
     auth_routes.HandleFunc("/users/{username:[a-zA-Z0-9]+}", user_get).Methods("GET")
     auth_routes.HandleFunc("/users/{username:[a-zA-Z0-9]+}/about", user_about_post).Methods("POST")
     auth_routes.HandleFunc("/users/{username:[a-zA-Z0-9]+}/signature", user_signature_post).Methods("POST")
+    auth_routes.HandleFunc("/users/{username:[a-zA-Z0-9]+}/change_password", user_change_password_get).Methods("GET")
+    auth_routes.HandleFunc("/users/{username:[a-zA-Z0-9]+}/change_password", user_change_password_post).Methods("POST")
     auth_routes.Use(auth_middleware)
 
     admin_routes := auth_routes.PathPrefix("/admin").Subrouter()
@@ -397,6 +473,8 @@ func CreateRouter() *mux.Router {
     admin_routes.HandleFunc("/invites_cancel/{key:[a-zA-Z0-9]+}", admin_invites_cancel_get).Methods("GET")
     admin_routes.HandleFunc("/invites_cancel_all", admin_cancel_all_post).Methods("GET")
     admin_routes.HandleFunc("/users/{username:[a-zA-Z0-9]+}/change_type", admin_users_change_type_get).Methods("GET")
+    admin_routes.HandleFunc("/users/{username:[a-zA-Z0-9]+}/change_password", admin_users_change_password_get).Methods("GET")
+    admin_routes.HandleFunc("/users/{username:[a-zA-Z0-9]+}/change_password", admin_users_change_password_post).Methods("POST")
     admin_routes.HandleFunc("/bots", admin_bots_get).Methods("GET")
     admin_routes.HandleFunc("/bots2", admin_bots2_get).Methods("GET")
     admin_routes.Use(admin_middleware)
