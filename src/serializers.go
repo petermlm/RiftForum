@@ -1,6 +1,20 @@
 package main
 
-import "strings"
+import (
+    "log"
+    "strings"
+    "html/template"
+
+    "github.com/frustra/bbcode"
+)
+
+var bbcode_compiler bbcode.Compiler
+
+func InitSers() {
+    // Booleans: autoCloseTags, ignoreUnmatchedClosingTags
+    bbcode_compiler = bbcode.NewCompiler(true, true)
+    log.Println("Serializers initialized")
+}
 
 type UserInfo struct {
     Username string
@@ -83,10 +97,10 @@ type UserData struct {
     Username string
     Usertype string
     CreatedAt string
+    AboutParagraphs []template.HTML
     About string
-    AboutF string
+    SignatureParagraphs []template.HTML
     Signature string
-    SignatureF string
 }
 
 type RegisterData struct {
@@ -141,9 +155,9 @@ type MessageData struct {
     AuthorId uint
     AuthorUsername string
     AuthorUsertype string
-    SignatureF string
+    SignatureParagraphs []template.HTML
     CreatedAt string
-    Messages []string
+    MessageParagraphs []template.HTML
 }
 
 type TopicData struct {
@@ -198,9 +212,9 @@ func SerializeUser(user *User) *UserData {
     ser_user.Username = user.Username
     ser_user.Usertype = user.GetUserType()
     ser_user.CreatedAt = user.CreatedAt.Format("2006-01-02 15:04:05")
-    ser_user.AboutF = user.About
+    ser_user.AboutParagraphs = stringToOutputHtml(user.About)
     ser_user.About = user.About
-    ser_user.SignatureF = user.Signature
+    ser_user.SignatureParagraphs = stringToOutputHtml(user.Signature)
     ser_user.Signature = user.Signature
 
     return ser_user
@@ -275,9 +289,9 @@ func SerializeTopic(topic *Topic, page Page) *TopicData {
             AuthorId: message.Author.Id,
             AuthorUsername: message.Author.Username,
             AuthorUsertype: message.Author.GetUserType(),
-            SignatureF: message.Author.Signature,
+            SignatureParagraphs: stringToOutputHtml(message.Author.Signature),
             CreatedAt: message.CreatedAt.Format("2006-01-02 15:04:05"),
-            Messages: strings.Split(message.Message, "\r\n"),
+            MessageParagraphs: stringToOutputHtml(message.Message),
         }
 
         messages = append(messages, message_struct)
@@ -293,4 +307,15 @@ func SerializeTopic(topic *Topic, page Page) *TopicData {
     }
 
     return ser_topic
+}
+
+func stringToOutputHtml(str string) []template.HTML {
+    str_pars := strings.Split(str, "\r\n")
+    str_pars_html := make([]template.HTML, len(str_pars))
+
+    for i, str_par := range str_pars {
+        str_pars_html[i] = template.HTML(bbcode_compiler.Compile(str_par))
+    }
+
+    return str_pars_html
 }

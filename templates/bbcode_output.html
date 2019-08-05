@@ -1,0 +1,5 @@
+{{define "bbcode_output"}}
+{{range $val := .}}
+<p>{{$length := len $val }}{{if eq $length 0}}&nbsp;{{else}}{{$val}}{{end}}</p>
+{{end}}
+{{end}}
