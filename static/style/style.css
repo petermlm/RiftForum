@@ -1,23 +1,23 @@
 body {
-    font-family: Ubuntu, sans-serif;
+  font-family: Ubuntu, sans-serif;
 }
 
 footer {
-    clear: both;
-    margin-top: 30px;
+  clear: both;
+  margin-top: 30px;
 }
 
 .link_visited:visited {
-    color: #551a8b;
+  color: #551a8b;
 }
 
 .user_display {
-    padding-top: 8px;
-    padding-right: 14px;
+  padding-top: 8px;
+  padding-right: 14px;
 }
 
 .submit_button[disabled] {
-    cursor: default;
+  cursor: default;
 }
 
 /* ============================================================================
@@ -26,29 +26,29 @@ footer {
  */
 
 nav {
-    border-radius: 0 !important;
+  border-radius: 0 !important;
 }
 
 .nav_right {
-    float: right;
-    padding-top: 8px;
-    color: #777;
+  float: right;
+  padding-top: 8px;
+  color: #777;
 }
 
 .nav_right_element {
-    float: right;
+  float: right;
 }
 
 .nav_right_bad_loggin {
-    display: none;
-    float: right;
-    margin-right: 10px;
-    margin-top: 15px;
-    color: #ff0000;
+  display: none;
+  float: right;
+  margin-right: 10px;
+  margin-top: 15px;
+  color: #ff0000;
 }
 
 .nav_wrapper {
-    width: 1060px;
+  width: 1060px;
 }
 
 /* ============================================================================
@@ -57,25 +57,25 @@ nav {
  */
 
 .page_title_wrapper {
-    width: 100%;
-    display: flex;
-    justify-content: center;
+  width: 100%;
+  display: flex;
+  justify-content: center;
 }
 
 .page_title {
-    width: 1030px;
-    margin: 10px 0px;
-    border-bottom: 1px solid #e7e7e7;
+  width: 1030px;
+  margin: 10px 0px;
+  border-bottom: 1px solid #e7e7e7;
 }
 
 .page_content_wrapper {
-    width: 100%;
-    display: flex;
-    justify-content: center;
+  width: 100%;
+  display: flex;
+  justify-content: center;
 }
 
 .page_content_wrapper_in {
-    width: 1030px;
+  width: 1030px;
 }
 
 /* ============================================================================
@@ -84,23 +84,23 @@ nav {
  */
 
 .invites_bulk_actions_text_subtitle {
-    font-weight: bold;
+  font-weight: bold;
 }
 
 .invites_bulk_actions_text_middot {
-    font-weight: bold;
+  font-weight: bold;
 }
 
 .invites_list_actions_head {
-    text-align: right;
+  text-align: right;
 }
 
 .invites_list_key {
-    font-family: "Courier New", Courier, monospace;
+  font-family: "Courier New", Courier, monospace;
 }
 
 .invites_list_actions {
-    text-align: right;
+  text-align: right;
 }
 
 /* ============================================================================
@@ -109,30 +109,30 @@ nav {
  */
 
 .topics_list_title a {
-    font-size: 12pt;
+  font-size: 12pt;
 }
 
 .topics_list_title_author {
-    color: grey;
-    font-size: 9pt;
+  color: grey;
+  font-size: 9pt;
 }
 
 .topics_list_title_author_hl {
-    color: black;
-    font-size: 9pt !important;
+  color: black;
+  font-size: 9pt !important;
 }
 
 .topics_list_messages {
-    text-align: center;
-    vertical-align: middle !important;
+  text-align: center;
+  vertical-align: middle !important;
 }
 
 .topics_list_last {
-    color: grey;
+  color: grey;
 }
 
 .topics_list_last_hl {
-    color: black;
+  color: black;
 }
 
 /* ============================================================================
@@ -141,36 +141,36 @@ nav {
  */
 
 .new_topic_form_wrapper {
-    width: 100%;
-    display: flex;
-    justify-content: center;
+  width: 100%;
+  display: flex;
+  justify-content: center;
 }
 
 .new_topic_forum {
-    margin-top: 25px;
-    padding: 0px 10px;
-    width: 690px;
+  margin-top: 25px;
+  padding: 0px 10px;
+  width: 690px;
 }
 
 .new_topic_forum form textarea {
-    margin-top: 10px;
-    resize: vertical;
-    height: 8em;
+  margin-top: 10px;
+  resize: vertical;
+  height: 8em;
 }
 
 .new_topic_forum form button {
-    margin-top: 10px;
-    float: right;
-    width: 100px;
+  margin-top: 10px;
+  float: right;
+  width: 100px;
 }
 
 #text_feedback {
-    padding-top: 18px;
-    padding-left: 12px;
+  padding-top: 18px;
+  padding-left: 12px;
 }
 
 .text_feedback_normal {
-    color: grey;
+  color: grey;
 }
 
 /* ============================================================================
@@ -179,61 +179,61 @@ nav {
  */
 
 .message_list_message {
-    width: 100%;
-    margin-bottom: 10px;
-    padding: 0px 19px;
-    background-color: #f8f8f8;
-    border-color: #e7e7e7;
-    border-radius: 4px;
+  width: 100%;
+  margin-bottom: 10px;
+  padding: 0px 19px;
+  background-color: #f8f8f8;
+  border-color: #e7e7e7;
+  border-radius: 4px;
 }
 
 .message_list_author_info {
-    padding-top: 10px;
-    padding-bottom: 10px;
-    padding-left: 19px;
+  padding-top: 10px;
+  padding-bottom: 10px;
+  padding-left: 19px;
 }
 
 .message_list_author_info_name {
-    font-size: 12pt;
-    margin-bottom: 8px;
+  font-size: 12pt;
+  margin-bottom: 8px;
 }
 
 .message_list_author_info_type {
-    font-size: 10pt;
-    margin-bottom: 8px;
+  font-size: 10pt;
+  margin-bottom: 8px;
 }
 
 .message_list_author_info_date {
-    font-size: 10pt;
-    color: gray;
-    margin-bottom: 12px;
+  font-size: 10pt;
+  color: gray;
+  margin-bottom: 12px;
 }
 
 .message_list_author_info_date span {
-    color: black;
+  color: black;
 }
 
 .message_list_edit_bnt a {
-    width: 100%;
+  width: 100%;
 }
 
 .message_list_author_message {
-    padding-top: 10px;
-    padding-bottom: 10px;
-    border-left: 1px solid #e7e7e7;
+  padding-top: 10px;
+  padding-bottom: 10px;
+  border-left: 1px solid #e7e7e7;
 }
 
 .message_list_author_message_text {
-    min-height: 100px;
+  min-height: 100px;
 }
 
 .message_list_author_message_sig {
-    margin-top: 10px;
-    padding-top: 10px;
+  margin-top: 10px;
+  padding-top: 10px;
 }
 
 .message_list_author_message_sig_line {
-    border-top: 1px solid #e7e7e7;
+  border-top: 1px solid #e7e7e7;
 }
 
 /* ============================================================================
@@ -242,34 +242,34 @@ nav {
  */
 
 .new_message_wrapper {
-    width: 100%;
-    display: flex;
-    justify-content: center;
-    margin-top: 30px;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  margin-top: 30px;
 }
 
 .new_message {
-    width: 1030px;
-    width: 690px;
+  width: 1030px;
+  width: 690px;
 }
 
 .new_message form textarea {
-    resize: vertical;
-    height: 8em;
+  resize: vertical;
+  height: 8em;
 }
 
 .new_message form button {
-    margin-top: 10px;
-    float: right;
-    width: 100px;
+  margin-top: 10px;
+  float: right;
+  width: 100px;
 }
 
 .new_message form button[name=post] {
-    margin-left: 10px;
+  margin-left: 10px;
 }
 
 .new_message form button[name=clear] {
-    display: none;
+  display: none;
 }
 
 /* ============================================================================
@@ -278,11 +278,11 @@ nav {
  */
 
 .users_list_creation_date {
-    text-align: right;
+  text-align: right;
 }
 
 .users_list_change_type {
-    text-align: right;
+  text-align: right;
 }
 
 /* ============================================================================
@@ -291,45 +291,45 @@ nav {
  */
 
 .user_info_user_type {
-    margin-bottom: 20px;
+  margin-bottom: 20px;
 }
 
 .user_info_part {
-    background-color: #f5f5f5;
-    padding-top: 0;
-    padding-bottom: 20px;
-    padding-left: 20px;
-    padding-right: 20px;
-    margin-bottom: 20px;
-    border: 1px solid #e3e3e3;
-    border-radius: 4px;
+  background-color: #f5f5f5;
+  padding-top: 0;
+  padding-bottom: 20px;
+  padding-left: 20px;
+  padding-right: 20px;
+  margin-bottom: 20px;
+  border: 1px solid #e3e3e3;
+  border-radius: 4px;
 }
 
 .user_info_part textarea {
-    /* margin-top: 10px; */
-    resize: vertical;
-    height: 8em;
+  /* margin-top: 10px; */
+  resize: vertical;
+  height: 8em;
 }
 
 .user_info_part button {
-    margin-top: 10px;
-    margin-left: 10px;
-    float: right;
-    width: 100px;
+  margin-top: 10px;
+  margin-left: 10px;
+  float: right;
+  width: 100px;
 }
 
 .user_info_part h2 {
-    padding-bottom: 5px;
-    border-bottom: 1px solid #8c8c8c;
-    margin-bottom: 25px;
+  padding-bottom: 5px;
+  border-bottom: 1px solid #8c8c8c;
+  margin-bottom: 25px;
 }
 
 .user_info_part h2 a {
-    font-size: 10pt;
+  font-size: 10pt;
 }
 
 #user_info_password_form form input {
-    margin-bottom: 20px;
+  margin-bottom: 20px;
 }
 
 /* ============================================================================
@@ -338,7 +338,7 @@ nav {
  */
 
 .current-page-item {
-    font-weight: bold;
+  font-weight: bold;
 }
 
 /* ============================================================================
@@ -347,22 +347,22 @@ nav {
  */
 
 .register_wrapper {
-    width: 100%;
-    display: flex;
-    justify-content: center;
+  width: 100%;
+  display: flex;
+  justify-content: center;
 }
 
 .login-container, .register-container {
-    width: 500px;
-    background-color: #f5f5f5;
-    padding: 20px;
-    border: 1px solid #e3e3e3;
-    border-radius: 4px;
+  width: 500px;
+  background-color: #f5f5f5;
+  padding: 20px;
+  border: 1px solid #e3e3e3;
+  border-radius: 4px;
 }
 
 .login-container form input,
 .register-container form input {
-    margin-bottom: 20px;
+  margin-bottom: 20px;
 }
 
 /* ============================================================================
@@ -371,25 +371,25 @@ nav {
  */
 
 .admin_part {
-    width: 1030px;
-    background-color: #f5f5f5;
-    padding-top: 0;
-    padding-bottom: 20px;
-    padding-left: 20px;
-    padding-right: 20px;
-    margin-bottom: 20px;
-    border: 1px solid #e3e3e3;
-    border-radius: 4px;
+  width: 1030px;
+  background-color: #f5f5f5;
+  padding-top: 0;
+  padding-bottom: 20px;
+  padding-left: 20px;
+  padding-right: 20px;
+  margin-bottom: 20px;
+  border: 1px solid #e3e3e3;
+  border-radius: 4px;
 }
 
 .admin_part h2 {
-    padding-bottom: 5px;
-    border-bottom: 1px solid #8c8c8c;
-    margin-bottom: 25px;
+  padding-bottom: 5px;
+  border-bottom: 1px solid #8c8c8c;
+  margin-bottom: 25px;
 }
 
 .admin_part button {
-    width: 125px;
+  width: 125px;
 }
 
 /* ============================================================================
@@ -413,28 +413,28 @@ nav {
  */
 
 .error_wrapper {
-    width: 100%;
-    display: flex;
-    justify-content: center;
+  width: 100%;
+  display: flex;
+  justify-content: center;
 }
 
 .display-error {
-    margin-top: 40px;
-    width: 1030px;
+  margin-top: 40px;
+  width: 1030px;
 }
 
 .display-error div {
-    width: 100%;
-    display: flex;
-    justify-content: center;
+  width: 100%;
+  display: flex;
+  justify-content: center;
 }
 
 .notfound-container {
-    width: 1030px;
-    background-color: #f5f5f5;
-    padding: 20px;
-    border: 1px solid #e3e3e3;
-    border-radius: 4px;
-    text-align: center;
-    font-size: 30pt;
+  width: 1030px;
+  background-color: #f5f5f5;
+  padding: 20px;
+  border: 1px solid #e3e3e3;
+  border-radius: 4px;
+  text-align: center;
+  font-size: 30pt;
 }
