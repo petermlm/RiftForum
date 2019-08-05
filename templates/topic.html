@@ -35,16 +35,14 @@
                     </div>
                     <div class="col-sm-10 message_list_author_message">
                         <div class="message_list_author_message_text">
-                            {{range $val := .MessageParagraphs}}
-                            <p>{{$length := len $val }}{{if eq $length 0}}&nbsp;{{else}}{{$val}}{{end}}</p>
-                            {{end}}
+                            {{template "bbcode_output" .MessageParagraphs}}
                         </div>
                         {{$length := len .SignatureF }}{{if eq $length 0}}
                         <div class="message_list_author_message_sig">
                         {{else}}
                         <div class="message_list_author_message_sig message_list_author_message_sig_line">
                         {{end}}
-                            {{.SignatureF}}
+                            {{template "bbcode_output" .SignatureF}}
                         </div>
                     </div>
                 </div>
