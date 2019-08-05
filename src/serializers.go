@@ -97,10 +97,10 @@ type UserData struct {
     Username string
     Usertype string
     CreatedAt string
+    AboutParagraphs []template.HTML
     About string
-    AboutF []template.HTML
+    SignatureParagraphs []template.HTML
     Signature string
-    SignatureF []template.HTML
 }
 
 type RegisterData struct {
@@ -155,7 +155,7 @@ type MessageData struct {
     AuthorId uint
     AuthorUsername string
     AuthorUsertype string
-    SignatureF []template.HTML
+    SignatureParagraphs []template.HTML
     CreatedAt string
     MessageParagraphs []template.HTML
 }
@@ -212,9 +212,9 @@ func SerializeUser(user *User) *UserData {
     ser_user.Username = user.Username
     ser_user.Usertype = user.GetUserType()
     ser_user.CreatedAt = user.CreatedAt.Format("2006-01-02 15:04:05")
-    ser_user.AboutF = stringToOutputHtml(user.About)
+    ser_user.AboutParagraphs = stringToOutputHtml(user.About)
     ser_user.About = user.About
-    ser_user.SignatureF = stringToOutputHtml(user.Signature)
+    ser_user.SignatureParagraphs = stringToOutputHtml(user.Signature)
     ser_user.Signature = user.Signature
 
     return ser_user
@@ -289,7 +289,7 @@ func SerializeTopic(topic *Topic, page Page) *TopicData {
             AuthorId: message.Author.Id,
             AuthorUsername: message.Author.Username,
             AuthorUsertype: message.Author.GetUserType(),
-            SignatureF: stringToOutputHtml(message.Author.Signature),
+            SignatureParagraphs: stringToOutputHtml(message.Author.Signature),
             CreatedAt: message.CreatedAt.Format("2006-01-02 15:04:05"),
             MessageParagraphs: stringToOutputHtml(message.Message),
         }

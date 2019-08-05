@@ -22,7 +22,7 @@
         <div class="page_content_wrapper_in user_info_part">
             <h2>About</h2>
             <div id="user_info_about_form">
-                <div id="user_info_about_text">{{template "bbcode_output" .AboutF}}</div>
+                <div id="user_info_about_text">{{template "bbcode_output" .AboutParagraphs}}</div>
                 <form method="POST" action="/users/{{.Username}}/about">
                     <textarea class="form-control" name="about" placeholder="About" required>{{.About}}</textarea>
                     <button type="submit" class="btn btn-default">Save</button>
@@ -35,7 +35,7 @@
         <div class="page_content_wrapper_in user_info_part">
             <h2>Signature</h2>
             <div id="user_info_signature_form">
-                <div id="user_info_signature_text">{{template "bbcode_output" .SignatureF}}</div>
+                <div id="user_info_signature_text">{{template "bbcode_output" .SignatureParagraphs}}</div>
                 <form method="POST" action="/users/{{.Username}}/signature">
                     <textarea class="form-control" name="signature" placeholder="Signature" required>{{.Signature}}</textarea>
                     <button type="submit" class="btn btn-default">Save</button>
