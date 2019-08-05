@@ -137,7 +137,7 @@ func admin_users_change_type_get(res http.ResponseWriter, req *http.Request) {
 }
 
 func admin_users_change_password_get(res http.ResponseWriter, req *http.Request) {
-    render_change_password(res, req, true)
+    render_change_password(res, req, true, false)
 }
 
 func admin_users_change_password_post(res http.ResponseWriter, req *http.Request) {
@@ -152,7 +152,13 @@ func admin_users_change_password_post(res http.ResponseWriter, req *http.Request
         NotFound(&res, req)
     }
 
-    ChangePassword(user, form_new_password, form_new_password2)
+    err = ChangePassword(user, form_new_password, form_new_password2)
+
+    if err != nil {
+        render_change_password(res, req, false, true)
+        return
+    }
+
     Redirect(&res, req, fmt.Sprintf("/users/%s", username))
 }
 
@@ -326,7 +332,7 @@ func user_signature_post(res http.ResponseWriter, req *http.Request) {
 }
 
 func user_change_password_get(res http.ResponseWriter, req *http.Request) {
-    render_change_password(res, req, false)
+    render_change_password(res, req, false, false)
 }
 
 func user_change_password_post(res http.ResponseWriter, req *http.Request) {
@@ -343,10 +349,17 @@ func user_change_password_post(res http.ResponseWriter, req *http.Request) {
     }
 
     if !VerifyUserPass(user, form_old_password) {
-        panic("Bad password")  // TODO
+        render_change_password(res, req, false, true)
+        return
     }
 
-    ChangePassword(user, form_new_password, form_new_password2)
+    err = ChangePassword(user, form_new_password, form_new_password2)
+
+    if err != nil {
+        render_change_password(res, req, false, true)
+        return
+    }
+
     Redirect(&res, req, fmt.Sprintf("/users/%s", username))
 }
 
@@ -417,7 +430,7 @@ func check_permission(username string, user_info *UserInfo) bool {
     return username == user_info.Username || user_info.IsMod()
 }
 
-func render_change_password(res http.ResponseWriter, req *http.Request, is_for_admin bool) {
+func render_change_password(res http.ResponseWriter, req *http.Request, is_for_admin bool, render_error bool) {
     vars := mux.Vars(req)
     username := vars["username"]
 
@@ -427,7 +440,7 @@ func render_change_password(res http.ResponseWriter, req *http.Request, is_for_a
         NotFound(&res, req)
     }
 
-    data := SerializeChangePassword(user, is_for_admin)
+    data := SerializeChangePassword(user, is_for_admin, render_error)
     Render(&res, req, "change_password.html", data)
 }
 
