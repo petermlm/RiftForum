@@ -3,6 +3,7 @@ package main
 import (
     "log"
     "strings"
+    "html/template"
 
     "github.com/frustra/bbcode"
 )
@@ -156,7 +157,7 @@ type MessageData struct {
     AuthorUsertype string
     SignatureF string
     CreatedAt string
-    MessageParagraphs []string
+    MessageParagraphs []template.HTML
 }
 
 type TopicData struct {
@@ -285,11 +286,10 @@ func SerializeTopic(topic *Topic, page Page) *TopicData {
 
     for _, message := range topic.Messages {
         messages_pars := strings.Split(message.Message, "\r\n")
+        messages_pars_html := make([]template.HTML, len(messages_pars))
 
         for i, msg_par := range messages_pars {
-            log.Println(i, msg_par)
-            log.Println(bbcode_compiler.Compile(msg_par))
-            messages_pars[i] = bbcode_compiler.Compile(msg_par)
+            messages_pars_html[i] = template.HTML(bbcode_compiler.Compile(msg_par))
         }
 
         message_struct := &MessageData {
@@ -298,7 +298,7 @@ func SerializeTopic(topic *Topic, page Page) *TopicData {
             AuthorUsertype: message.Author.GetUserType(),
             SignatureF: message.Author.Signature,
             CreatedAt: message.CreatedAt.Format("2006-01-02 15:04:05"),
-            MessageParagraphs: messages_pars,
+            MessageParagraphs: messages_pars_html,
         }
 
         messages = append(messages, message_struct)
