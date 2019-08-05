@@ -112,6 +112,11 @@ func (r *RegisterData) HasKey() bool {
     return r.Key != ""
 }
 
+type ChangePasswordData struct {
+    RiftData
+    Username string
+}
+
 type InviteListData struct {
     Key string
     Status string
@@ -224,6 +229,12 @@ func SerializeRegister(key string) *RegisterData {
     ser_register := new(RegisterData)
     ser_register.Key = key
     return ser_register
+}
+
+func SerializeChangePassword(user *User) *ChangePasswordData {
+    ser_change_password := new(ChangePasswordData)
+    ser_change_password.Username = user.Username
+    return ser_change_password
 }
 
 func SerializeInvites(invites []*Invite, page Page) *InvitesListData {

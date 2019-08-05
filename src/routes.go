@@ -78,7 +78,6 @@ func register_post(res http.ResponseWriter, req *http.Request) {
     form_password2 := req.PostFormValue("password2")
 
     Register(form_invite_key, form_username, form_password, form_password2)
-
     Redirect(&res, req, "/")
 }
 
@@ -303,6 +302,37 @@ func user_signature_post(res http.ResponseWriter, req *http.Request) {
     Redirect(&res, req, redirect_path)
 }
 
+func user_change_password_get(res http.ResponseWriter, req *http.Request) {
+    vars := mux.Vars(req)
+    username := vars["username"]
+
+    user, err := GetUser(username)
+
+    if err != nil {
+        NotFound(&res, req)
+    }
+
+    data := SerializeChangePassword(user)
+    Render(&res, req, "change_password.html", data)
+}
+
+func user_change_password_post(res http.ResponseWriter, req *http.Request) {
+    vars := mux.Vars(req)
+    username := vars["username"]
+    form_old_password := req.PostFormValue("old_password")
+    form_new_password := req.PostFormValue("new_password")
+    form_new_password2 := req.PostFormValue("new_password2")
+
+    user, err := GetUser(username)
+
+    if err != nil {
+        NotFound(&res, req)
+    }
+
+    ChangePassword(user, form_old_password, form_new_password, form_new_password2)
+    Redirect(&res, req, fmt.Sprintf("/users/%s", username))
+}
+
 func save_user_info(next http.Handler) http.Handler {
     return http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
         cookie, err := req.Cookie("jwt")
@@ -388,6 +418,8 @@ func CreateRouter() *mux.Router {
     auth_routes.HandleFunc("/users/{username:[a-zA-Z0-9]+}", user_get).Methods("GET")
     auth_routes.HandleFunc("/users/{username:[a-zA-Z0-9]+}/about", user_about_post).Methods("POST")
     auth_routes.HandleFunc("/users/{username:[a-zA-Z0-9]+}/signature", user_signature_post).Methods("POST")
+    auth_routes.HandleFunc("/users/{username:[a-zA-Z0-9]+}/change_password", user_change_password_get).Methods("GET")
+    auth_routes.HandleFunc("/users/{username:[a-zA-Z0-9]+}/change_password", user_change_password_post).Methods("POST")
     auth_routes.Use(auth_middleware)
 
     admin_routes := auth_routes.PathPrefix("/admin").Subrouter()

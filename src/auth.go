@@ -40,7 +40,7 @@ func CreateToken(form_username string, form_password string) (string, error) {
         return "", errors.New("Login credentials are invalid")
     }
 
-    if !verify_user_pass(user, form_password) {
+    if !VerifyUserPass(user, form_password) {
         return "", errors.New("Login credentials are invalid")
     }
 
@@ -73,7 +73,7 @@ func VerifyToken(token_string string) *Claims {
     return token.Claims.(*Claims)
 }
 
-func verify_user_pass(user *User, password string) bool {
+func VerifyUserPass(user *User, password string) bool {
     incoming := []byte(password)
     existing := []byte(user.PasswordHash)
     err := bcrypt.CompareHashAndPassword(existing, incoming)
