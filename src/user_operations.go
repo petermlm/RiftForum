@@ -17,12 +17,8 @@ func Register(invite_key string,
     InviteSet(invite_key, Used)
 }
 
-func ChangePassword(user *User, old_password, new_password, new_password2 string) {
+func ChangePassword(user *User, new_password, new_password2 string) {
     if new_password != new_password2 {
-        return
-    }
-
-    if !VerifyUserPass(user, old_password) {
         return
     }
 

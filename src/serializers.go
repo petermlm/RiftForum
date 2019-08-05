@@ -115,6 +115,11 @@ func (r *RegisterData) HasKey() bool {
 type ChangePasswordData struct {
     RiftData
     Username string
+    is_for_admin bool
+}
+
+func (c *ChangePasswordData) IsForAdmin() bool {
+    return c.is_for_admin
 }
 
 type InviteListData struct {
@@ -231,9 +236,10 @@ func SerializeRegister(key string) *RegisterData {
     return ser_register
 }
 
-func SerializeChangePassword(user *User) *ChangePasswordData {
+func SerializeChangePassword(user *User, is_for_admin bool) *ChangePasswordData {
     ser_change_password := new(ChangePasswordData)
     ser_change_password.Username = user.Username
+    ser_change_password.is_for_admin = is_for_admin
     return ser_change_password
 }
 
