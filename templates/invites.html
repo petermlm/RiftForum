@@ -1,52 +1,52 @@
 <!DOCTYPE html>
 <html lang="en">
-{{template "head"}}
-<body>
+  {{template "head"}}
+  <body>
     {{template "header" .}}
 
     <main>
 
 
     <div class="page_title_wrapper">
-        <div class="page_title">
-            <h1>Invites</h1>
-        </div>
+      <div class="page_title">
+        <h1>Invites</h1>
+      </div>
     </div>
 
     <div class="page_content_wrapper">
-        <div class="page_content_wrapper_in">
-            <span class="invites_bulk_actions_text_subtitle">Bulk Action:</span>&nbsp;&nbsp;
-            <a href="/admin/invites_new">New Invite</a>
-            <span class="invites_bulk_actions_text_middot">&middot;</span>
-            <a href="/admin/invites_cancel_all">Cancel All</a>
-        </div>
+      <div class="page_content_wrapper_in">
+        <span class="invites_bulk_actions_text_subtitle">Bulk Action:</span>&nbsp;&nbsp;
+        <a href="/admin/invites_new">New Invite</a>
+        <span class="invites_bulk_actions_text_middot">&middot;</span>
+        <a href="/admin/invites_cancel_all">Cancel All</a>
+      </div>
     </div>
 
     <div class="page_content_wrapper">
-        <table class="page_content_wrapper_in table table-striped table-hover">
-            <thead>
-                <tr>
-                    <th class="col-sm-*">Key</th>
-                    <th class="col-sm-2">Status</th>
-                    <th class="col-sm-2">Date</th>
-                    <th class="col-sm-1 invites_list_actions_head">Actions</th>
-                </tr>
-            </thead>
-            <tbody>
-                {{range .Invites}}
-                <tr>
-                    <td class="invites_list_key">{{.Key}}</td>
-                    <td class="invites_list_status">{{.Status}}</td>
-                    <td class="invites_list_created_at">{{.CreatedAt}}</td>
-                    {{if eq .Status "Unused"}}
-                    <td class="invites_list_actions"><a href="/admin/invites_cancel/{{.Key}}">Cancel</a></td>
-                    {{else}}
-                    <td class="invites_list_actions">-</td>
-                    {{end}}
-                </tr>
-                {{end}}
-            </tbody>
-        </table>
+      <table class="page_content_wrapper_in table table-striped table-hover">
+        <thead>
+          <tr>
+            <th class="col-sm-*">Key</th>
+            <th class="col-sm-2">Status</th>
+            <th class="col-sm-2">Date</th>
+            <th class="col-sm-1 invites_list_actions_head">Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          {{range .Invites}}
+          <tr>
+            <td class="invites_list_key">{{.Key}}</td>
+            <td class="invites_list_status">{{.Status}}</td>
+            <td class="invites_list_created_at">{{.CreatedAt}}</td>
+            {{if eq .Status "Unused"}}
+            <td class="invites_list_actions"><a href="/admin/invites_cancel/{{.Key}}">Cancel</a></td>
+            {{else}}
+            <td class="invites_list_actions">-</td>
+            {{end}}
+          </tr>
+          {{end}}
+        </tbody>
+      </table>
     </div>
 
     {{template "pages" .}}
@@ -54,5 +54,5 @@
     </main>
 
     {{template "footer"}}
-</body>
+  </body>
 </html>

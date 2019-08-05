@@ -1,33 +1,33 @@
 <!DOCTYPE html>
 <html lang="en">
-{{template "head"}}
-<body>
+  {{template "head"}}
+  <body>
     {{template "header" .}}
 
     <main>
 
     <div class="page_title_wrapper">
-        <div class="page_title">
-            <h1>Register</h1>
-        </div>
+      <div class="page_title">
+        <h1>Register</h1>
+      </div>
     </div>
 
     <div class="page_content_wrapper">
-        <div class="register-container">
-            <form method="POST" action="/register">
-                <input class="form-control" name="invite_key" placeholder="Invite Key" type="text"
-                {{if .HasKey}} value="{{.Key}}"{{end}}
-                required />
-                <input class="form-control" name="username" placeholder="Username" type="text" required />
-                <input class="form-control" name="password" placeholder="Password" type="password" required />
-                <input class="form-control" name="password2" placeholder="Confirm Password" type="password" required />
-                <button class="form-control btn btn-default" type="submit">Register</button>
-            </form>
-        </div>
+      <div class="register-container">
+        <form method="POST" action="/register">
+          <input class="form-control" name="invite_key" placeholder="Invite Key" type="text"
+                                                                                 {{if .HasKey}} value="{{.Key}}"{{end}}
+                                                                                                required />
+          <input class="form-control" name="username" placeholder="Username" type="text" required />
+          <input class="form-control" name="password" placeholder="Password" type="password" required />
+          <input class="form-control" name="password2" placeholder="Confirm Password" type="password" required />
+          <button class="form-control btn btn-default" type="submit">Register</button>
+        </form>
+      </div>
     </div>
 
     </main>
 
     {{template "footer"}}
-</body>
+  </body>
 </html>
