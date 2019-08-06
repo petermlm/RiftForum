@@ -44,6 +44,14 @@
       </div>
     </div>
 
+    <div class="page_content_wrapper">
+      {{if .IsSameUser}}
+      <a href="/users/{{.Username}}/change_password">Change Password</a>
+      {{else if .IsAdmin}}
+      <a href="/admin/users/{{.Username}}/change_password">Change Password</a>
+      {{end}}
+    </div>
+
     </main>
 
     {{template "footer"}}

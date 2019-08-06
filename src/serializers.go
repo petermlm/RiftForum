@@ -101,6 +101,11 @@ type UserData struct {
     About string
     SignatureParagraphs []template.HTML
     Signature string
+    SameUser bool
+}
+
+func (u *UserData) IsSameUser() bool {
+    return u.SameUser
 }
 
 type RegisterData struct {
@@ -221,7 +226,7 @@ func SerializeUsers(users []*User, page Page) *UsersListData {
     return ser_users
 }
 
-func SerializeUser(user *User) *UserData {
+func SerializeUser(cusername string, user *User) *UserData {
     ser_user := new(UserData)
 
     ser_user.Username = user.Username
@@ -231,6 +236,7 @@ func SerializeUser(user *User) *UserData {
     ser_user.About = user.About
     ser_user.SignatureParagraphs = stringToOutputHtml(user.Signature)
     ser_user.Signature = user.Signature
+    ser_user.SameUser = cusername == user.Username
 
     return ser_user
 }

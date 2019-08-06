@@ -282,6 +282,9 @@ func users_get(res http.ResponseWriter, req *http.Request) {
 }
 
 func user_get(res http.ResponseWriter, req *http.Request) {
+    ctx := req.Context()
+    user_info := ctx.Value("UserInfo").(*UserInfo)
+
     vars := mux.Vars(req)
     username := vars["username"]
 
@@ -291,7 +294,7 @@ func user_get(res http.ResponseWriter, req *http.Request) {
         NotFound(&res, req)
     }
 
-    data := SerializeUser(user)
+    data := SerializeUser(user_info.Username, user)
     Render(&res, req, "user.html", data)
 }
 
