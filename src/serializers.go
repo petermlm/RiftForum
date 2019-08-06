@@ -345,6 +345,10 @@ func SerializeTopic(topic *Topic, page Page) *TopicData {
 }
 
 func stringToOutputHtml(str string) []template.HTML {
+    if str == "" {
+        return make([]template.HTML, 0)
+    }
+
     str_pars := strings.Split(str, "\r\n")
     str_pars_html := make([]template.HTML, len(str_pars))
 

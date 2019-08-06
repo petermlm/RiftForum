@@ -37,12 +37,12 @@
               <div class="message_list_author_message_text">
                 {{template "bbcode_output" .MessageParagraphs}}
               </div>
-              {{$length := len .SignatureParagraphs }}{{if eq $length 0}}
-              <div class="message_list_author_message_sig">
+                {{$length := len .SignatureParagraphs }}{{if eq $length 0}}
+                <div class="message_list_author_message_sig">
                 {{else}}
                 <div class="message_list_author_message_sig message_list_author_message_sig_line">
-                  {{end}}
-                  {{template "bbcode_output" .SignatureParagraphs}}
+                {{end}}
+                {{template "bbcode_output" .SignatureParagraphs}}
                 </div>
               </div>
             </div>

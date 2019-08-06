@@ -14,6 +14,8 @@ var banner_sentences = [...]string{
     "No JS",
     "Irony",
     "Підтримує UTF-8",
+    "User Friendly",
+    "Dove-à-Quim",
 }
 
 func set_banner_sentence() string {
