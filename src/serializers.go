@@ -32,6 +32,7 @@ func (u *UserInfo) IsMod() bool {
 type RiftDataI interface {
     SetUserInfo(UserInfo *UserInfo)
     SetPath(path string)
+    SetBannerSentence(sentence string)
     HasUser() bool
     IsAdmin() bool
 }
@@ -39,6 +40,7 @@ type RiftDataI interface {
 type RiftData struct {
     UserInfo *UserInfo
     Path string
+    BannerSentence string
 }
 
 func (r *RiftData) SetUserInfo(UserInfo *UserInfo) {
@@ -47,6 +49,10 @@ func (r *RiftData) SetUserInfo(UserInfo *UserInfo) {
 
 func (r *RiftData) SetPath(path string) {
     r.Path = path
+}
+
+func (r *RiftData) SetBannerSentence(sentence string) {
+    r.BannerSentence = sentence
 }
 
 func (r *RiftData) HasUser() bool {
