@@ -20,6 +20,7 @@
             <div class="col-sm-2 message_list_author_info">
               <div class="message_list_author_info_name">
                 <a href="/users/{{.AuthorUsername}}">{{.AuthorUsername}}</a>
+                {{template "banned" .IsAuthorBanned}}
               </div>
               <div class="message_list_author_info_type">{{.AuthorUsertype}}</div>
               <div class="message_list_author_info_date">

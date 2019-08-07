@@ -8,7 +8,7 @@
 
     <div class="page_title_wrapper">
       <div class="page_title">
-        <h1>{{.Username}}{{if .IsBanned}} <span>Banned</span>{{end}}</h1>
+        <h1>{{.Username}}{{template "banned" .IsBanned}}</h1>
       </div>
     </div>
 

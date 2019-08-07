@@ -88,6 +88,11 @@ type UserListData struct {
     Username string
     Usertype string
     CreatedAt string
+    Banned bool
+}
+
+func (u *UserListData) IsBanned() bool {
+    return u.Banned
 }
 
 type UsersListData struct {
@@ -186,9 +191,14 @@ type MessageData struct {
     AuthorId uint
     AuthorUsername string
     AuthorUsertype string
+    AuthorBanned bool
     SignatureParagraphs []template.HTML
     CreatedAt string
     MessageParagraphs []template.HTML
+}
+
+func (m *MessageData) IsAuthorBanned() bool {
+    return m.AuthorBanned
 }
 
 type TopicData struct {
@@ -229,6 +239,7 @@ func SerializeUsers(users []*User, page Page) *UsersListData {
             Username: user.Username,
             Usertype: user.GetUserType(),
             CreatedAt: user.CreatedAt.Format("2006-01-02 15:04:05"),
+            Banned: user.Banned,
         }
 
         ser_users.Users = append(ser_users.Users, ser_user)
@@ -330,6 +341,7 @@ func SerializeTopic(topic *Topic, page Page) *TopicData {
             AuthorId: message.Author.Id,
             AuthorUsername: message.Author.Username,
             AuthorUsertype: message.Author.GetUserType(),
+            AuthorBanned: message.Author.Banned,
             SignatureParagraphs: stringToOutputHtml(message.Author.Signature),
             CreatedAt: message.CreatedAt.Format("2006-01-02 15:04:05"),
             MessageParagraphs: stringToOutputHtml(message.Message),

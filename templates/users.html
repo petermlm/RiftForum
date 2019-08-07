@@ -30,37 +30,37 @@
         </thead>
         <tbody>
           {{range .Users}}
-          {{if eq .Usertype "Administrator"}}
-          <tr class="danger">
+            {{if eq .Usertype "Administrator"}}
+            <tr class="warning">
             {{else if eq .Usertype "Moderator"}}
             <tr class="info">
-              {{else}}
-              <tr>
-                {{end}}
+            {{else}}
+            <tr>
+            {{end}}
+              <td>
+                <a href="/users/{{.Username}}">{{.Username}}</a>
+                {{template "banned" .IsBanned}}
+              </td>
+              <td class="users_list_user_type">
+                {{.Usertype}}
+              </td>
+              <td class="users_list_creation_date">
+                {{.CreatedAt}}
+              </td>
 
-                <td>
-                  <a href="/users/{{.Username}}">{{.Username}}</a>
-                </td>
-                <td class="users_list_user_type">
-                  {{.Usertype}}
-                </td>
-                <td class="users_list_creation_date">
-                  {{.CreatedAt}}
-                </td>
-
-                {{if $.IsAdmin}}
-                <td class="users_list_change_type">
-                  {{if eq .Usertype "Administrator"}}
-                  -
-                  {{else if eq .Usertype "Moderator"}}
-                  <a href="/admin/users/{{.Username}}/change_type?new_type=basic">Make Basic</a>
-                  {{else}}
-                  <a href="/admin/users/{{.Username}}/change_type?new_type=moderator">Make Moderator</a>
-                  {{end}}
-                </td>
+              {{if $.IsAdmin}}
+              <td class="users_list_change_type">
+                {{if eq .Usertype "Administrator"}}
+                -
+                {{else if eq .Usertype "Moderator"}}
+                <a href="/admin/users/{{.Username}}/change_type?new_type=basic">Make Basic</a>
+                {{else}}
+                <a href="/admin/users/{{.Username}}/change_type?new_type=moderator">Make Moderator</a>
                 {{end}}
-              </tr>
+              </td>
               {{end}}
+            </tr>
+          {{end}}
         </tbody>
       </table>
     </div>
