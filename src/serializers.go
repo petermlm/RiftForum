@@ -107,7 +107,12 @@ type UserData struct {
     About string
     SignatureParagraphs []template.HTML
     Signature string
+    Banned bool
     SameUser bool
+}
+
+func (u *UserData) IsBanned() bool {
+    return u.Banned
 }
 
 func (u *UserData) IsSameUser() bool {
@@ -242,6 +247,7 @@ func SerializeUser(cusername string, user *User) *UserData {
     ser_user.About = user.About
     ser_user.SignatureParagraphs = stringToOutputHtml(user.Signature)
     ser_user.Signature = user.Signature
+    ser_user.Banned = user.Banned
     ser_user.SameUser = cusername == user.Username
 
     return ser_user

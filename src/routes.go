@@ -150,6 +150,7 @@ func admin_users_change_password_post(res http.ResponseWriter, req *http.Request
 
     if err != nil {
         NotFound(&res, req)
+        return
     }
 
     err = ChangePassword(user, form_new_password, form_new_password2)
@@ -162,7 +163,28 @@ func admin_users_change_password_post(res http.ResponseWriter, req *http.Request
     Redirect(&res, req, fmt.Sprintf("/users/%s", username))
 }
 
-func admin_routes(res http.ResponseWriter, req *http.Request) {
+func admin_users_ban_get(res http.ResponseWriter, req *http.Request) {
+    user, err := get_user_from_url(res, req)
+
+    if err != nil {
+        NotFound(&res, req)
+        return
+    }
+
+    BanUser(user)
+    Redirect(&res, req, fmt.Sprintf("/users/%s", user.Username))
+}
+
+func admin_users_unban_get(res http.ResponseWriter, req *http.Request) {
+    user, err := get_user_from_url(res, req)
+
+    if err != nil {
+        NotFound(&res, req)
+        return
+    }
+
+    UnbanUser(user)
+    Redirect(&res, req, fmt.Sprintf("/users/%s", user.Username))
 }
 
 func admin_bots_get(res http.ResponseWriter, req *http.Request) {
@@ -292,6 +314,7 @@ func user_get(res http.ResponseWriter, req *http.Request) {
 
     if err != nil {
         NotFound(&res, req)
+        return
     }
 
     data := SerializeUser(user_info.Username, user)
@@ -349,6 +372,7 @@ func user_change_password_post(res http.ResponseWriter, req *http.Request) {
 
     if err != nil {
         NotFound(&res, req)
+        return
     }
 
     if !VerifyUserPass(user, form_old_password) {
@@ -429,6 +453,12 @@ func admin_middleware(next http.Handler) http.Handler {
     })
 }
 
+func get_user_from_url(res http.ResponseWriter, req *http.Request) (*User, error) {
+    vars := mux.Vars(req)
+    username := vars["username"]
+    return GetUser(username)
+}
+
 func check_permission(username string, user_info *UserInfo) bool {
     return username == user_info.Username || user_info.IsMod()
 }
@@ -441,6 +471,7 @@ func render_change_password(res http.ResponseWriter, req *http.Request, is_for_a
 
     if err != nil {
         NotFound(&res, req)
+        return
     }
 
     data := SerializeChangePassword(user, is_for_admin, render_error)
@@ -478,6 +509,8 @@ func CreateRouter() *mux.Router {
     admin_routes.HandleFunc("/users/{username:[a-zA-Z0-9]+}/change_type", admin_users_change_type_get).Methods("GET")
     admin_routes.HandleFunc("/users/{username:[a-zA-Z0-9]+}/change_password", admin_users_change_password_get).Methods("GET")
     admin_routes.HandleFunc("/users/{username:[a-zA-Z0-9]+}/change_password", admin_users_change_password_post).Methods("POST")
+    admin_routes.HandleFunc("/users/{username:[a-zA-Z0-9]+}/ban", admin_users_ban_get).Methods("GET")
+    admin_routes.HandleFunc("/users/{username:[a-zA-Z0-9]+}/unban", admin_users_unban_get).Methods("GET")
     admin_routes.HandleFunc("/bots", admin_bots_get).Methods("GET")
     admin_routes.HandleFunc("/bots2", admin_bots2_get).Methods("GET")
     admin_routes.Use(admin_middleware)
