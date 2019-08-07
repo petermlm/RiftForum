@@ -55,13 +55,12 @@ func login_post(res http.ResponseWriter, req *http.Request) {
     Redirect(&res, req, next_page)
 }
 
-func logout(res http.ResponseWriter, req *http.Request) {
+func logout_post(res http.ResponseWriter, req *http.Request) {
     cookie := http.Cookie{
         Name: "jwt",
         Value: "",
     }
     http.SetCookie(res, &cookie)
-
     Redirect(&res, req, "/")
 }
 
@@ -150,6 +149,7 @@ func admin_users_change_password_post(res http.ResponseWriter, req *http.Request
 
     if err != nil {
         NotFound(&res, req)
+        return
     }
 
     err = ChangePassword(user, form_new_password, form_new_password2)
@@ -162,7 +162,28 @@ func admin_users_change_password_post(res http.ResponseWriter, req *http.Request
     Redirect(&res, req, fmt.Sprintf("/users/%s", username))
 }
 
-func admin_routes(res http.ResponseWriter, req *http.Request) {
+func admin_users_ban_get(res http.ResponseWriter, req *http.Request) {
+    user, err := get_user_from_url(res, req)
+
+    if err != nil {
+        NotFound(&res, req)
+        return
+    }
+
+    BanUser(user)
+    Redirect(&res, req, fmt.Sprintf("/users/%s", user.Username))
+}
+
+func admin_users_unban_get(res http.ResponseWriter, req *http.Request) {
+    user, err := get_user_from_url(res, req)
+
+    if err != nil {
+        NotFound(&res, req)
+        return
+    }
+
+    UnbanUser(user)
+    Redirect(&res, req, fmt.Sprintf("/users/%s", user.Username))
 }
 
 func admin_bots_get(res http.ResponseWriter, req *http.Request) {
@@ -289,6 +310,7 @@ func user_get(res http.ResponseWriter, req *http.Request) {
 
     if err != nil {
         NotFound(&res, req)
+        return
     }
 
     data := SerializeUser(user_info.Username, user)
@@ -346,6 +368,7 @@ func user_change_password_post(res http.ResponseWriter, req *http.Request) {
 
     if err != nil {
         NotFound(&res, req)
+        return
     }
 
     if !VerifyUserPass(user, form_old_password) {
@@ -373,13 +396,17 @@ func save_user_info(next http.Handler) http.Handler {
             claims := VerifyToken(cookie.Value)
 
             if claims != nil {
-                user_info := &UserInfo {
-                    Username: claims.Username,
-                    Usertype: claims.Usertype,
-                }
+                user, _ := GetUser(claims.Username)
 
-                ctx = context.WithValue(ctx, "UserInfo", user_info)
-                authenticated = true
+                if !user.Banned {
+                    user_info := &UserInfo {
+                        Username: claims.Username,
+                        Usertype: claims.Usertype,
+                    }
+
+                    ctx = context.WithValue(ctx, "UserInfo", user_info)
+                    authenticated = true
+                }
             }
         }
 
@@ -426,6 +453,12 @@ func admin_middleware(next http.Handler) http.Handler {
     })
 }
 
+func get_user_from_url(res http.ResponseWriter, req *http.Request) (*User, error) {
+    vars := mux.Vars(req)
+    username := vars["username"]
+    return GetUser(username)
+}
+
 func check_permission(username string, user_info *UserInfo) bool {
     return username == user_info.Username || user_info.IsMod()
 }
@@ -444,6 +477,7 @@ func render_change_password(
 
     if err != nil {
         NotFound(&res, req)
+        return
     }
 
     data := SerializeChangePassword(user, is_for_admin, old_password_wrong, new_passwords_not_equal)
@@ -455,7 +489,7 @@ func CreateRouter() *mux.Router {
     router.HandleFunc("/", index).Methods("GET")
     router.HandleFunc("/login", login_get).Methods("GET")
     router.HandleFunc("/login", login_post).Methods("POST")
-    router.HandleFunc("/logout", logout).Methods("POST")
+    router.HandleFunc("/logout", logout_post).Methods("POST")
     router.HandleFunc("/register", register_get).Methods("GET")
     router.HandleFunc("/register", register_post).Methods("POST")
     router.Use(save_user_info)
@@ -481,6 +515,8 @@ func CreateRouter() *mux.Router {
     admin_routes.HandleFunc("/users/{username:[a-zA-Z0-9]+}/change_type", admin_users_change_type_get).Methods("GET")
     admin_routes.HandleFunc("/users/{username:[a-zA-Z0-9]+}/change_password", admin_users_change_password_get).Methods("GET")
     admin_routes.HandleFunc("/users/{username:[a-zA-Z0-9]+}/change_password", admin_users_change_password_post).Methods("POST")
+    admin_routes.HandleFunc("/users/{username:[a-zA-Z0-9]+}/ban", admin_users_ban_get).Methods("GET")
+    admin_routes.HandleFunc("/users/{username:[a-zA-Z0-9]+}/unban", admin_users_unban_get).Methods("GET")
     admin_routes.HandleFunc("/bots", admin_bots_get).Methods("GET")
     admin_routes.HandleFunc("/bots2", admin_bots2_get).Methods("GET")
     admin_routes.Use(admin_middleware)

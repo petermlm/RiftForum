@@ -107,6 +107,20 @@ func SaveUser(user *User) {
     }
 }
 
+func BanUser(user *User) {
+    if user.Usertype == Administrator {
+        panic("Administrator can't be banned")
+    }
+
+    user.Banned = true
+    db.Update(user)
+}
+
+func UnbanUser(user *User) {
+    user.Banned = false
+    db.Update(user)
+}
+
 func GetInvites(page Page) []*Invite {
     db := GetDBCon()
     var invites []*Invite

@@ -8,7 +8,7 @@
 
     <div class="page_title_wrapper">
       <div class="page_title">
-        <h1>{{.Username}}</h1>
+        <h1>{{.Username}}{{template "banned" .IsBanned}}</h1>
       </div>
     </div>
 
@@ -49,6 +49,16 @@
       <a href="/users/{{.Username}}/change_password">Change Password</a>
       {{else if .IsAdmin}}
       <a href="/admin/users/{{.Username}}/change_password">Change Password</a>
+      {{end}}
+    </div>
+
+    <div class="page_content_wrapper">
+      {{if and .IsAdmin (eq .IsSameUser false)}}
+        {{if .IsBanned}}
+          <a href="/admin/users/{{.Username}}/unban">Unban User</a>
+        {{else}}
+          <a href="/admin/users/{{.Username}}/ban">Ban User</a>
+        {{end}}
       {{end}}
     </div>
 

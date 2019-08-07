@@ -34,6 +34,7 @@ type User struct {
     Signature string `sql:"default:''`
     About string `sql:"default:''`
     Usertype UserTypes `sql:",notnull"`
+    Banned bool `sql:",defautl:false"`
 
     Topics []*Topic
     Messages []*Message
