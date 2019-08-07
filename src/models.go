@@ -156,11 +156,13 @@ func NewMessage(user *User, topic *Topic, message_text string) uint {
         TopicId: topic.Id,
     }
 
-    err = db.Insert(message)
+    err := db.Insert(message)
 
     if err != nil {
         panic(err)
     }
+
+    return message.Id
 }
 
 /* ============================================================================
