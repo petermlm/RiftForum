@@ -20,6 +20,10 @@ footer {
   cursor: default;
 }
 
+.error_label {
+  color: #ff0000;
+}
+
 /* ============================================================================
  * Nav
  * ============================================================================
@@ -358,6 +362,10 @@ nav {
 .register-container form input,
 .change_password-container form input {
   margin-bottom: 20px;
+}
+
+.change_password_error {
+  margin-top: 16px;
 }
 
 /* ============================================================================
