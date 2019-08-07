@@ -55,13 +55,12 @@ func login_post(res http.ResponseWriter, req *http.Request) {
     Redirect(&res, req, next_page)
 }
 
-func logout(res http.ResponseWriter, req *http.Request) {
+func logout_post(res http.ResponseWriter, req *http.Request) {
     cookie := http.Cookie{
         Name: "jwt",
         Value: "",
     }
     http.SetCookie(res, &cookie)
-
     Redirect(&res, req, "/")
 }
 
@@ -400,13 +399,17 @@ func save_user_info(next http.Handler) http.Handler {
             claims := VerifyToken(cookie.Value)
 
             if claims != nil {
-                user_info := &UserInfo {
-                    Username: claims.Username,
-                    Usertype: claims.Usertype,
-                }
+                user, _ := GetUser(claims.Username)
 
-                ctx = context.WithValue(ctx, "UserInfo", user_info)
-                authenticated = true
+                if !user.Banned {
+                    user_info := &UserInfo {
+                        Username: claims.Username,
+                        Usertype: claims.Usertype,
+                    }
+
+                    ctx = context.WithValue(ctx, "UserInfo", user_info)
+                    authenticated = true
+                }
             }
         }
 
@@ -483,7 +486,7 @@ func CreateRouter() *mux.Router {
     router.HandleFunc("/", index).Methods("GET")
     router.HandleFunc("/login", login_get).Methods("GET")
     router.HandleFunc("/login", login_post).Methods("POST")
-    router.HandleFunc("/logout", logout).Methods("POST")
+    router.HandleFunc("/logout", logout_post).Methods("POST")
     router.HandleFunc("/register", register_get).Methods("GET")
     router.HandleFunc("/register", register_post).Methods("POST")
     router.Use(save_user_info)
