@@ -190,6 +190,11 @@ func topics_post(res http.ResponseWriter, req *http.Request) {
     form_title = strings.ReplaceAll(form_title, "\r\n", " ")
     form_message = strings.TrimSpace(form_message)
 
+    if len(form_title) == 0 || len(form_message) == 0 {
+        OperationNotAllowed(&res, req)
+        return
+    }
+
     // Author
     user := new(User)
     ctx := req.Context()
@@ -231,6 +236,11 @@ func topic_post(res http.ResponseWriter, req *http.Request) {
     db := GetDBCon()
     form_message := req.PostFormValue("message")
 
+    if len(form_message) == 0 {
+        OperationNotAllowed(&res, req)
+        return
+    }
+
     // Author
     user := new(User)
     ctx := req.Context()
@@ -253,22 +263,9 @@ func topic_post(res http.ResponseWriter, req *http.Request) {
     topic_id := uint(topic_id_parsed)
     page := PageDefault()
     topic := GetTopic(topic_id, page)
-    UpdateTopic(topic)
 
     // Message
-    message := &Message{
-        Message: form_message,
-        Author: user,
-        AuthorId: user.Id,
-        Topic: topic,
-        TopicId: topic.Id,
-    }
-
-    err = db.Insert(message)
-
-    if err != nil {
-        panic(err)
-    }
+    NewMessage(user, topic, form_message)
 
     redirect_path := fmt.Sprintf("/topics/%d", topic_id)
     Redirect(&res, req, redirect_path)

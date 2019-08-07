@@ -145,6 +145,26 @@ type Message struct {
     Topic *Topic `sql:",notnull"`
 }
 
+func NewMessage(user *User, topic *Topic, message_text string) uint {
+    UpdateTopic(topic)
+
+    message := &Message{
+        Message: message_text,
+        Author: user,
+        AuthorId: user.Id,
+        Topic: topic,
+        TopicId: topic.Id,
+    }
+
+    err := db.Insert(message)
+
+    if err != nil {
+        panic(err)
+    }
+
+    return message.Id
+}
+
 /* ============================================================================
  * Invite
  * ============================================================================
