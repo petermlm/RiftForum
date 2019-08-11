@@ -16,6 +16,8 @@ var banner_sentences = [...]string{
     "Підтримує UTF-8",
     "User Friendly",
     "Dove-à-Quim",
+    "Pen Pineapple Apple Pen",
+    "Only on Pay-Pre-View",
 }
 
 func set_banner_sentence() string {
