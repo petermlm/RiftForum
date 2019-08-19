@@ -49,21 +49,26 @@
     </div>
 
     <div class="page_content_wrapper">
-      {{if .IsSameUser}}
-      <a href="/users/{{.Username}}/change_password">Change Password</a>
-      {{else if .IsAdmin}}
-      <a href="/admin/users/{{.Username}}/change_password">Change Password</a>
-      {{end}}
-    </div>
-
-    <div class="page_content_wrapper">
-      {{if and .IsAdmin (eq .IsSameUser false)}}
-        {{if .IsBanned}}
-          <a href="/admin/users/{{.Username}}/unban">Unban User</a>
-        {{else}}
-          <a href="/admin/users/{{.Username}}/ban">Ban User</a>
+      <div class="page_content_wrapper_in user_info_part">
+        <h2>Other Settings</h2>
+        <ul>
+        {{if .IsSameUser}}
+        <li><a href="/users/{{.Username}}/change_password">Change Password</a></li>
+        {{else if .IsAdmin}}
+        <li><a href="/admin/users/{{.Username}}/change_password">Change Password</a></li>
         {{end}}
-      {{end}}
+
+        {{if and .IsAdmin (eq .IsSameUser false)}}
+          <li>
+          {{if .IsBanned}}
+            <a href="/admin/users/{{.Username}}/unban">Unban User</a>
+          {{else}}
+            <a href="/admin/users/{{.Username}}/ban">Ban User</a>
+          {{end}}
+          </li>
+        {{end}}
+        </ul>
+      </div>
     </div>
 
     </main>
