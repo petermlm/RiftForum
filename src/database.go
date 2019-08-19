@@ -74,27 +74,7 @@ func createSchema() {
 }
 
 func createDefaultData() {
-    var err error
-
-    // Users
-    user_admin := NewUser("admin", Administrator, "pl")
-    err = db.Insert(user_admin)
-
-    if err != nil {
-        RiftForumPanic("Can't create admin", err)
-    }
-
-    user_basic := NewUser("petermlm", Moderator, "pl")
-    err = db.Insert(user_basic)
-
-    if err != nil {
-        RiftForumPanic("Can't create petermlm", err)
-    }
-
-    rift_bot := NewUser("RiftBot", Basic, "pl")
-    err = db.Insert(rift_bot)
-
-    if err != nil {
-        RiftForumPanic("Can't create RiftBot", err)
-    }
+    NewUser("admin", Administrator, "pl")
+    NewUser("petermlm", Moderator, "pl")
+    NewUser("RiftBot", Basic, "pl")
 }

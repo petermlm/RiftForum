@@ -14,8 +14,7 @@ func Register(invite_key string,
         return errors.New("Invite doesn't exist")
     }
 
-    new_user := NewUser(username, Basic, password)
-    SaveUser(new_user)
+    NewUser(username, Basic, password)
     InviteSet(invite_key, Used)
 
     return nil

@@ -64,7 +64,7 @@ func NewUser(username string, user_type UserTypes, password string) *User {
         PasswordHash: hash,
         Usertype: user_type,
     }
-
+    db.Insert(user)
     return user
 }
 
