@@ -1,11 +1,13 @@
 package main
 
 import (
+    "fmt"
     "time"
     "log"
 
     "github.com/go-pg/pg"
-    "github.com/go-pg/pg/orm"
+    _ "github.com/go-pg/pg/orm"
+    "github.com/go-pg/migrations"
 )
 
 var db *pg.DB
@@ -34,11 +36,28 @@ func InitDB() {
         panic("Can't connect with database")
     }
 
-    // Create schema and default data
-    createSchema()
-    createDefaultData()
-
     log.Println("Database connection established")
+}
+
+func MigrateCmd(commands []string) {
+    oldVersion, newVersion, err := migrations.Run(db, commands...)
+    if err != nil {
+        panic(err.Error())
+    }
+    if newVersion != oldVersion {
+        fmt.Printf("migrated from version %d to %d\n", oldVersion, newVersion)
+    } else {
+        fmt.Printf("version is %d\n", oldVersion)
+    }
+}
+
+func MigrationsTableExsits() bool {
+    res, _ := db.Exec(`
+           SELECT 1
+           FROM   information_schema.tables
+           WHERE  table_name = 'gopg_migrations';
+    `)
+    return res.RowsReturned() > 0
 }
 
 func CloseDB() {
@@ -54,27 +73,4 @@ func isDbConGood() bool {
     var n int
     _, err := db.QueryOne(pg.Scan(&n), "SELECT 1")
     return err == nil
-}
-
-func createSchema() {
-    for _, model := range []interface{}{
-        (*User)(nil),
-        (*Topic)(nil),
-        (*Message)(nil),
-        (*Invite)(nil),
-    } {
-        err := db.CreateTable(model, &orm.CreateTableOptions{
-            Temp: DatabaseTemp,
-        })
-
-        if err != nil {
-            panic("Can't create database schema")
-        }
-    }
-}
-
-func createDefaultData() {
-    NewUser("admin", Administrator, "pl")
-    NewUser("petermlm", Moderator, "pl")
-    NewUser("RiftBot", Basic, "pl")
 }

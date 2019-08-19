@@ -10,6 +10,8 @@ services:
       - postgres
     volumes:
       - ../:/go/src/app
+    user: "${UID}:${GID}"
+    entrypoint: docker/entry-dev.sh
   postgres:
     image: postgres:9.6
     environment:

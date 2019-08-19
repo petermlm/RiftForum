@@ -35,9 +35,6 @@ type User struct {
     About string `sql:"default:''`
     Usertype UserTypes `sql:",notnull"`
     Banned bool `sql:",defautl:false"`
-
-    Topics []*Topic
-    Messages []*Message
 }
 
 func GenerateHash(password string) (string, error) {
