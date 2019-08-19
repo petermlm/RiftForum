@@ -1,7 +1,7 @@
 package main
 
 const (
-    // Debug Mode
+    // Debug
     DebugMode = true
 
     // Server settings
@@ -16,8 +16,6 @@ const (
     DatabaseDatabase = "riftforum_db"
     DatabaseUser = "riftforum_user"
     DatabasePassword = "riftforum_pass"
-
-    DatabaseTemp = true
 
     // Templating settings
     TemplatesDir = "templates"

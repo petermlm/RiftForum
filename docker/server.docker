@@ -1,15 +1,22 @@
 FROM golang:1.12
 
-
+ENV GO111MODULE=on
 WORKDIR /go/src/app
-COPY . .
 
-RUN go get -d -v ./...
-RUN go install -v ./...
-
+# Install air
+RUN apt install -y curl
 RUN mkdir -p /air_run
-RUN apt install curl
 RUN curl -fLo /air_run/air https://raw.githubusercontent.com/cosmtrek/air/master/bin/linux/air
 RUN chmod +x /air_run/air
 
-CMD ["/air_run/air", "-c", "air.conf"]
+# Create user
+RUN useradd -m -s /bin/bash dockeruser
+USER dockeruser
+
+# Prepare packages
+COPY go.mod .
+COPY go.sum .
+RUN go mod download
+
+# Copy rest of code base
+COPY . .
