@@ -173,6 +173,11 @@ type InviteNewData struct {
     KeyUrl string
 }
 
+type BotsData struct {
+    RiftData
+    HearthBeats map[string]bool
+}
+
 type TopicListData struct {
     TopicId uint
     Title string
@@ -314,6 +319,12 @@ func SerializeInviteNew(new_invite *Invite) *InviteNewData {
         Key: new_invite.Key,
         KeyUrl: new_invite.GetKeyUrl(),
     }
+}
+
+func SerializeBots(hearthbeats map[string]bool) *BotsData {
+    ser_bots := new(BotsData)
+    ser_bots.HearthBeats = hearthbeats
+    return ser_bots
 }
 
 func SerializeTopics(topics []*Topic, page Page) *TopicsListData {

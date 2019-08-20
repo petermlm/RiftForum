@@ -17,6 +17,13 @@ const (
     DatabaseUser = "riftforum_user"
     DatabasePassword = "riftforum_pass"
 
+    // Redis settings
+    RedisAddr = "redis:6379"
+
+    // Bot settings
+    BotHearthBeatExpire = 60 // Seconds
+    BotHearthBeatDead = 60 // Seconds
+
     // Templating settings
     TemplatesDir = "templates"
 

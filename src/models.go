@@ -93,7 +93,7 @@ type Topic struct {
     Messages []*Message
 }
 
-func NewTopic(user *User, title_text string, message_text string) uint {
+func NewTopic(user *User, title_text string, message_text string) *Topic {
     var err error
 
     // Topic
@@ -124,7 +124,8 @@ func NewTopic(user *User, title_text string, message_text string) uint {
         panic(err)
     }
 
-    return topic.Id
+    SendNewTopic(topic)
+    return topic
 }
 
 /* ============================================================================
@@ -143,7 +144,7 @@ type Message struct {
     Topic *Topic `sql:",notnull"`
 }
 
-func NewMessage(user *User, topic *Topic, message_text string) uint {
+func NewMessage(user *User, topic *Topic, message_text string) *Message {
     UpdateTopic(topic)
 
     message := &Message{
@@ -160,7 +161,8 @@ func NewMessage(user *User, topic *Topic, message_text string) uint {
         panic(err)
     }
 
-    return message.Id
+    SendNewMessage(message)
+    return message
 }
 
 /* ============================================================================
