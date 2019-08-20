@@ -13,6 +13,7 @@ var bbcode_compiler bbcode.Compiler
 func InitSers() {
     // Booleans: autoCloseTags, ignoreUnmatchedClosingTags
     bbcode_compiler = bbcode.NewCompiler(true, true)
+    addBBCodeLists(&bbcode_compiler)
     log.Println("Serializers initialized")
 }
 
@@ -389,11 +390,12 @@ func stringToOutputHtml(str string) []template.HTML {
         return make([]template.HTML, 0)
     }
 
-    str_pars := strings.Split(str, "\r\n")
+    str_bbcoded := bbcode_compiler.Compile(str)
+    str_pars := strings.Split(str_bbcoded, "\r\n")
     str_pars_html := make([]template.HTML, len(str_pars))
 
     for i, str_par := range str_pars {
-        str_pars_html[i] = template.HTML(bbcode_compiler.Compile(str_par))
+        str_pars_html[i] = template.HTML(str_par)
     }
 
     return str_pars_html

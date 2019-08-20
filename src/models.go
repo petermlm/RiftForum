@@ -197,13 +197,6 @@ func (i Invite) GetInviteStatus() string {
 }
 
 func (i Invite) GetKeyUrl() string {
-    var protocol string
-
-    if Https {
-        protocol = "https"
-    } else {
-        protocol = "http"
-    }
-
-    return fmt.Sprintf("%s://%s/register?key=%s", protocol, BaseUrl, i.Key)
+    base_url := MakeBaseUrl()
+    return fmt.Sprintf("%s/register?key=%s", base_url, i.Key)
 }
