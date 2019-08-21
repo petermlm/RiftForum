@@ -176,7 +176,7 @@ type InviteNewData struct {
 
 type BotsData struct {
     RiftData
-    HearthBeats map[string]bool
+    HearthBeatStatus map[string]bool
 }
 
 type TopicListData struct {
@@ -322,9 +322,9 @@ func SerializeInviteNew(new_invite *Invite) *InviteNewData {
     }
 }
 
-func SerializeBots(hearthbeats map[string]bool) *BotsData {
+func SerializeBots(hearthbeat_status map[string]bool) *BotsData {
     ser_bots := new(BotsData)
-    ser_bots.HearthBeats = hearthbeats
+    ser_bots.HearthBeatStatus = hearthbeat_status
     return ser_bots
 }
 

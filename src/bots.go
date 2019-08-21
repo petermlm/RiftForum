@@ -33,8 +33,8 @@ func InitBots() {
     new_topics_ch = make(chan *Topic, 10)
     new_messages_ch = make(chan *Message, 10)
     // go ExpAnswerBot()
-    go GreeterBot()
-    go RedditAnswerBot()
+    go GreeterBot(new_users_ch)
+    go RedditAnswerBot(new_messages_ch)
 
     bots_initialized = true
     fmt.Println("Bots Started")
@@ -58,30 +58,32 @@ func SendNewMessage(message *Message) {
     }
 }
 
-func GetHearthBeats() map[string]bool {
+func GetHearthBeatStatus() map[string]bool {
     ret := make(map[string]bool)
 
-    key_name := redis_key_name("ExpAnswerBot")
-    val, _ := redis_client.Get(key_name).Result()
+    key_pattern := redis_keys_pattern()
+    keys, err := redis_client.Keys(key_pattern).Result()
 
-    valint, err := strconv.ParseInt(val, 10, 64)
-
-    if err == nil {
-        hearthbeat_interval := time.Now().Unix() - valint
-        dead_interval := int64(BotHearthBeatDead * time.Second)
-        fmt.Println(hearthbeat_interval)
-        fmt.Println(dead_interval)
-        ret[key_name] = hearthbeat_interval < dead_interval
-    } else {
-        ret[key_name] = false
+    if err != nil {
+        return ret
     }
 
-    ret["lol"] = true
+    for i := range keys {
+        key := keys[i]
+        bot_name := get_bot_name_from_key(key)
+        val, err := redis_client.Get(key).Result()
+
+        if err != nil {
+            ret[bot_name] = false
+        } else {
+            ret[bot_name] = hearthbeat_is_alive(val)
+        }
+    }
 
     return ret
 }
 
-func GreeterBot() {
+func GreeterBot(new_users_ch chan *User) {
     greeter_template := `[center][b][color=red]Welcome to RiftForum, %s![/color][/b][/center]
     Thank you for Registering! You are welcome to [i][color=blue]post anything[/color][/i]. [b]BBCode[/b] can be used to style messages, and your signature can be edited in the [url=%s]user details page[/url]. User types are:
     [list]
@@ -109,7 +111,7 @@ func GreeterBot() {
     }
 }
 
-func RedditAnswerBot() {
+func RedditAnswerBot(new_messages_ch chan *Message) {
     bot_name := "RedditAnswerBot"
     user, _ := GetUser(bot_name)
     re := regexp.MustCompile(`\/r\/[a-zA-Z0-9_]+`)
@@ -167,10 +169,31 @@ func ExpAnswerBot() {
 }
 
 func redis_key_name(bot_name string) string {
-    return fmt.Sprintf("%s_hearthbeat", bot_name)
+    return fmt.Sprintf("Hearthbeat_%s", bot_name)
+}
+
+func redis_keys_pattern() string {
+    return "Hearthbeat_*"
 }
 
 func beat_hearth(bot_name string) {
     key_name := redis_key_name(bot_name)
     redis_client.Set(key_name, time.Now().Unix(), BotHearthBeatExpire * time.Second)
+}
+
+func get_bot_name_from_key(key string) string {
+    prefix_len := len(redis_keys_pattern())
+    return key[prefix_len - 1:]
+}
+
+func hearthbeat_is_alive(val string) bool {
+    valint, err := strconv.ParseInt(val, 10, 64)
+
+    if err != nil {
+        return false
+    }
+
+    hearthbeat_interval := time.Now().Unix() - valint
+    dead_interval := int64(BotHearthBeatDead * time.Second)
+    return hearthbeat_interval < dead_interval
 }

@@ -13,10 +13,25 @@
     </div>
 
     <div class="page_content_wrapper">
-      Bots...
-      {{range $index, $element := .HearthBeats}}
-      ||{{$index}}-{{$element}}||
-      {{end}}
+      <table class="page_content_wrapper_in table table-hover">
+        <thead>
+          <tr>
+            <th class="col-sm-6">Botname</th>
+            <th class="col-sm-6">Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          {{range $index, $element := .HearthBeatStatus}}
+          <tr><td>{{$index}}</td><td><span
+            {{if $element}}
+              class="text-success">Alive
+            {{else}}
+              class="text-danger">Dead
+            {{end}}
+          </span></td></tr>
+          {{end}}
+        </tbody>
+      </table>
     </div>
 
     </main>

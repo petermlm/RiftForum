@@ -386,8 +386,8 @@ func user_change_password_post(res http.ResponseWriter, req *http.Request) {
 }
 
 func user_bots_get(res http.ResponseWriter, req *http.Request) {
-    hearthbeats := GetHearthBeats()
-    data := SerializeBots(hearthbeats)
+    hearthbeat_status := GetHearthBeatStatus()
+    data := SerializeBots(hearthbeat_status)
     Render(&res, req, "bots.html", data)
 }
 
