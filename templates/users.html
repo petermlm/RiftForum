@@ -32,10 +32,12 @@
           {{range .Users}}
             {{if eq .Usertype "Administrator"}}
             <tr class="warning">
-            {{else if .IsBanned}}
-            <tr class="danger">
             {{else if eq .Usertype "Moderator"}}
             <tr class="info">
+            {{else if eq .Usertype "Bot"}}
+            <tr class="success">
+            {{else if .IsBanned}}
+            <tr class="danger">
             {{else}}
             <tr>
             {{end}}

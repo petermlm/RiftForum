@@ -11,4 +11,5 @@ require (
 	github.com/go-redis/redis v6.15.2+incompatible // indirect
 	github.com/gorilla/mux v1.7.3 // indirect
 	github.com/jasonlvhit/gocron v0.0.0-20190807165158-02e46f9ad554 // indirect
+	github.com/yalp/jsonpath v0.0.0-20180802001716-5cc68e5049a0 // indirect
 )

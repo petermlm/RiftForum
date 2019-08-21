@@ -21,3 +21,7 @@ func MakeBaseUrl() string {
 
     return fmt.Sprintf("%s://%s", protocol, BaseUrl)
 }
+
+func MakeRedditLink(subreddit string) string {
+    return fmt.Sprintf("https://reddit.com%s", subreddit)
+}

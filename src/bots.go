@@ -4,11 +4,14 @@ import (
     "fmt"
     "time"
     "strconv"
+    "regexp"
 
     redis "github.com/go-redis/redis"
 )
 
+var bots_initialized = false
 var redis_client *redis.Client
+var new_users_ch chan *User
 var new_topics_ch chan *Topic
 var new_messages_ch chan *Message
 
@@ -26,18 +29,33 @@ func InitBots() {
 
     fmt.Println("Redis connection established")
 
+    new_users_ch = make(chan *User, 10)
     new_topics_ch = make(chan *Topic, 10)
     new_messages_ch = make(chan *Message, 10)
-    go ExpAnswerBot()
+    // go ExpAnswerBot()
+    go GreeterBot()
+    go RedditAnswerBot()
+
+    bots_initialized = true
     fmt.Println("Bots Started")
 }
 
+func SendNewUser(user *User) {
+    if bots_initialized {
+        new_users_ch <- user
+    }
+}
+
 func SendNewTopic(topic *Topic) {
-    new_topics_ch <- topic
+    if bots_initialized {
+        new_topics_ch <- topic
+    }
 }
 
 func SendNewMessage(message *Message) {
-    new_messages_ch <- message
+    if bots_initialized {
+        new_messages_ch <- message
+    }
 }
 
 func GetHearthBeats() map[string]bool {
@@ -63,8 +81,75 @@ func GetHearthBeats() map[string]bool {
     return ret
 }
 
+func GreeterBot() {
+    greeter_template := `[center][b][color=red]Welcome to RiftForum, %s![/color][/b][/center]
+    Thank you for Registering! You are welcome to [i][color=blue]post anything[/color][/i]. [b]BBCode[/b] can be used to style messages, and your signature can be edited in the [url=%s]user details page[/url]. User types are:
+    [list]
+    [*] Administrator
+    [*] Moderator
+    [*] Basic
+    [*] Bot
+    [/list]
+    Happy Posting!`
+    bot_name := "GreeterBot"
+    user, _ := GetUser(bot_name)
+
+    for {
+        beat_hearth(bot_name)
+
+        select {
+        case new_user := <- new_users_ch:
+            title := fmt.Sprintf("Welcome %s!", new_user.Username)
+            user_detail_page := fmt.Sprintf("%s/users/%s", MakeBaseUrl(), new_user.Username)
+            message := fmt.Sprintf(greeter_template, new_user.Username, user_detail_page)
+            NewTopic(user, title, message)
+        case <-time.After(10 * time.Second):
+            func(){}()
+        }
+    }
+}
+
+func RedditAnswerBot() {
+    bot_name := "RedditAnswerBot"
+    user, _ := GetUser(bot_name)
+    re := regexp.MustCompile(`\/r\/[a-zA-Z0-9_]+`)
+
+    for {
+        beat_hearth(bot_name)
+
+        select {
+        case new_message := <- new_messages_ch:
+            if new_message.Author.Id != user.Id {
+                matches := re.FindAllString(new_message.Message, -1)
+
+                if len(matches) == 0{
+                    break
+                }
+
+                new_message_text := ""
+                for i := range matches {
+                    posts := GetRedditHot(matches[i])
+                    bbcode_list := MakeBBCodeListReddit(matches[i], posts)
+
+                    if bbcode_list == "" {
+                        continue
+                    }
+
+                    new_message_text += bbcode_list
+                }
+
+                if new_message_text != "" {
+                    NewMessage(user, new_message.Topic, new_message_text)
+                }
+            }
+        case <-time.After(10 * time.Second):
+            func(){}()
+        }
+    }
+}
+
 func ExpAnswerBot() {
-    user := get_rift_bot_user()
+    user, _ := GetUser("RiftBot")
     for {
         beat_hearth("ExpAnswerBot")
 
@@ -79,18 +164,6 @@ func ExpAnswerBot() {
             func(){}()
         }
     }
-}
-
-func get_rift_bot_user() *User {
-    user := new(User)
-
-    err := db.Model(user).Where("Username = 'RiftBot'").Select()
-
-    if err != nil {
-        panic(err)
-    }
-
-    return user
 }
 
 func redis_key_name(bot_name string) string {

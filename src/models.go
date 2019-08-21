@@ -24,6 +24,7 @@ const (
     Administrator = iota + 1
     Moderator
     Basic
+    Bot
 )
 
 type User struct {
@@ -62,6 +63,7 @@ func NewUser(username string, user_type UserTypes, password string) *User {
         Usertype: user_type,
     }
     db.Insert(user)
+    SendNewUser(user)
     return user
 }
 
@@ -72,8 +74,9 @@ func (u User) GetUserType() string {
         return "Moderator"
     } else if u.Usertype == Basic {
         return "Basic"
+    } else if u.Usertype == Bot {
+        return "Bot"
     }
-
     return "NoType"
 }
 
@@ -124,6 +127,7 @@ func NewTopic(user *User, title_text string, message_text string) *Topic {
         panic(err)
     }
 
+    SendNewMessage(message)
     SendNewTopic(topic)
     return topic
 }
