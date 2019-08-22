@@ -1,3 +1,17 @@
+package main
+
+import (
+    "errors"
+    "net/url"
+
+    "github.com/frustra/bbcode"
+)
+
+func AddCustomBBCode(compiler *bbcode.Compiler) {
+    add_lists(compiler)
+    add_youtube(compiler)
+}
+
 // From:
 // https://gist.githubusercontent.com/xthexder/44f4b9cec3ed7876780d/raw/3420d5c43d5ebd99f910a2f277ec9184a496d9d0/gistfile1.go
 // Note: Use of this list tag implementation requires that `autoCloseTags` be set to true.
@@ -8,11 +22,7 @@
 // [*] Item 2
 // [/list]
 
-package main
-
-import "github.com/frustra/bbcode"
-
-func addBBCodeLists(compiler *bbcode.Compiler) {
+func add_lists(compiler *bbcode.Compiler) {
     compiler.SetTag("list", func(node *bbcode.BBCodeNode) (*bbcode.HTMLTag, bool) {
         out := bbcode.NewHTMLTag("")
         out.Name = "ul"
@@ -90,4 +100,57 @@ func addBBCodeLists(compiler *bbcode.Compiler) {
         }
         return bbcode.DefaultTagCompiler(node)
     })
+}
+
+
+func add_youtube(compiler *bbcode.Compiler) {
+    compiler.SetTag("youtube", func(node *bbcode.BBCodeNode) (*bbcode.HTMLTag, bool) {
+        if len(node.Children) != 1 {
+            return bbcode.CompileRaw(node), false
+        }
+        yt_source := node.Children[0]
+
+        if yt_source.ID != bbcode.TEXT {
+            return bbcode.CompileRaw(node), false
+        }
+        link := yt_source.Value.(string)
+
+        yt_link, err := parse_yt_link(link)
+        if err != nil {
+            return bbcode.CompileRaw(node), false
+        }
+
+        // Creates the iframe tag
+        out := bbcode.NewHTMLTag("")
+        out.Name = "iframe"
+        out.Attrs["width"] = "560"
+        out.Attrs["height"] = "315"
+        out.Attrs["src"] = yt_link
+        out.Attrs["frameborder"] = "0"
+        out.Attrs["allow"] = "accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
+        out.Attrs["allowfullscreen"] = ""
+
+        // Closes the tag
+        out.AppendChild(bbcode.NewHTMLTag(""))
+        return out, false
+    })
+}
+
+func parse_yt_link(link string) (string, error) {
+    yt_link := "https://www.youtube-nocookie.com/embed/"
+
+    url_parsed, err := url.Parse(link)
+    if err != nil {
+        return "", errors.New("Not a url")
+    }
+
+    query, _ := url.ParseQuery(url_parsed.RawQuery)
+
+    video_id_arr, ok := query["v"]
+    if !ok {
+        return "", errors.New("No video id")
+    }
+
+    video_id := video_id_arr[0]
+    return yt_link + video_id, nil
 }

@@ -13,7 +13,7 @@ var bbcode_compiler bbcode.Compiler
 func InitSers() {
     // Booleans: autoCloseTags, ignoreUnmatchedClosingTags
     bbcode_compiler = bbcode.NewCompiler(true, true)
-    addBBCodeLists(&bbcode_compiler)
+    AddCustomBBCode(&bbcode_compiler)
     log.Println("Serializers initialized")
 }
 
