@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+  {{template "head"}}
+  <body>
+    {{template "header" .}}
+
+    <main>
+
+    <div class="page_title_wrapper">
+      <div class="page_title">
+        <h1>BBCode</h1>
+      </div>
+    </div>
+
+    <div class="page_content_wrapper">
+      <div class="page_content_wrapper_in">
+        These are the various bbcode tags which can be used to style Messages and Signatures. Most are available directly from <a href="https://github.com/frustra/bbcode">the library that implements them</a>. Others were developed as custom tags. Those are marked with a start (*).
+      </div>
+    </div>
+
+    <div class="page_content_wrapper">
+      <table class="page_content_wrapper_in table table-hover">
+        <thead>
+          <tr>
+            <th class="col-sm-6">Rule</th>
+            <th class="col-sm-6">Description</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><pre>[b]text[/b]</pre></td>
+            <td>Makes text bold</td>
+          </tr>
+          <tr>
+            <td><pre>[url]link[/url]</pre></td>
+            <td>Makes url a link</td>
+          </tr>
+          <tr>
+            <td><pre>[url=link]text[/url]</pre></td>
+            <td>Makes url a link with a different text</td>
+          </tr>
+          <tr>
+            <td><pre>[img]link[/img]</pre></td>
+            <td>Places an image</td>
+          </tr>
+          <tr>
+            <td><pre>[img=link]alt[/img]</pre></td>
+            <td>Places an image with alt text</td>
+          </tr>
+          <tr>
+            <td><pre>[center]text[/center]</pre></td>
+            <td>Center content enclosed in tags</td>
+          </tr>
+          <tr>
+            <td><pre>[color=red]text[/color]</pre></td>
+            <td>Colors text with given color</td>
+          </tr>
+          <tr>
+            <td><pre>[size=2]text[/size]</pre></td>
+            <td>Sets size of text</td>
+          </tr>
+          <tr>
+            <td><pre>[quote]text[/quote]</pre></td>
+            <td>Displays text quoted</td>
+          </tr>
+          <tr>
+            <td><pre>[quote=Somebody]text[/quote]</pre></td>
+            <td>Displays text quoted and a name of quoted</td>
+          </tr>
+          <tr>
+            <td><pre>[quote name=Somebody]text[/quote]</pre></td>
+            <td>Same as previous</td>
+          </tr>
+          <tr>
+            <td><pre>[code][b]anything[/b][/code]</pre></td>
+            <td>Any bbcode inside the code tags will shown literally</td>
+          </tr>
+          <tr>
+            <td><pre>[list][*]anything[/list]</pre></td>
+            <td>Displays a list in which each entry is given by [*]</td>
+          </tr>
+          <tr>
+            <td><pre>[youtube]https://www.youtube.com/watch?v=dQw4w9WgXcQ[/youtube]</pre></td>
+            <td>* Given Youtube video will be embedded in threat</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    </main>
+
+    {{template "footer"}}
+  </body>
+</html>

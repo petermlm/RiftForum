@@ -186,20 +186,6 @@ func admin_users_unban_get(res http.ResponseWriter, req *http.Request) {
     Redirect(&res, req, fmt.Sprintf("/users/%s", user.Username))
 }
 
-func admin_bots_get(res http.ResponseWriter, req *http.Request) {
-    // fmt.Println("here")
-    // // gocron.Every(5).Seconds().Do(BasicBot)
-    // gocron.Every(5).Seconds().Do(HelloBot)
-    // gocron.Start()
-    // Redirect(&res, req, "/")
-    // fmt.Println("There")
-    // // gocron.Remove(BasicBot)
-    // gocron.Remove(HelloBot)
-
-    data := SerializeBots(map[string]bool{"yes": true})
-    Render(&res, req, "bots.html", data)
-}
-
 func topics_post(res http.ResponseWriter, req *http.Request) {
     var err error
     db := GetDBCon()
@@ -391,6 +377,11 @@ func user_bots_get(res http.ResponseWriter, req *http.Request) {
     Render(&res, req, "bots.html", data)
 }
 
+func user_bbcode_get(res http.ResponseWriter, req *http.Request) {
+    data := SerializeEmpty()
+    Render(&res, req, "bbcode.html", data)
+}
+
 func save_user_info(next http.Handler) http.Handler {
     return http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
         cookie, err := req.Cookie("jwt")
@@ -510,6 +501,7 @@ func CreateRouter() *mux.Router {
     auth_routes.HandleFunc("/users/{username:[a-zA-Z0-9]+}/change_password", user_change_password_get).Methods("GET")
     auth_routes.HandleFunc("/users/{username:[a-zA-Z0-9]+}/change_password", user_change_password_post).Methods("POST")
     auth_routes.HandleFunc("/bots", user_bots_get).Methods("GET")
+    auth_routes.HandleFunc("/bbcode", user_bbcode_get).Methods("GET")
     auth_routes.Use(auth_middleware)
 
     admin_routes := auth_routes.PathPrefix("/admin").Subrouter()
@@ -523,7 +515,6 @@ func CreateRouter() *mux.Router {
     admin_routes.HandleFunc("/users/{username:[a-zA-Z0-9]+}/change_password", admin_users_change_password_post).Methods("POST")
     admin_routes.HandleFunc("/users/{username:[a-zA-Z0-9]+}/ban", admin_users_ban_get).Methods("GET")
     admin_routes.HandleFunc("/users/{username:[a-zA-Z0-9]+}/unban", admin_users_unban_get).Methods("GET")
-    admin_routes.HandleFunc("/bots", admin_bots_get).Methods("GET")
     admin_routes.Use(admin_middleware)
 
     router.
