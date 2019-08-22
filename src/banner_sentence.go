@@ -18,6 +18,7 @@ var banner_sentences = [...]string{
     "Dove-à-Quim",
     "Pen Pineapple Apple Pen",
     "Only on Pay-Pre-View",
+    "No lollygagging",
 }
 
 func set_banner_sentence() string {

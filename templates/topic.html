@@ -19,7 +19,15 @@
           <div class="row">
             <div class="col-sm-2 message_list_author_info">
               <div class="message_list_author_info_name">
-                <a href="/users/{{.AuthorUsername}}">{{.AuthorUsername}}</a>
+                <a href="/users/{{.AuthorUsername}}"
+                {{if eq .AuthorUsertype "Administrator"}}
+                class="text-warning"
+                {{else if eq .AuthorUsertype "Moderator"}}
+                class="text-info"
+                {{else if eq .AuthorUsertype "Bot"}}
+                class="text-success"
+                {{end}}
+                >{{.AuthorUsername}}</a>
                 {{template "banned" .IsAuthorBanned}}
               </div>
               <div class="message_list_author_info_type">{{.AuthorUsertype}}</div>

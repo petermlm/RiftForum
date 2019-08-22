@@ -13,6 +13,7 @@ var bbcode_compiler bbcode.Compiler
 func InitSers() {
     // Booleans: autoCloseTags, ignoreUnmatchedClosingTags
     bbcode_compiler = bbcode.NewCompiler(true, true)
+    AddCustomBBCode(&bbcode_compiler)
     log.Println("Serializers initialized")
 }
 
@@ -173,6 +174,11 @@ type InviteNewData struct {
     KeyUrl string
 }
 
+type BotsData struct {
+    RiftData
+    HearthBeatStatus map[string]bool
+}
+
 type TopicListData struct {
     TopicId uint
     Title string
@@ -316,6 +322,12 @@ func SerializeInviteNew(new_invite *Invite) *InviteNewData {
     }
 }
 
+func SerializeBots(hearthbeat_status map[string]bool) *BotsData {
+    ser_bots := new(BotsData)
+    ser_bots.HearthBeatStatus = hearthbeat_status
+    return ser_bots
+}
+
 func SerializeTopics(topics []*Topic, page Page) *TopicsListData {
     ser_topics := new(TopicsListData)
 
@@ -378,11 +390,12 @@ func stringToOutputHtml(str string) []template.HTML {
         return make([]template.HTML, 0)
     }
 
-    str_pars := strings.Split(str, "\r\n")
+    str_bbcoded := bbcode_compiler.Compile(str)
+    str_pars := strings.Split(str_bbcoded, "\r\n")
     str_pars_html := make([]template.HTML, len(str_pars))
 
     for i, str_par := range str_pars {
-        str_pars_html[i] = template.HTML(bbcode_compiler.Compile(str_par))
+        str_pars_html[i] = template.HTML(str_par)
     }
 
     return str_pars_html

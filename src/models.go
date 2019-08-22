@@ -24,6 +24,7 @@ const (
     Administrator = iota + 1
     Moderator
     Basic
+    Bot
 )
 
 type User struct {
@@ -62,6 +63,7 @@ func NewUser(username string, user_type UserTypes, password string) *User {
         Usertype: user_type,
     }
     db.Insert(user)
+    SendNewUser(user)
     return user
 }
 
@@ -72,8 +74,9 @@ func (u User) GetUserType() string {
         return "Moderator"
     } else if u.Usertype == Basic {
         return "Basic"
+    } else if u.Usertype == Bot {
+        return "Bot"
     }
-
     return "NoType"
 }
 
@@ -93,7 +96,7 @@ type Topic struct {
     Messages []*Message
 }
 
-func NewTopic(user *User, title_text string, message_text string) uint {
+func NewTopic(user *User, title_text string, message_text string) *Topic {
     var err error
 
     // Topic
@@ -124,7 +127,9 @@ func NewTopic(user *User, title_text string, message_text string) uint {
         panic(err)
     }
 
-    return topic.Id
+    SendNewMessage(message)
+    SendNewTopic(topic)
+    return topic
 }
 
 /* ============================================================================
@@ -143,7 +148,7 @@ type Message struct {
     Topic *Topic `sql:",notnull"`
 }
 
-func NewMessage(user *User, topic *Topic, message_text string) uint {
+func NewMessage(user *User, topic *Topic, message_text string) *Message {
     UpdateTopic(topic)
 
     message := &Message{
@@ -160,7 +165,8 @@ func NewMessage(user *User, topic *Topic, message_text string) uint {
         panic(err)
     }
 
-    return message.Id
+    SendNewMessage(message)
+    return message
 }
 
 /* ============================================================================
@@ -195,13 +201,6 @@ func (i Invite) GetInviteStatus() string {
 }
 
 func (i Invite) GetKeyUrl() string {
-    var protocol string
-
-    if Https {
-        protocol = "https"
-    } else {
-        protocol = "http"
-    }
-
-    return fmt.Sprintf("%s://%s/register?key=%s", protocol, BaseUrl, i.Key)
+    base_url := MakeBaseUrl()
+    return fmt.Sprintf("%s/register?key=%s", base_url, i.Key)
 }

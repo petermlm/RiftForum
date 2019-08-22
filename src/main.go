@@ -19,6 +19,7 @@ func riftforum() {
     InitTmpl()
     InitSers()
     InitAuth()
+    InitBots()
 
     log.Println("Starting Server")
     router := CreateRouter()
@@ -38,5 +39,4 @@ func main() {
     } else {
         riftforum()
     }
-
 }
