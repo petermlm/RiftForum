@@ -241,7 +241,6 @@ func GetTopic(topic_id uint, page Page) *Topic {
         Select()
 
     if err != nil {
-        // panic(err)
         return nil
     }
 
@@ -262,6 +261,32 @@ func CountMessagePages(topic_id uint, page Page) int {
 func UpdateTopic(topic *Topic) {
     topic.UpdatedAt = time.Now()
     err := db.Update(topic)
+
+    if err != nil {
+        panic(err)
+    }
+}
+
+func GetMessage(message_id uint) *Message {
+    db := GetDBCon()
+
+    message := new(Message)
+    err := db.Model(message).
+        Relation("Author").
+        Relation("Topic").
+        Where("message.id = ?", message_id).
+        Select()
+
+    if err != nil {
+        return nil
+    }
+
+    return message
+}
+
+func UpdateMessage(message *Message) {
+    message.UpdatedAt = time.Now()
+    err := db.Update(message)
 
     if err != nil {
         panic(err)

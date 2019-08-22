@@ -18,6 +18,7 @@ func InitSers() {
 }
 
 type UserInfo struct {
+    Id uint
     Username string
     Usertype UserTypes
 }
@@ -199,6 +200,7 @@ type TopicsListData struct {
 }
 
 type MessageData struct {
+    Id uint
     AuthorId uint
     AuthorUsername string
     AuthorUsertype string
@@ -212,6 +214,10 @@ func (m *MessageData) IsAuthorBanned() bool {
     return m.AuthorBanned
 }
 
+func (m *MessageData) CanEdit() bool {
+    return true
+}
+
 type TopicData struct {
     RiftData
     TopicId uint
@@ -220,6 +226,14 @@ type TopicData struct {
     PageNum int
     PageSize int
     PageMax int
+}
+
+type MessageEditData struct {
+    RiftData
+    Id uint
+    TopicId uint
+    Title string
+    Message string
 }
 
 func SerializeEmpty() *EmptyData {
@@ -361,6 +375,7 @@ func SerializeTopic(topic *Topic, page Page) *TopicData {
 
     for _, message := range topic.Messages {
         message_struct := &MessageData {
+            Id: message.Id,
             AuthorId: message.Author.Id,
             AuthorUsername: message.Author.Username,
             AuthorUsertype: message.Author.GetUserType(),
@@ -383,6 +398,15 @@ func SerializeTopic(topic *Topic, page Page) *TopicData {
     }
 
     return ser_topic
+}
+
+func SerializeMessageEdit(message *Message) *MessageEditData {
+    data := new(MessageEditData)
+    data.Id = message.Id
+    data.TopicId = message.Topic.Id
+    data.Title = message.Topic.Title
+    data.Message = message.Message
+    return data
 }
 
 func stringToOutputHtml(str string) []template.HTML {

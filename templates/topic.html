@@ -35,12 +35,11 @@
                 Posted on<br/>
                 <span>{{.CreatedAt}}</span>
               </div>
-              <!-- TODO -->
-              <!-- <% if(message.CanEdit) { %> -->
-              <!-- <div class="message_list_edit_bnt" data&#45;message&#45;id="<%= message.message_id %>"> -->
-              <!-- <a href="#">Edit</a> -->
-              <!-- </div> -->
-              <!-- <% } %> -->
+              {{if or $.IsMod (eq .AuthorId $.UserInfo.Id)}}
+              <div class="message_list_edit_bnt">
+                <a href="/messages/{{.Id}}">Edit</a>
+              </div>
+              {{end}}
             </div>
             <div class="col-sm-10 message_list_author_message">
               <div class="message_list_author_message_text">

@@ -273,6 +273,35 @@ nav {
 }
 
 /* ============================================================================
+ * Edit Message
+ * ============================================================================
+ */
+
+.edit_message_wrapper {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+
+.edit_message {
+  margin-top: 25px;
+  padding: 0px 10px;
+  width: 1030px;
+}
+
+.edit_message form textarea {
+  margin-top: 10px;
+  resize: vertical;
+  height: 8em;
+}
+
+.edit_message form button {
+  margin-top: 10px;
+  float: right;
+  width: 100px;
+}
+
+/* ============================================================================
  * Users List
  * ============================================================================
  */

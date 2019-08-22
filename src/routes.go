@@ -286,6 +286,51 @@ func topic_post(res http.ResponseWriter, req *http.Request) {
     Redirect(&res, req, redirect_path)
 }
 
+func message_get(res http.ResponseWriter, req *http.Request) {
+    vars := mux.Vars(req)
+    message_id_parsed, err := strconv.ParseUint(vars["id"], 10, 32)
+
+    if err != nil {
+        NotFound(&res, req)
+        return
+    }
+
+    message_id := uint(message_id_parsed)
+    message := GetMessage(message_id)
+
+    if message == nil {
+        NotFound(&res, req)
+        return
+    }
+
+    data := SerializeMessageEdit(message)
+    Render(&res, req, "message_edit.html", data)
+}
+
+func message_post(res http.ResponseWriter, req *http.Request) {
+    vars := mux.Vars(req)
+    message_id_parsed, err := strconv.ParseUint(vars["id"], 10, 32)
+    form_message := req.PostFormValue("message")
+
+    if err != nil {
+        NotFound(&res, req)
+        return
+    }
+
+    message_id := uint(message_id_parsed)
+    message := GetMessage(message_id)
+    message.Message = form_message
+    UpdateMessage(message)
+
+    if message == nil {
+        NotFound(&res, req)
+        return
+    }
+
+    redirect_path := fmt.Sprintf("/topics/%d", message.Topic.Id)
+    Redirect(&res, req, redirect_path)
+}
+
 func users_get(res http.ResponseWriter, req *http.Request) {
     page := PageFromRequest(req)
     users := GetUsers(page)
@@ -405,6 +450,7 @@ func save_user_info(next http.Handler) http.Handler {
 
                 if !user.Banned {
                     user_info := &UserInfo {
+                        Id: claims.Id,
                         Username: claims.Username,
                         Usertype: claims.Usertype,
                     }
@@ -503,6 +549,8 @@ func CreateRouter() *mux.Router {
     auth_routes.HandleFunc("/topics", topics_post).Methods("POST")
     auth_routes.HandleFunc("/topics/{id:[0-9]+}", topic_get).Methods("GET")
     auth_routes.HandleFunc("/topics/{id:[0-9]+}", topic_post).Methods("POST")
+    auth_routes.HandleFunc("/messages/{id:[0-9]+}", message_get).Methods("GET")
+    auth_routes.HandleFunc("/messages/{id:[0-9]+}", message_post).Methods("POST")
     auth_routes.HandleFunc("/users", users_get).Methods("GET")
     auth_routes.HandleFunc("/users/{username:[a-zA-Z0-9]+}", user_get).Methods("GET")
     auth_routes.HandleFunc("/users/{username:[a-zA-Z0-9]+}/about", user_about_post).Methods("POST")

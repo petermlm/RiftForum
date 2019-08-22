@@ -15,6 +15,7 @@ var secret []byte
 
 type Claims struct {
     jwt.StandardClaims
+    Id uint
     Username string
     Usertype UserTypes
 }
@@ -52,6 +53,7 @@ func CreateToken(form_username string, form_password string) (string, error) {
         jwt.StandardClaims{
             ExpiresAt: time.Now().Add(time.Hour * 24).Unix(),
         },
+        user.Id,
         user.Username,
         user.Usertype,
     }
