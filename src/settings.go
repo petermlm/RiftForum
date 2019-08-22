@@ -4,12 +4,12 @@ const (
     // Debug
     DebugMode = true
 
-    // Server settings
+    // Server
     HostAndPort = ":8080"
     BaseUrl = "localhost:8080"
     Https = false
 
-    // Database settings
+    // Database
     DatabaseConnRetries = 5
 
     DatabaseAddr = "postgres:5432"
@@ -17,20 +17,24 @@ const (
     DatabaseUser = "riftforum_user"
     DatabasePassword = "riftforum_pass"
 
-    // Redis settings
+    // Redis
     RedisAddr = "redis:6379"
 
-    // Bot settings
+    // Invites
+    InviteSize = 12
+
+    // Bots
     BotHearthBeatPeriod = 10 // Seconds
     BotHearthBeatExpire = 60 // Seconds
     BotHearthBeatDead = 60 // Seconds
     BotChannelLag = 1024
 
-    // Templating settings
+    // Templating
     TemplatesDir = "templates"
 
-    // Misc
-    InviteSize = 12
+    // Pages
     PageDefaultLimit = 20
     PageDefaultOffset = 0
+    PageDefaultSize = 20
+    PageDefaultNum = 0
 )

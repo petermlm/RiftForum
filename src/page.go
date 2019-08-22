@@ -1,6 +1,7 @@
 package main
 
 import (
+    "fmt"
     "strconv"
     "net/http"
 )
@@ -15,6 +16,17 @@ func (p Page) get_size() int {
 
 func (p Page) get_num() int {
     return p.offset / p.limit
+}
+
+func (p Page) querystr() string {
+    return fmt.Sprintf("page_size=%d&page_num=%d", p.get_size(), p.get_num())
+}
+
+func NewPage(num int) Page {
+    return Page{
+        limit: PageDefaultSize,
+        offset: num * PageDefaultLimit,
+    }
 }
 
 func PageDefault() Page {
@@ -34,11 +46,11 @@ func PageFromRequest(req *http.Request) Page {
     var page Page
 
     if page_size_err != nil || page_size_parsed <= 0 {
-        page_size_parsed = 20
+        page_size_parsed = PageDefaultSize
     }
 
     if page_num_err != nil {
-        page_num_parsed = 0
+        page_num_parsed = PageDefaultNum
     }
 
     page.limit = int(page_size_parsed)

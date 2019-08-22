@@ -260,20 +260,29 @@ func topic_post(res http.ResponseWriter, req *http.Request) {
     // Topic
     vars := mux.Vars(req)
     topic_id_parsed, err := strconv.ParseUint(vars["id"], 10, 32)
-
     if err != nil {
         NotFound(&res, req)
         return
     }
-
     topic_id := uint(topic_id_parsed)
-    page := PageDefault()
-    topic := GetTopic(topic_id, page)
+    topic := GetTopic(topic_id, PageDefault())
 
     // Message
     NewMessage(user, topic, form_message)
 
-    redirect_path := fmt.Sprintf("/topics/%d", topic_id)
+    // Get page to redirect to
+    var page Page
+    var page_querystr string
+
+    msg_pages := CountMessagePages(topic_id, PageDefault())
+    if msg_pages == 0 {
+        page = PageDefault()
+    } else {
+        page = NewPage(msg_pages)
+        page_querystr = "?" + page.querystr()
+    }
+
+    redirect_path := fmt.Sprintf("/topics/%d%s", topic_id, page_querystr)
     Redirect(&res, req, redirect_path)
 }
 
