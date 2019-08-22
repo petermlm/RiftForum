@@ -16,6 +16,7 @@ var new_topics_ch chan *Topic
 var new_messages_ch chan *Message
 
 func InitBots() {
+    // Initialize Redis Connection
     redis_client = redis.NewClient(&redis.Options{
         Addr:     RedisAddr,
         Password: "",
@@ -26,15 +27,31 @@ func InitBots() {
     if err != nil {
         panic("Can't connect with redis")
     }
-
     fmt.Println("Redis connection established")
 
-    new_users_ch = make(chan *User, 10)
-    new_topics_ch = make(chan *Topic, 10)
-    new_messages_ch = make(chan *Message, 10)
-    // go ExpAnswerBot()
+    // Initialize channels
+    new_users_ch = make(chan *User, BotChannelLag)
+    new_topics_ch = make(chan *Topic, BotChannelLag)
+    new_messages_ch = make(chan *Message, BotChannelLag)
+
+    // Fan out new messages
+    new_msg_ch := make([]chan *Message, 2)
+    for i, _ := range new_msg_ch {
+        new_msg_ch[i] = make(chan *Message, BotChannelLag)
+    }
+
+    go func() {
+        for i := range new_messages_ch {
+            for _, c := range new_msg_ch {
+                c <- i
+            }
+        }
+    }()
+
+    // Stat bot functions
     go GreeterBot(new_users_ch)
-    go RedditAnswerBot(new_messages_ch)
+    go RedditBot(new_msg_ch[0])
+    go YoutubeBot(new_msg_ch[1])
 
     bots_initialized = true
     fmt.Println("Bots Started")
@@ -105,14 +122,14 @@ func GreeterBot(new_users_ch chan *User) {
             user_detail_page := fmt.Sprintf("%s/users/%s", MakeBaseUrl(), new_user.Username)
             message := fmt.Sprintf(greeter_template, new_user.Username, user_detail_page)
             NewTopic(user, title, message)
-        case <-time.After(10 * time.Second):
+        case <-time.After(BotHearthBeatPeriod * time.Second):
             func(){}()
         }
     }
 }
 
-func RedditAnswerBot(new_messages_ch chan *Message) {
-    bot_name := "RedditAnswerBot"
+func RedditBot(new_messages_ch chan *Message) {
+    bot_name := "RedditBot"
     user, _ := GetUser(bot_name)
     re := regexp.MustCompile(`\/r\/[a-zA-Z0-9_]+`)
 
@@ -121,30 +138,64 @@ func RedditAnswerBot(new_messages_ch chan *Message) {
 
         select {
         case new_message := <- new_messages_ch:
-            if new_message.Author.Id != user.Id {
-                matches := re.FindAllString(new_message.Message, -1)
-
-                if len(matches) == 0{
-                    break
-                }
-
-                new_message_text := ""
-                for i := range matches {
-                    posts := GetRedditHot(matches[i])
-                    bbcode_list := MakeBBCodeListReddit(matches[i], posts)
-
-                    if bbcode_list == "" {
-                        continue
-                    }
-
-                    new_message_text += bbcode_list
-                }
-
-                if new_message_text != "" {
-                    NewMessage(user, new_message.Topic, new_message_text)
-                }
+            if new_message.Author.Id == user.Id {
+                break
             }
-        case <-time.After(10 * time.Second):
+
+            matches := re.FindAllString(new_message.Message, -1)
+
+            if len(matches) == 0 {
+                break
+            }
+
+            new_message_text := ""
+            for i := range matches {
+                posts := GetRedditHot(matches[i])
+                bbcode_list := MakeBBCodeListReddit(matches[i], posts)
+
+                if bbcode_list == "" {
+                    continue
+                }
+
+                new_message_text += bbcode_list
+            }
+
+            if new_message_text == "" {
+                break
+            }
+
+            NewMessage(user, new_message.Topic, new_message_text)
+        case <-time.After(BotHearthBeatPeriod * time.Second):
+            func(){}()
+        }
+    }
+}
+
+func YoutubeBot(new_messages_ch chan *Message) {
+    bot_name := "YoutubeBot"
+    user, _ := GetUser(bot_name)
+    re := regexp.MustCompile(`^!youtubelist`)
+
+    for {
+        beat_hearth(bot_name)
+        select {
+        case new_message := <- new_messages_ch:
+            if new_message.Author.Id == user.Id {
+                break
+            }
+
+            if !re.MatchString(new_message.Message) {
+                break
+            }
+
+            yt_list := youtube_videos_list(new_message.Topic)
+
+            if yt_list == "" {
+                break
+            }
+
+            NewMessage(user, new_message.Topic, yt_list)
+        case <-time.After(BotHearthBeatPeriod * time.Second):
             func(){}()
         }
     }
@@ -162,7 +213,7 @@ func ExpAnswerBot() {
             if new_message.Author.Id != user.Id {
                 NewMessage(user, new_message.Topic, "Answer to a message")
             }
-        case <-time.After(10 * time.Second):
+        case <-time.After(BotHearthBeatPeriod * time.Second):
             func(){}()
         }
     }
@@ -181,11 +232,6 @@ func beat_hearth(bot_name string) {
     redis_client.Set(key_name, time.Now().Unix(), BotHearthBeatExpire * time.Second)
 }
 
-func get_bot_name_from_key(key string) string {
-    prefix_len := len(redis_keys_pattern())
-    return key[prefix_len - 1:]
-}
-
 func hearthbeat_is_alive(val string) bool {
     valint, err := strconv.ParseInt(val, 10, 64)
 
@@ -196,4 +242,9 @@ func hearthbeat_is_alive(val string) bool {
     hearthbeat_interval := time.Now().Unix() - valint
     dead_interval := int64(BotHearthBeatDead * time.Second)
     return hearthbeat_interval < dead_interval
+}
+
+func get_bot_name_from_key(key string) string {
+    prefix_len := len(redis_keys_pattern())
+    return key[prefix_len - 1:]
 }

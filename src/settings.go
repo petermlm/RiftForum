@@ -21,8 +21,10 @@ const (
     RedisAddr = "redis:6379"
 
     // Bot settings
+    BotHearthBeatPeriod = 10 // Seconds
     BotHearthBeatExpire = 60 // Seconds
     BotHearthBeatDead = 60 // Seconds
+    BotChannelLag = 1024
 
     // Templating settings
     TemplatesDir = "templates"

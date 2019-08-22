@@ -1,9 +1,6 @@
 package main
 
 import (
-    "errors"
-    "net/url"
-
     "github.com/frustra/bbcode"
 )
 
@@ -134,23 +131,4 @@ func add_youtube(compiler *bbcode.Compiler) {
         out.AppendChild(bbcode.NewHTMLTag(""))
         return out, false
     })
-}
-
-func parse_yt_link(link string) (string, error) {
-    yt_link := "https://www.youtube-nocookie.com/embed/"
-
-    url_parsed, err := url.Parse(link)
-    if err != nil {
-        return "", errors.New("Not a url")
-    }
-
-    query, _ := url.ParseQuery(url_parsed.RawQuery)
-
-    video_id_arr, ok := query["v"]
-    if !ok {
-        return "", errors.New("No video id")
-    }
-
-    video_id := video_id_arr[0]
-    return yt_link + video_id, nil
 }

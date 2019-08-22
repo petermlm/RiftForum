@@ -13,7 +13,8 @@ func init() {
         NewUser("petermlm", Moderator, "pl")
         NewUser("RiftBot", Bot, "pl")
         NewUser("GreeterBot", Bot, "pl")
-        NewUser("RedditAnswerBot", Bot, "pl")
+        NewUser("RedditBot", Bot, "pl")
+        NewUser("YoutubeBot", Bot, "pl")
         return nil
     }, func(db migrations.DB) error {
         fmt.Println("Dropping default my_table...")
