@@ -287,6 +287,8 @@ func topic_post(res http.ResponseWriter, req *http.Request) {
 }
 
 func message_get(res http.ResponseWriter, req *http.Request) {
+    ctx := req.Context()
+    user_info := ctx.Value("UserInfo").(*UserInfo)
     vars := mux.Vars(req)
     message_id_parsed, err := strconv.ParseUint(vars["id"], 10, 32)
 
@@ -303,11 +305,18 @@ func message_get(res http.ResponseWriter, req *http.Request) {
         return
     }
 
+    if !check_permission(message.Author.Username, user_info) {
+        OperationNotAllowed(&res, req)
+        return
+    }
+
     data := SerializeMessageEdit(message)
     Render(&res, req, "message_edit.html", data)
 }
 
 func message_post(res http.ResponseWriter, req *http.Request) {
+    ctx := req.Context()
+    user_info := ctx.Value("UserInfo").(*UserInfo)
     vars := mux.Vars(req)
     message_id_parsed, err := strconv.ParseUint(vars["id"], 10, 32)
     form_message := req.PostFormValue("message")
@@ -324,6 +333,11 @@ func message_post(res http.ResponseWriter, req *http.Request) {
 
     if message == nil {
         NotFound(&res, req)
+        return
+    }
+
+    if !check_permission(message.Author.Username, user_info) {
+        OperationNotAllowed(&res, req)
         return
     }
 
@@ -425,13 +439,13 @@ func user_change_password_post(res http.ResponseWriter, req *http.Request) {
     Redirect(&res, req, fmt.Sprintf("/users/%s", username))
 }
 
-func user_bots_get(res http.ResponseWriter, req *http.Request) {
+func bots_get(res http.ResponseWriter, req *http.Request) {
     hearthbeat_status := GetHearthBeatStatus()
     data := SerializeBots(hearthbeat_status)
     Render(&res, req, "bots.html", data)
 }
 
-func user_bbcode_get(res http.ResponseWriter, req *http.Request) {
+func bbcode_get(res http.ResponseWriter, req *http.Request) {
     data := SerializeEmpty()
     Render(&res, req, "bbcode.html", data)
 }
@@ -557,8 +571,8 @@ func CreateRouter() *mux.Router {
     auth_routes.HandleFunc("/users/{username:[a-zA-Z0-9]+}/signature", user_signature_post).Methods("POST")
     auth_routes.HandleFunc("/users/{username:[a-zA-Z0-9]+}/change_password", user_change_password_get).Methods("GET")
     auth_routes.HandleFunc("/users/{username:[a-zA-Z0-9]+}/change_password", user_change_password_post).Methods("POST")
-    auth_routes.HandleFunc("/bots", user_bots_get).Methods("GET")
-    auth_routes.HandleFunc("/bbcode", user_bbcode_get).Methods("GET")
+    auth_routes.HandleFunc("/bots", bots_get).Methods("GET")
+    auth_routes.HandleFunc("/bbcode", bbcode_get).Methods("GET")
     auth_routes.Use(auth_middleware)
 
     admin_routes := auth_routes.PathPrefix("/admin").Subrouter()
