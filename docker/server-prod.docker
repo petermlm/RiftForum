@@ -1,0 +1,17 @@
+FROM golang:1.12
+
+ENV GO111MODULE=on
+WORKDIR /go/src/app
+
+# Create user
+RUN useradd -m -s /bin/bash dockeruser
+USER dockeruser
+
+# Copy all and install mods
+COPY . .
+COPY go.mod .
+COPY go.sum .
+RUN go mod download
+
+# Build
+RUN go build -o /go/tmp/server src/*.go

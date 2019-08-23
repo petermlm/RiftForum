@@ -9,18 +9,18 @@ const (
     BaseUrl = "localhost:8080"
     Https = false
 
-    // Database
+    // Database and Reddis
     DatabaseConnRetries = 5
-
     DatabaseAddr = "postgres:5432"
     DatabaseDatabase = "riftforum_db"
     DatabaseUser = "riftforum_user"
     DatabasePassword = "riftforum_pass"
-
-    // Redis
     RedisAddr = "redis:6379"
 
-    // Invites
+    // Users and Invites
+    AdminUsername = "admin"
+    FirstUsername = "Pedro"
+    DefaultPassword = "pl"
     InviteSize = 12
 
     // Bots

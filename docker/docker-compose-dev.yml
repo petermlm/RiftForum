@@ -1,18 +1,21 @@
 version: '2'
 services:
   server:
+    container_name: riftforum_server_dev
     build:
       context: ..
-      dockerfile: docker/server.docker
+      dockerfile: docker/server-dev.docker
     ports:
       - "8080:8080"
     depends_on:
       - postgres
+      - redis
     volumes:
       - ../:/go/src/app
     user: "${UID}:${GID}"
     entrypoint: docker/entry-dev.sh
   postgres:
+    container_name: riftforum_postgres_dev
     image: postgres:9.6
     environment:
       - POSTGRES_DB=riftforum_db
@@ -21,6 +24,7 @@ services:
     ports:
       - "8090:5432"
   redis:
+    container_name: riftforum_redis_dev
     image: redis:5-alpine
     ports:
       - "8070:6379"

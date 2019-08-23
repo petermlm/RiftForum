@@ -9,12 +9,17 @@ import (
 func init() {
     migrations.MustRegisterTx(func(db migrations.DB) error {
         fmt.Println("Creating default users...")
-        NewUser("admin", Administrator, "pl")
-        NewUser("petermlm", Moderator, "pl")
-        NewUser("RiftBot", Bot, "pl")
-        NewUser("GreeterBot", Bot, "pl")
-        NewUser("RedditBot", Bot, "pl")
-        NewUser("YoutubeBot", Bot, "pl")
+
+        // Admin and first user
+        NewUser(AdminUsername, Administrator, DefaultPassword)
+        NewUser(FirstUsername, Moderator, DefaultPassword)
+
+        // Bots
+        NewUser("RiftBot", Bot, DefaultPassword)
+        NewUser("GreeterBot", Bot, DefaultPassword)
+        NewUser("RedditBot", Bot, DefaultPassword)
+        NewUser("YoutubeBot", Bot, DefaultPassword)
+
         return nil
     }, func(db migrations.DB) error {
         fmt.Println("Dropping default my_table...")
