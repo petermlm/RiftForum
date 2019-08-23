@@ -5,6 +5,7 @@ const (
     DebugMode = true
 
     // Server
+    VersionString = "0.1"
     HostAndPort = ":8080"
     BaseUrl = "localhost:8080"
     Https = false

@@ -61,6 +61,7 @@ func Render(res *http.ResponseWriter, req *http.Request, tpl_name string, data R
 
     data.SetPath(req.URL.Path)
     data.SetBannerSentence(set_banner_sentence())
+    data.SetVersion()
 
     err := templates.ExecuteTemplate(*res, tpl_name, data)
 
