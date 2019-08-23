@@ -22,6 +22,10 @@ func MakeBaseUrl() string {
     return fmt.Sprintf("%s://%s", protocol, BaseUrl)
 }
 
+func RiftLink(url string) {
+    return fmt.Sprintf("%s%s", ApiBase, url)
+}
+
 func MakeRedditLink(subreddit string) string {
     return fmt.Sprintf("https://reddit.com%s", subreddit)
 }

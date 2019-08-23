@@ -66,7 +66,8 @@ func Render(res *http.ResponseWriter, req *http.Request, tpl_name string, data R
 }
 
 func Redirect(res *http.ResponseWriter, req *http.Request, url string) {
-    http.Redirect(*res, req, url, http.StatusSeeOther)
+    url_with_base := RiftLink(url)
+    http.Redirect(*res, req, url_with_base, http.StatusSeeOther)
 }
 
 func Login(res *http.ResponseWriter, req *http.Request, path string) {
