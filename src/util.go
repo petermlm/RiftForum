@@ -22,7 +22,7 @@ func MakeBaseUrl() string {
     return fmt.Sprintf("%s://%s", protocol, BaseUrl)
 }
 
-func RiftLink(url string) {
+func RiftLink(url string) string {
     return fmt.Sprintf("%s%s", ApiBase, url)
 }
 
