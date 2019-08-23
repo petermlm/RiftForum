@@ -8,6 +8,7 @@ const (
     VersionString = "0.1"
     HostAndPort = ":8080"
     BaseUrl = "localhost:8080"
+    ApiBase = "/"
     Https = false
 
     // Database and Reddis

@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
-  {{template "head"}}
+  {{template "head" .}}
   <body>
     {{template "header" .}}
 
@@ -24,7 +24,7 @@
         <div id="user_info_about_form">
           <div id="user_info_about_text">{{template "bbcode_output" .AboutParagraphs}}</div>
           {{if or .IsSameUser .IsMod}}
-          <form method="POST" action="/users/{{.Username}}/about">
+          <form method="POST" action="{{.ApiBase}}users/{{.Username}}/about">
             <textarea class="form-control" name="about" placeholder="About" required>{{.About}}</textarea>
             <button type="submit" class="btn btn-default">Save</button>
           </form>
@@ -39,7 +39,7 @@
         <div id="user_info_signature_form">
           <div id="user_info_signature_text">{{template "bbcode_output" .SignatureParagraphs}}</div>
           {{if or .IsSameUser .IsMod}}
-          <form method="POST" action="/users/{{.Username}}/signature">
+          <form method="POST" action="{{.ApiBase}}users/{{.Username}}/signature">
             <textarea class="form-control" name="signature" placeholder="Signature" required>{{.Signature}}</textarea>
             <button type="submit" class="btn btn-default">Save</button>
           </form>
@@ -53,17 +53,17 @@
         <h2>Other Settings</h2>
         <ul>
         {{if .IsSameUser}}
-        <li><a href="/users/{{.Username}}/change_password">Change Password</a></li>
+        <li><a href="{{.ApiBase}}users/{{.Username}}/change_password">Change Password</a></li>
         {{else if .IsAdmin}}
-        <li><a href="/admin/users/{{.Username}}/change_password">Change Password</a></li>
+        <li><a href="{{.ApiBase}}admin/users/{{.Username}}/change_password">Change Password</a></li>
         {{end}}
 
         {{if and .IsAdmin (eq .IsSameUser false)}}
           <li>
           {{if .IsBanned}}
-            <a href="/admin/users/{{.Username}}/unban">Unban User</a>
+            <a href="{{.ApiBase}}admin/users/{{.Username}}/unban">Unban User</a>
           {{else}}
-            <a href="/admin/users/{{.Username}}/ban">Ban User</a>
+            <a href="{{.ApiBase}}admin/users/{{.Username}}/ban">Ban User</a>
           {{end}}
           </li>
         {{end}}

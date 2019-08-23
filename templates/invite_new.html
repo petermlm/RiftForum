@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
-  {{template "head"}}
+  {{template "head" .}}
   <body>
     {{template "header" .}}
 
@@ -20,7 +20,7 @@
           <small class="form-text text-muted">The URL for registration with this key</small>
         </div>
         <div class="form-group">
-          <a href="/admin/invites">Back</a>
+          <a href="{{.ApiBase}}admin/invites">Back</a>
         </div>
       </div>
     </div>

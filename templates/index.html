@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
-  {{template "head"}}
+  {{template "head" .}}
   <body>
     {{template "header" .}}
 
@@ -25,10 +25,10 @@
           {{range .Topics}}
           <tr>
             <td class="topics_list_title">
-              <a href="/topics/{{ .TopicId }}" class="link_visited">{{ .Title }}</a><br/>
+              <a href="{{$.ApiBase}}topics/{{ .TopicId }}" class="link_visited">{{ .Title }}</a><br/>
               <span class="topics_list_title_author">
                 By
-                <a href="/users/{{ .AuthorUsername }}" class="topics_list_title_author_hl">
+                <a href="{{$.ApiBase}}users/{{ .AuthorUsername }}" class="topics_list_title_author_hl">
                   {{ .AuthorUsername }}
                 </a>
                 on
@@ -40,7 +40,7 @@
               <span class="topics_list_last">
                 By
                 <span class="topics_list_last_hl">
-                  <a href="/users/{{ .LastAuthor }}">
+                  <a href="{{$.ApiBase}}users/{{ .LastAuthor }}">
                     {{ .LastAuthor }}
                   </a>
                 </span>
@@ -59,7 +59,7 @@
     {{if .HasUser}}
     <div class="new_topic_form_wrapper">
       <div class="new_topic_forum">
-        <form method="POST" action="/topics">
+        <form method="POST" action="{{.ApiBase}}topics">
           <input class="form-control" name="title" placeholder="Title" type="text" required />
           <textarea class="form-control" name="message" placeholder="Message" required></textarea>
           <button type="submit" class="btn btn-default submit_button" name="submit">Send</button>

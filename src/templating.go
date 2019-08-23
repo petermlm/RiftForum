@@ -54,17 +54,12 @@ func InitTmpl() {
 func Render(res *http.ResponseWriter, req *http.Request, tpl_name string, data RiftDataI) {
     ctx := req.Context()
     user_info, ok := ctx.Value("UserInfo").(*UserInfo)
-
     if ok {
         data.SetUserInfo(user_info)
     }
-
-    data.SetPath(req.URL.Path)
-    data.SetBannerSentence(set_banner_sentence())
-    data.SetVersion()
+    data.SetData(req.URL.Path)
 
     err := templates.ExecuteTemplate(*res, tpl_name, data)
-
     if err != nil {
         RiftForumPanic("Can't execute template", err)
     }

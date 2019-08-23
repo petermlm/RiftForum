@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
-  {{template "head"}}
+  {{template "head" .}}
   <body>
     {{template "header" .}}
 
@@ -19,7 +19,7 @@
           <div class="row">
             <div class="col-sm-2 message_list_author_info">
               <div class="message_list_author_info_name">
-                <a href="/users/{{.AuthorUsername}}"
+                <a href="{{$.ApiBase}}users/{{.AuthorUsername}}"
                 {{if eq .AuthorUsertype "Administrator"}}
                 class="text-warning"
                 {{else if eq .AuthorUsertype "Moderator"}}
@@ -37,7 +37,7 @@
               </div>
               {{if or $.IsMod (eq .AuthorId $.UserInfo.Id)}}
               <div class="message_list_edit_bnt">
-                <a href="/messages/{{.Id}}">Edit</a>
+                <a href="{{$.ApiBase}}messages/{{.Id}}">Edit</a>
               </div>
               {{end}}
             </div>
@@ -64,7 +64,7 @@
       {{if .HasUser}}
       <div class="new_message_wrapper">
         <div id="new_message" class="new_message">
-          <form method="POST" action="/topics/{{ .TopicId }}">
+          <form method="POST" action="{{.ApiBase}}topics/{{ .TopicId }}">
             <input type="hidden" name="method" value="post" />
             <input type="hidden" name="message_id" value="" />
             <textarea class="form-control" name="message" placeholder="Message" required></textarea>

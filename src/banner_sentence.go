@@ -21,6 +21,6 @@ var banner_sentences = [...]string{
     "No lollygagging",
 }
 
-func set_banner_sentence() string {
+func get_banner_sentence() string {
     return banner_sentences[rand.Intn(len(banner_sentences))]
 }

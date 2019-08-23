@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
-  {{template "head"}}
+  {{template "head" .}}
   <body>
     {{template "header" .}}
 
@@ -42,7 +42,7 @@
             <tr>
             {{end}}
               <td>
-                <a href="/users/{{.Username}}">{{.Username}}</a>
+                <a href="{{$.ApiBase}}users/{{.Username}}">{{.Username}}</a>
                 {{template "banned" .IsBanned}}
               </td>
               <td class="users_list_user_type">
@@ -57,9 +57,9 @@
                 {{if eq .Usertype "Administrator"}}
                 -
                 {{else if eq .Usertype "Moderator"}}
-                <a href="/admin/users/{{.Username}}/change_type?new_type=basic">Make Basic</a>
+                <a href="{{$.ApiBase}}admin/users/{{.Username}}/change_type?new_type=basic">Make Basic</a>
                 {{else}}
-                <a href="/admin/users/{{.Username}}/change_type?new_type=moderator">Make Moderator</a>
+                <a href="{{$.ApiBase}}admin/users/{{.Username}}/change_type?new_type=moderator">Make Moderator</a>
                 {{end}}
               </td>
               {{end}}

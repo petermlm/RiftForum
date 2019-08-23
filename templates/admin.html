@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
-  {{template "head"}}
+  {{template "head" .}}
   <body>
     {{template "header" .}}
 
@@ -13,7 +13,7 @@
     </div>
 
     <div class="page_content_wrapper">
-      <a class="page_content_wrapper_in" href="/admin/invites">To Invites</a>
+      <a class="page_content_wrapper_in" href="{{.ApiBase}}admin/invites">To Invites</a>
     </div>
 
     </main>

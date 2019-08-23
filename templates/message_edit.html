@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
-  {{template "head"}}
+  {{template "head" .}}
   <body>
     {{template "header" .}}
 
@@ -8,13 +8,13 @@
 
     <div class="page_title_wrapper">
       <div class="page_title">
-        <h1>Editing In: <a href="/topics/{{.TopicId}}">{{.Title}}</a></h1>
+        <h1>Editing In: <a href="{{.ApiBase}}topics/{{.TopicId}}">{{.Title}}</a></h1>
       </div>
     </div>
 
     <div class="edit_message_wrapper">
       <div class="edit_message">
-        <form method="POST" action="/messages/{{.Id}}">
+        <form method="POST" action="{{.ApiBase}}messages/{{.Id}}">
           <textarea class="form-control" name="message" placeholder="Message" required>{{.Message}}</textarea>
           <button type="submit" class="btn btn-default submit_button" name="submit">Send</button>
         </form>

@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
-  {{template "head"}}
+  {{template "head" .}}
   <body>
     {{template "header" .}}
 
@@ -9,7 +9,7 @@
     <div class="page_content_wrapper">
       <div class="notfound-container">
         Admin Only<br />
-        Click <a href="/">here</a> to go main page
+        Click <a href="{{.ApiBase}}">here</a> to go main page
       </div>
     </div>
 

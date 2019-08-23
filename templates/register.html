@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
-  {{template "head"}}
+  {{template "head" .}}
   <body>
     {{template "header" .}}
 
@@ -14,7 +14,7 @@
 
     <div class="page_content_wrapper">
       <div class="register-container">
-        <form method="POST" action="/register">
+        <form method="POST" action="{{.ApiBase}}register">
           <input class="form-control" name="invite_key" placeholder="Invite Key" type="text"
                                                                                  {{if .HasKey}} value="{{.Key}}"{{end}}
                                                                                                 required />
