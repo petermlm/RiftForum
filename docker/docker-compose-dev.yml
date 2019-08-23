@@ -4,7 +4,7 @@ services:
     container_name: riftforum_server_dev
     build:
       context: ..
-      dockerfile: docker/server.docker
+      dockerfile: docker/server-dev.docker
     ports:
       - "8080:8080"
     depends_on:
