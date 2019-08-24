@@ -16,8 +16,8 @@
       <div class="register-container">
         <form method="POST" action="{{.ApiBase}}register">
           <input class="form-control" name="invite_key" placeholder="Invite Key" type="text"
-                                                                                 {{if .HasKey}} value="{{.Key}}"{{end}}
-                                                                                                required />
+            {{if .HasKey}} value="{{.Key}}"{{end}}
+          required />
           <input class="form-control" name="username" placeholder="Username" type="text" required />
           <input class="form-control" name="password" placeholder="Password" type="password" required />
           <input class="form-control" name="password2" placeholder="Confirm Password" type="password" required />

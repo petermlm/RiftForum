@@ -76,8 +76,13 @@ func register_post(res http.ResponseWriter, req *http.Request) {
     form_password := req.PostFormValue("password")
     form_password2 := req.PostFormValue("password2")
 
-    Register(form_invite_key, form_username, form_password, form_password2)
-    Redirect(&res, req, "/")
+    err := Register(form_invite_key, form_username, form_password, form_password2)
+
+    if err != nil {
+        Redirect(&res, req, "/")
+    } else {
+        Redirect(&res, req, "/register")
+    }
 }
 
 func admin_get(res http.ResponseWriter, req *http.Request) {

@@ -23,6 +23,7 @@ const (
     RedisAddr = "redis:6379"
 
     // Users and Invites
+    MaxUsernameSize = 20
     AdminUsername = "admin"
     FirstUsername = "Pedro"
     DefaultPassword = "pl"

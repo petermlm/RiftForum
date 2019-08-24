@@ -57,6 +57,10 @@ func NewUser(username string, user_type UserTypes, password string) *User {
         panic(err)
     }
 
+    if len(username) > MaxUsernameSize {
+        panic("Username is to big")
+    }
+
     user := &User{
         Username: username,
         PasswordHash: hash,

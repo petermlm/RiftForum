@@ -14,6 +14,10 @@ func Register(invite_key string,
         return errors.New("Invite doesn't exist")
     }
 
+    if len(username) > MaxUsernameSize {
+        return errors.New("Username is to big")
+    }
+
     NewUser(username, Basic, password)
     InviteSet(invite_key, Used)
 
