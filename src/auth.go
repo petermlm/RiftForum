@@ -1,10 +1,10 @@
 package main
 
 import (
-    "log"
-    "crypto/rand"
     "errors"
     "fmt"
+    "io/ioutil"
+    "log"
     "time"
 
     "golang.org/x/crypto/bcrypt"
@@ -24,10 +24,10 @@ func InitAuth() {
     if DebugMode {
         secret = []byte("secret")
     } else {
-        secret = make([]byte, 64)
-        _, err := rand.Read(secret)
+        var err error
+        secret, err = ioutil.ReadFile(SecretFilename)
         if err != nil {
-            panic("Could not generate server secret.")
+            panic("Could not read file with secret.")
         }
     }
 

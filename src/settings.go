@@ -11,6 +11,9 @@ const (
     ApiBase = "/"
     Https = false
 
+    // Secret
+    SecretFilename = "secret"
+
     // Database and Reddis
     DatabaseConnRetries = 5
     DatabaseAddr = "postgres:5432"
