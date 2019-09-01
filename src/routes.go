@@ -66,7 +66,8 @@ func logout_post(res http.ResponseWriter, req *http.Request) {
 
 func register_get(res http.ResponseWriter, req *http.Request) {
     key := req.URL.Query().Get("key")
-    data := SerializeRegister(key)
+    errors := RegisterErrors{false, false, false, false}
+    data := SerializeRegister(key, errors)
     Render(&res, req, "register.html", data)
 }
 
@@ -76,12 +77,13 @@ func register_post(res http.ResponseWriter, req *http.Request) {
     form_password := req.PostFormValue("password")
     form_password2 := req.PostFormValue("password2")
 
-    err := Register(form_invite_key, form_username, form_password, form_password2)
+    errors := Register(form_invite_key, form_username, form_password, form_password2)
 
-    if err != nil {
+    if errors == nil {
         Redirect(&res, req, "/")
     } else {
-        Redirect(&res, req, "/register")
+        data := SerializeRegister(form_invite_key, *errors)
+        Render(&res, req, "register.html", data)
     }
 }
 
@@ -141,7 +143,8 @@ func admin_users_change_type_get(res http.ResponseWriter, req *http.Request) {
 }
 
 func admin_users_change_password_get(res http.ResponseWriter, req *http.Request) {
-    render_change_password(res, req, true, false, false)
+    errors := ChangePasswordErrors{false, false}
+    render_change_password(res, req, true, errors)
 }
 
 func admin_users_change_password_post(res http.ResponseWriter, req *http.Request) {
@@ -160,7 +163,8 @@ func admin_users_change_password_post(res http.ResponseWriter, req *http.Request
     err = ChangePassword(user, form_new_password, form_new_password2)
 
     if err != nil {
-        render_change_password(res, req, false, false, true)
+        errors := ChangePasswordErrors{false, true}
+        render_change_password(res, req, false, errors)
         return
     }
 
@@ -412,7 +416,8 @@ func user_signature_post(res http.ResponseWriter, req *http.Request) {
 }
 
 func user_change_password_get(res http.ResponseWriter, req *http.Request) {
-    render_change_password(res, req, false, false, false)
+    errors := ChangePasswordErrors{false, false}
+    render_change_password(res, req, false, errors)
 }
 
 func user_change_password_post(res http.ResponseWriter, req *http.Request) {
@@ -430,14 +435,16 @@ func user_change_password_post(res http.ResponseWriter, req *http.Request) {
     }
 
     if !VerifyUserPass(user, form_old_password) {
-        render_change_password(res, req, false, true, false)
+        errors := ChangePasswordErrors{true, false}
+        render_change_password(res, req, false, errors)
         return
     }
 
     err = ChangePassword(user, form_new_password, form_new_password2)
 
     if err != nil {
-        render_change_password(res, req, false, false, true)
+        errors := ChangePasswordErrors{false, true}
+        render_change_password(res, req, false, errors)
         return
     }
 
@@ -537,8 +544,7 @@ func render_change_password(
     res http.ResponseWriter,
     req *http.Request,
     is_for_admin bool,
-    old_password_wrong bool,
-    new_passwords_not_equal bool,
+    errors ChangePasswordErrors,
 ) {
     vars := mux.Vars(req)
     username := vars["username"]
@@ -550,7 +556,7 @@ func render_change_password(
         return
     }
 
-    data := SerializeChangePassword(user, is_for_admin, old_password_wrong, new_passwords_not_equal)
+    data := SerializeChangePassword(user, is_for_admin, errors)
     Render(&res, req, "change_password.html", data)
 }
 

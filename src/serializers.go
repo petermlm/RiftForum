@@ -126,21 +126,49 @@ func (u *UserData) IsSameUser() bool {
     return u.SameUser
 }
 
+type RegisterErrors struct {
+    invite_key_bad bool
+    username_alreay_taken bool
+    username_is_invalid bool
+    passwords_dont_match bool
+}
+
 type RegisterData struct {
     RiftData
     Key string
+    errors RegisterErrors
 }
 
 func (r *RegisterData) HasKey() bool {
     return r.Key != ""
 }
 
+func (r *RegisterData) InviteKeyBad() bool {
+    return r.errors.invite_key_bad
+}
+
+func (r *RegisterData) UsernameAlreayTaken() bool {
+    return r.errors.username_alreay_taken
+}
+
+func (r *RegisterData) UsernameIsInvalid() bool {
+    return r.errors.username_is_invalid
+}
+
+func (r *RegisterData) PasswordsDontMatch() bool {
+    return r.errors.passwords_dont_match
+}
+
+type ChangePasswordErrors struct {
+    old_password_wrong bool
+    new_passwords_not_equal bool
+}
+
 type ChangePasswordData struct {
     RiftData
     Username string
     is_for_admin bool
-    old_password_wrong bool
-    new_passwords_not_equal bool
+    errors ChangePasswordErrors
 }
 
 func (c *ChangePasswordData) IsForAdmin() bool {
@@ -148,11 +176,11 @@ func (c *ChangePasswordData) IsForAdmin() bool {
 }
 
 func (c *ChangePasswordData) OldPasswordIsWrong() bool {
-    return c.old_password_wrong
+    return c.errors.old_password_wrong
 }
 
 func (c *ChangePasswordData) NewPasswordsNotEqual() bool {
-    return c.new_passwords_not_equal
+    return c.errors.new_passwords_not_equal
 }
 
 type InviteListData struct {
@@ -289,23 +317,22 @@ func SerializeUser(cusername string, user *User) *UserData {
     return ser_user
 }
 
-func SerializeRegister(key string) *RegisterData {
+func SerializeRegister(key string, errors RegisterErrors) *RegisterData {
     ser_register := new(RegisterData)
     ser_register.Key = key
+    ser_register.errors = errors
     return ser_register
 }
 
 func SerializeChangePassword(
     user *User,
     is_for_admin bool,
-    old_password_wrong bool,
-    new_passwords_not_equal bool,
+    errors ChangePasswordErrors,
 ) *ChangePasswordData {
     ser_change_password := new(ChangePasswordData)
     ser_change_password.Username = user.Username
     ser_change_password.is_for_admin = is_for_admin
-    ser_change_password.old_password_wrong = old_password_wrong
-    ser_change_password.new_passwords_not_equal = new_passwords_not_equal
+    ser_change_password.errors = errors
     return ser_change_password
 }
 

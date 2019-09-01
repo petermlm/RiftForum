@@ -22,6 +22,11 @@
           <input class="form-control" name="password" placeholder="Password" type="password" required />
           <input class="form-control" name="password2" placeholder="Confirm Password" type="password" required />
           <button class="form-control btn btn-default" type="submit">Register</button>
+
+          {{if .InviteKeyBad}}{{template "password_form_error" "Invite Is Invalid"}}{{end}}
+          {{if .UsernameAlreayTaken}}{{template "password_form_error" "Username Already Taken"}}{{end}}
+          {{if .UsernameIsInvalid}}{{template "password_form_error" "Username Is Invalid"}}{{end}}
+          {{if .PasswordsDontMatch}}{{template "password_form_error" "Passwords Don't Match"}}{{end}}
         </form>
       </div>
     </div>

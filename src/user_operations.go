@@ -5,22 +5,31 @@ import "errors"
 func Register(invite_key string,
               username string,
               password string,
-              password2 string) error {
+              password2 string) *RegisterErrors {
+    register_errors := &RegisterErrors{false, false, false, false}
+
     if password != password2 {
-        return errors.New("Passwords don't match")
+        register_errors.passwords_dont_match = true
+        return register_errors
     }
 
     if !InviteExists(invite_key) {
-        return errors.New("Invite doesn't exist")
+        register_errors.invite_key_bad = true
+        return register_errors
     }
 
     if len(username) > MaxUsernameSize {
-        return errors.New("Username is to big")
+        register_errors.username_is_invalid = true
+        return register_errors
+    }
+
+    if _, err := GetUser(username); err == nil {
+        register_errors.username_alreay_taken = true
+        return register_errors
     }
 
     NewUser(username, Basic, password)
     InviteSet(invite_key, Used)
-
     return nil
 }
 
