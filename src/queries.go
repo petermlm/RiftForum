@@ -1,190 +1,190 @@
 package main
 
 import (
-    "fmt"
-    "errors"
-    "time"
-    "github.com/go-pg/pg/orm"
+	"errors"
+	"fmt"
+	"github.com/go-pg/pg/orm"
+	"time"
 )
 
 func GetUser(username string) (*User, error) {
-    db := GetDBCon()
+	db := GetDBCon()
 
-    user := new(User)
-    err := db.Model(user).
-        Where("\"user\".username = ?", username).
-        Select()
+	user := new(User)
+	err := db.Model(user).
+		Where("\"user\".username = ?", username).
+		Select()
 
-    if err != nil {
-        return nil, errors.New("User doesn't exist")
-    }
+	if err != nil {
+		return nil, errors.New("User doesn't exist")
+	}
 
-    return user, nil
+	return user, nil
 }
 
 func GetUsers(page Page) []*User {
-    db := GetDBCon()
-    var users []*User
+	db := GetDBCon()
+	var users []*User
 
-    err := db.Model(&users).
-        Order("user.created_at DESC").
-        Limit(page.limit).
-        Offset(page.offset).
-        Select()
+	err := db.Model(&users).
+		Order("user.created_at DESC").
+		Limit(page.limit).
+		Offset(page.offset).
+		Select()
 
-    if err != nil {
-        panic(err)
-    }
+	if err != nil {
+		panic(err)
+	}
 
-    return users
+	return users
 }
 
 func CountUsersPages(page Page) int {
-    db := GetDBCon()
-    count, err := db.Model(&User{}).Count()
+	db := GetDBCon()
+	count, err := db.Model(&User{}).Count()
 
-    if err != nil {
-        panic(err)
-    }
+	if err != nil {
+		panic(err)
+	}
 
-    return count_pages(page, count)
+	return count_pages(page, count)
 }
 
 func UserTypeSet(username string, new_type UserTypes) {
-    db := GetDBCon()
+	db := GetDBCon()
 
-    user := new(User)
-    err := db.Model(user).
-        Where("\"user\".username = ?", username).
-        Select()
+	user := new(User)
+	err := db.Model(user).
+		Where("\"user\".username = ?", username).
+		Select()
 
-    if err != nil {
-        return
-    }
+	if err != nil {
+		return
+	}
 
-    user.Usertype = new_type
-    db.Update(user)
+	user.Usertype = new_type
+	db.Update(user)
 }
 
 func UserSetAbout(username string, new_about string) {
-    db := GetDBCon()
+	db := GetDBCon()
 
-    user := new(User)
-    err := db.Model(user).
-        Where("\"user\".username = ?", username).
-        Select()
+	user := new(User)
+	err := db.Model(user).
+		Where("\"user\".username = ?", username).
+		Select()
 
-    if err != nil {
-        return
-    }
+	if err != nil {
+		return
+	}
 
-    user.About = new_about
-    db.Update(user)
+	user.About = new_about
+	db.Update(user)
 }
 
 func UserSetSignature(username string, new_signature string) {
-    db := GetDBCon()
+	db := GetDBCon()
 
-    user := new(User)
-    err := db.Model(user).
-        Where("\"user\".username = ?", username).
-        Select()
+	user := new(User)
+	err := db.Model(user).
+		Where("\"user\".username = ?", username).
+		Select()
 
-    if err != nil {
-        return
-    }
+	if err != nil {
+		return
+	}
 
-    user.Signature = new_signature
-    db.Update(user)
+	user.Signature = new_signature
+	db.Update(user)
 }
 
 func SaveUser(user *User) {
-    db := GetDBCon()
-    err := db.Insert(user)
+	db := GetDBCon()
+	err := db.Insert(user)
 
-    if err != nil {
-        panic(err)
-    }
+	if err != nil {
+		panic(err)
+	}
 }
 
 func BanUser(user *User) {
-    if user.Usertype == Administrator {
-        panic("Administrator can't be banned")
-    }
+	if user.Usertype == Administrator {
+		panic("Administrator can't be banned")
+	}
 
-    user.Banned = true
-    db.Update(user)
+	user.Banned = true
+	db.Update(user)
 }
 
 func UnbanUser(user *User) {
-    user.Banned = false
-    db.Update(user)
+	user.Banned = false
+	db.Update(user)
 }
 
 func GetInvites(page Page) []*Invite {
-    db := GetDBCon()
-    var invites []*Invite
+	db := GetDBCon()
+	var invites []*Invite
 
-    err := db.Model(&invites).
-        Order("invite.created_at DESC").
-        Limit(page.limit).
-        Offset(page.offset).
-        Select()
+	err := db.Model(&invites).
+		Order("invite.created_at DESC").
+		Limit(page.limit).
+		Offset(page.offset).
+		Select()
 
-    if err != nil {
-        panic(err)
-    }
+	if err != nil {
+		panic(err)
+	}
 
-    return invites
+	return invites
 }
 
 func CountInvitesPages(page Page) int {
-    db := GetDBCon()
-    count, err := db.Model(&Invite{}).Count()
+	db := GetDBCon()
+	count, err := db.Model(&Invite{}).Count()
 
-    if err != nil {
-        panic(err)
-    }
+	if err != nil {
+		panic(err)
+	}
 
-    return count_pages(page, count)
+	return count_pages(page, count)
 }
 
 func InviteExists(invite_key string) bool {
-    invite := new(Invite)
-    err := db.Model(invite).
-        Where("\"invite\".key = ?", invite_key).
-        Select()
+	invite := new(Invite)
+	err := db.Model(invite).
+		Where("\"invite\".key = ?", invite_key).
+		Select()
 
-    if err != nil {
-        return false
-    }
+	if err != nil {
+		return false
+	}
 
-    return true
+	return true
 }
 
 func InviteSet(invite_key string, new_status InviteStatus) {
-    invite := new(Invite)
-    err := db.Model(invite).
-        Where("\"invite\".key = ?", invite_key).
-        Select()
+	invite := new(Invite)
+	err := db.Model(invite).
+		Where("\"invite\".key = ?", invite_key).
+		Select()
 
-    if err != nil {
-        return
-    }
+	if err != nil {
+		return
+	}
 
-    if !(invite.Status == Unused && new_status == Canceled) &&
-        !(invite.Status == Unused && new_status == Used) {
-        return
-    }
+	if !(invite.Status == Unused && new_status == Canceled) &&
+		!(invite.Status == Unused && new_status == Used) {
+		return
+	}
 
-    invite.Status = new_status
-    db.Update(invite)
+	invite.Status = new_status
+	db.Update(invite)
 }
 
 func InviteCancelAll() {
-    db := GetDBCon()
+	db := GetDBCon()
 
-    db.Model((*Invite)(nil)).Exec(fmt.Sprintf(`
+	db.Model((*Invite)(nil)).Exec(fmt.Sprintf(`
         UPDATE invites
         SET status = %d
         WHERE status = %d
@@ -192,107 +192,107 @@ func InviteCancelAll() {
 }
 
 func GetTopics(page Page) []*Topic {
-    db := GetDBCon()
-    var topics []*Topic
+	db := GetDBCon()
+	var topics []*Topic
 
-    err := db.Model(&topics).
-        Relation("Author").
-        Relation("Messages", func(q *orm.Query) (*orm.Query, error) {
-            return q.Order("message.created_at ASC"), nil
-        }).
-        Relation("Messages.Author").
-        Order("topic.updated_at DESC").
-        Limit(page.limit).
-        Offset(page.offset).
-        Select()
+	err := db.Model(&topics).
+		Relation("Author").
+		Relation("Messages", func(q *orm.Query) (*orm.Query, error) {
+			return q.Order("message.created_at ASC"), nil
+		}).
+		Relation("Messages.Author").
+		Order("topic.updated_at DESC").
+		Limit(page.limit).
+		Offset(page.offset).
+		Select()
 
-    if err != nil {
-        panic(err)
-    }
+	if err != nil {
+		panic(err)
+	}
 
-    return topics
+	return topics
 }
 
 func CountTopicsPages(page Page) int {
-    db := GetDBCon()
-    count, err := db.Model(&Topic{}).Count()
+	db := GetDBCon()
+	count, err := db.Model(&Topic{}).Count()
 
-    if err != nil {
-        panic(err)
-    }
+	if err != nil {
+		panic(err)
+	}
 
-    return count_pages(page, count)
+	return count_pages(page, count)
 }
 
 func GetTopic(topic_id uint, page Page) *Topic {
-    db := GetDBCon()
+	db := GetDBCon()
 
-    topic := new(Topic)
-    err := db.Model(topic).
-        Relation("Author").
-        Relation("Messages", func(q *orm.Query) (*orm.Query, error) {
-            return q.Order("message.created_at ASC").
-                Limit(page.limit).
-                Offset(page.offset),
-                nil
-        }).
-        Relation("Messages.Author").
-        Where("topic.id = ?", topic_id).
-        Select()
+	topic := new(Topic)
+	err := db.Model(topic).
+		Relation("Author").
+		Relation("Messages", func(q *orm.Query) (*orm.Query, error) {
+			return q.Order("message.created_at ASC").
+					Limit(page.limit).
+					Offset(page.offset),
+				nil
+		}).
+		Relation("Messages.Author").
+		Where("topic.id = ?", topic_id).
+		Select()
 
-    if err != nil {
-        return nil
-    }
+	if err != nil {
+		return nil
+	}
 
-    return topic
+	return topic
 }
 
 func CountMessagePages(topic_id uint, page Page) int {
-    db := GetDBCon()
-    count, err := db.Model(&Message{}).Where("topic_id = ?", topic_id).Count()
+	db := GetDBCon()
+	count, err := db.Model(&Message{}).Where("topic_id = ?", topic_id).Count()
 
-    if err != nil {
-        panic(err)
-    }
+	if err != nil {
+		panic(err)
+	}
 
-    return count_pages(page, count)
+	return count_pages(page, count)
 }
 
 func UpdateTopic(topic *Topic) {
-    topic.UpdatedAt = time.Now()
-    err := db.Update(topic)
+	topic.UpdatedAt = time.Now()
+	err := db.Update(topic)
 
-    if err != nil {
-        panic(err)
-    }
+	if err != nil {
+		panic(err)
+	}
 }
 
 func GetMessage(message_id uint) *Message {
-    db := GetDBCon()
+	db := GetDBCon()
 
-    message := new(Message)
-    err := db.Model(message).
-        Relation("Author").
-        Relation("Topic").
-        Where("message.id = ?", message_id).
-        Select()
+	message := new(Message)
+	err := db.Model(message).
+		Relation("Author").
+		Relation("Topic").
+		Where("message.id = ?", message_id).
+		Select()
 
-    if err != nil {
-        return nil
-    }
+	if err != nil {
+		return nil
+	}
 
-    return message
+	return message
 }
 
 func UpdateMessage(message *Message) {
-    message.UpdatedAt = time.Now()
-    err := db.Update(message)
+	message.UpdatedAt = time.Now()
+	err := db.Update(message)
 
-    if err != nil {
-        panic(err)
-    }
+	if err != nil {
+		panic(err)
+	}
 }
 
 func count_pages(page Page, count int) int {
-    return (count - 1) / page.get_size()
+	return (count - 1) / page.get_size()
 }

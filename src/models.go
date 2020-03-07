@@ -2,17 +2,17 @@ package main
 
 import (
 	"errors"
+	"fmt"
 	"regexp"
-    "fmt"
-    "time"
+	"time"
 
-    "golang.org/x/crypto/bcrypt"
+	"golang.org/x/crypto/bcrypt"
 )
 
 type DBObject struct {
-    Id uint
-    CreatedAt time.Time `sql:"default:now()"`
-    UpdatedAt time.Time `sql:"default:now()"`
+	Id        uint
+	CreatedAt time.Time `sql:"default:now()"`
+	UpdatedAt time.Time `sql:"default:now()"`
 }
 
 /* ============================================================================
@@ -23,72 +23,72 @@ type DBObject struct {
 type UserTypes uint8
 
 const (
-    Administrator = iota + 1
-    Moderator
-    Basic
-    Bot
+	Administrator = iota + 1
+	Moderator
+	Basic
+	Bot
 )
 
 type User struct {
-    DBObject
+	DBObject
 
-    Username string `sql:",notnull,unique"`
-    PasswordHash string `sql:",notnull"`
-    Signature string `sql:"default:''`
-    About string `sql:"default:''`
-    Usertype UserTypes `sql:",notnull"`
-    Banned bool `sql:",defautl:false"`
+	Username     string    `sql:",notnull,unique"`
+	PasswordHash string    `sql:",notnull"`
+	Signature    string    `sql:"default:''`
+	About        string    `sql:"default:''`
+	Usertype     UserTypes `sql:",notnull"`
+	Banned       bool      `sql:",defautl:false"`
 }
 
 func GenerateHash(password string) (string, error) {
-    salted_bytes := []byte(password)
-    hashed_bytes, err := bcrypt.GenerateFromPassword(salted_bytes, bcrypt.DefaultCost)
+	salted_bytes := []byte(password)
+	hashed_bytes, err := bcrypt.GenerateFromPassword(salted_bytes, bcrypt.DefaultCost)
 
-    if err != nil {
-        return "", err
-    }
+	if err != nil {
+		return "", err
+	}
 
-    hash := string(hashed_bytes[:])
-    return hash, nil
+	hash := string(hashed_bytes[:])
+	return hash, nil
 }
 
 func NewUser(username string, user_type UserTypes, password string) (*User, error) {
-    hash, err := GenerateHash(password)
+	hash, err := GenerateHash(password)
 
-    if err != nil {
-        panic(err)
-    }
+	if err != nil {
+		panic(err)
+	}
 
-    if len(username) > MaxUsernameSize {
-        return nil, errors.New("Username is to big")
-    }
+	if len(username) > MaxUsernameSize {
+		return nil, errors.New("Username is to big")
+	}
 
 	var valid_username = regexp.MustCompile("^[a-zA-Z0-9]{1,20}$")
 	if !valid_username.MatchString(username) {
-        return nil, errors.New("Invalid username")
+		return nil, errors.New("Invalid username")
 	}
 
-    user := &User{
-        Username: username,
-        PasswordHash: hash,
-        Usertype: user_type,
-    }
-    db.Insert(user)
-    SendNewUser(user)
-    return user, nil
+	user := &User{
+		Username:     username,
+		PasswordHash: hash,
+		Usertype:     user_type,
+	}
+	db.Insert(user)
+	SendNewUser(user)
+	return user, nil
 }
 
 func (u User) GetUserType() string {
-    if u.Usertype == Administrator {
-        return "Administrator"
-    } else if u.Usertype == Moderator {
-        return "Moderator"
-    } else if u.Usertype == Basic {
-        return "Basic"
-    } else if u.Usertype == Bot {
-        return "Bot"
-    }
-    return "NoType"
+	if u.Usertype == Administrator {
+		return "Administrator"
+	} else if u.Usertype == Moderator {
+		return "Moderator"
+	} else if u.Usertype == Basic {
+		return "Basic"
+	} else if u.Usertype == Bot {
+		return "Bot"
+	}
+	return "NoType"
 }
 
 /* ============================================================================
@@ -97,50 +97,50 @@ func (u User) GetUserType() string {
  */
 
 type Topic struct {
-    DBObject
+	DBObject
 
-    Title string `sql:",notnull"`
+	Title string `sql:",notnull"`
 
-    AuthorId uint `sql:",notnull"`
-    Author *User `sql:",notnull"`
+	AuthorId uint  `sql:",notnull"`
+	Author   *User `sql:",notnull"`
 
-    Messages []*Message
+	Messages []*Message
 }
 
 func NewTopic(user *User, title_text string, message_text string) *Topic {
-    var err error
+	var err error
 
-    // Topic
-    topic := &Topic{
-        Title: title_text,
-        Author: user,
-        AuthorId: user.Id,
-    }
+	// Topic
+	topic := &Topic{
+		Title:    title_text,
+		Author:   user,
+		AuthorId: user.Id,
+	}
 
-    err = db.Insert(topic)
+	err = db.Insert(topic)
 
-    if err != nil {
-        panic(err)
-    }
+	if err != nil {
+		panic(err)
+	}
 
-    // Message
-    message := &Message{
-        Message: message_text,
-        Author: user,
-        AuthorId: user.Id,
-        Topic: topic,
-        TopicId: topic.Id,
-    }
+	// Message
+	message := &Message{
+		Message:  message_text,
+		Author:   user,
+		AuthorId: user.Id,
+		Topic:    topic,
+		TopicId:  topic.Id,
+	}
 
-    err = db.Insert(message)
+	err = db.Insert(message)
 
-    if err != nil {
-        panic(err)
-    }
+	if err != nil {
+		panic(err)
+	}
 
-    SendNewMessage(message)
-    SendNewTopic(topic)
-    return topic
+	SendNewMessage(message)
+	SendNewTopic(topic)
+	return topic
 }
 
 /* ============================================================================
@@ -149,35 +149,35 @@ func NewTopic(user *User, title_text string, message_text string) *Topic {
  */
 
 type Message struct {
-    DBObject
-    Message string `sql:",notnull"`
+	DBObject
+	Message string `sql:",notnull"`
 
-    AuthorId uint `sql:",notnull"`
-    Author *User `sql:",notnull"`
+	AuthorId uint  `sql:",notnull"`
+	Author   *User `sql:",notnull"`
 
-    TopicId uint `sql:",notnull"`
-    Topic *Topic `sql:",notnull"`
+	TopicId uint   `sql:",notnull"`
+	Topic   *Topic `sql:",notnull"`
 }
 
 func NewMessage(user *User, topic *Topic, message_text string) *Message {
-    UpdateTopic(topic)
+	UpdateTopic(topic)
 
-    message := &Message{
-        Message: message_text,
-        Author: user,
-        AuthorId: user.Id,
-        Topic: topic,
-        TopicId: topic.Id,
-    }
+	message := &Message{
+		Message:  message_text,
+		Author:   user,
+		AuthorId: user.Id,
+		Topic:    topic,
+		TopicId:  topic.Id,
+	}
 
-    err := db.Insert(message)
+	err := db.Insert(message)
 
-    if err != nil {
-        panic(err)
-    }
+	if err != nil {
+		panic(err)
+	}
 
-    SendNewMessage(message)
-    return message
+	SendNewMessage(message)
+	return message
 }
 
 /* ============================================================================
@@ -188,30 +188,30 @@ func NewMessage(user *User, topic *Topic, message_text string) *Message {
 type InviteStatus uint8
 
 const (
-    Unused = iota + 1
-    Used
-    Canceled
+	Unused = iota + 1
+	Used
+	Canceled
 )
 
 type Invite struct {
-    DBObject
-    Key string `sql:",notnull,unique"`
-    Status InviteStatus `sql:",notnull"`
+	DBObject
+	Key    string       `sql:",notnull,unique"`
+	Status InviteStatus `sql:",notnull"`
 }
 
 func (i Invite) GetInviteStatus() string {
-    if i.Status == Unused {
-        return "Unused"
-    } else if i.Status == Used {
-        return "Used"
-    } else if i.Status == Canceled {
-        return "Canceled"
-    }
+	if i.Status == Unused {
+		return "Unused"
+	} else if i.Status == Used {
+		return "Used"
+	} else if i.Status == Canceled {
+		return "Canceled"
+	}
 
-    return "NoStatus"
+	return "NoStatus"
 }
 
 func (i Invite) GetKeyUrl() string {
-    base_url := MakeBaseUrl()
-    return fmt.Sprintf("%s/register?key=%s", base_url, i.Key)
+	base_url := MakeBaseUrl()
+	return fmt.Sprintf("%s/register?key=%s", base_url, i.Key)
 }
