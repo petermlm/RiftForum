@@ -11,7 +11,7 @@ func init() {
         fmt.Println("Creating default users...")
 
         // Admin and first user
-        NewUser(AdminUsername, Administrator, DefaultPassword)
+		NewUser(AdminUsername, Administrator, DefaultPassword)
         NewUser(FirstUsername, Moderator, DefaultPassword)
 
         // Bots
@@ -19,6 +19,17 @@ func init() {
         NewUser("GreeterBot", Bot, DefaultPassword)
         NewUser("RedditBot", Bot, DefaultPassword)
         NewUser("YoutubeBot", Bot, DefaultPassword)
+
+		u := new(User)
+		db.Model(u).Where("Username = ?", "admin").Select()
+		for i:=0; i<30; i++ {
+			NewTopic(u, "lol", "lol")
+		}
+
+		t := GetTopic(1, PageDefault())
+		for i:=0; i<30; i++ {
+			NewMessage(u, t, "XD")
+		}
 
         return nil
     }, func(db migrations.DB) error {

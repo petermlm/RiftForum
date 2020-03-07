@@ -1,6 +1,8 @@
 package main
 
 import (
+	"errors"
+	"regexp"
     "fmt"
     "time"
 
@@ -50,7 +52,7 @@ func GenerateHash(password string) (string, error) {
     return hash, nil
 }
 
-func NewUser(username string, user_type UserTypes, password string) *User {
+func NewUser(username string, user_type UserTypes, password string) (*User, error) {
     hash, err := GenerateHash(password)
 
     if err != nil {
@@ -58,8 +60,13 @@ func NewUser(username string, user_type UserTypes, password string) *User {
     }
 
     if len(username) > MaxUsernameSize {
-        panic("Username is to big")
+        return nil, errors.New("Username is to big")
     }
+
+	var valid_username = regexp.MustCompile("^[a-zA-Z0-9]{1,20}$")
+	if !valid_username.MatchString(username) {
+        return nil, errors.New("Invalid username")
+	}
 
     user := &User{
         Username: username,
@@ -68,7 +75,7 @@ func NewUser(username string, user_type UserTypes, password string) *User {
     }
     db.Insert(user)
     SendNewUser(user)
-    return user
+    return user, nil
 }
 
 func (u User) GetUserType() string {

@@ -562,6 +562,7 @@ func render_change_password(
 
 func CreateRouter() *mux.Router {
     router := mux.NewRouter()
+	router.StrictSlash(true)
     router.HandleFunc("/", index).Methods("GET")
     router.HandleFunc("/login", login_get).Methods("GET")
     router.HandleFunc("/login", login_post).Methods("POST")

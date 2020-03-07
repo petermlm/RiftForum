@@ -57,7 +57,11 @@ func Render(res *http.ResponseWriter, req *http.Request, tpl_name string, data R
     if ok {
         data.SetUserInfo(user_info)
     }
-    data.SetData(req.URL.Path)
+	if ApiBase != "/" {
+		data.SetData(ApiBase + req.URL.Path)
+	} else {
+		data.SetData(req.URL.Path)
+	}
 
     err := templates.ExecuteTemplate(*res, tpl_name, data)
     if err != nil {

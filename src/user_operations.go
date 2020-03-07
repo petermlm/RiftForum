@@ -28,7 +28,12 @@ func Register(invite_key string,
         return register_errors
     }
 
-    NewUser(username, Basic, password)
+	_, err := NewUser(username, Basic, password)
+    if err != nil {
+        register_errors.username_is_invalid = true
+        return register_errors
+    }
+
     InviteSet(invite_key, Used)
     return nil
 }
