@@ -3,4 +3,4 @@
 export UID=$(id -u)
 export GID=$(id -g)
 cd docker
-docker-compose -f docker-compose-dev.yml up $@
+docker-compose -p riftforum -f docker-compose-dev.yml up $@

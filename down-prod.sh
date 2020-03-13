@@ -1,4 +1,4 @@
 #!/bin/bash
 
 cd docker
-docker-compose -f docker-compose-prod.yml down
+docker-compose -p riftforum -f docker-compose-prod.yml down
