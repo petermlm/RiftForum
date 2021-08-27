@@ -8,9 +8,9 @@ var letter_runes = []rune("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0
 
 func make_new_invite() *Invite {
 	db := GetDBCon()
-	key := make([]rune, InviteSize)
+	key := make([]rune, Config.InviteSize)
 
-	for i := 0; i < InviteSize; i++ {
+	for i := 0; i < Config.InviteSize; i++ {
 		key[i] = letter_runes[rand.Intn(len(letter_runes))]
 	}
 

@@ -13,17 +13,17 @@ func RiftForumPanic(msg string, err error) {
 func MakeBaseUrl() string {
 	var protocol string
 
-	if Https {
+	if Config.HTTPS {
 		protocol = "https"
 	} else {
 		protocol = "http"
 	}
 
-	return fmt.Sprintf("%s://%s", protocol, BaseUrl)
+	return fmt.Sprintf("%s://%s", protocol, Config.BaseURL)
 }
 
 func RiftLink(url string) string {
-	return fmt.Sprintf("%s%s", ApiBase, url)
+	return fmt.Sprintf("%s%s", Config.APIBase, url)
 }
 
 func MakeRedditLink(subreddit string) string {

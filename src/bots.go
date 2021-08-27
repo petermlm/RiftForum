@@ -18,7 +18,7 @@ var new_messages_ch chan *Message
 func InitBots() {
 	// Initialize Redis Connection
 	redis_client = redis.NewClient(&redis.Options{
-		Addr:     RedisAddr,
+		Addr:     Config.RedisAddr,
 		Password: "",
 		DB:       0,
 	})
@@ -30,14 +30,14 @@ func InitBots() {
 	fmt.Println("Redis connection established")
 
 	// Initialize channels
-	new_users_ch = make(chan *User, BotChannelLag)
-	new_topics_ch = make(chan *Topic, BotChannelLag)
-	new_messages_ch = make(chan *Message, BotChannelLag)
+	new_users_ch = make(chan *User, Config.BotChannelLag)
+	new_topics_ch = make(chan *Topic, Config.BotChannelLag)
+	new_messages_ch = make(chan *Message, Config.BotChannelLag)
 
 	// Fan out new messages
 	new_msg_ch := make([]chan *Message, 2)
 	for i, _ := range new_msg_ch {
-		new_msg_ch[i] = make(chan *Message, BotChannelLag)
+		new_msg_ch[i] = make(chan *Message, Config.BotChannelLag)
 	}
 
 	go func() {
@@ -122,7 +122,7 @@ func GreeterBot(new_users_ch chan *User) {
 			user_detail_page := fmt.Sprintf("%s/users/%s", MakeBaseUrl(), new_user.Username)
 			message := fmt.Sprintf(greeter_template, new_user.Username, user_detail_page)
 			NewTopic(user, title, message)
-		case <-time.After(BotHearthBeatPeriod * time.Second):
+		case <-time.After(Config.BotHearthBeatPeriod * time.Second):
 			func() {}()
 		}
 	}
@@ -165,7 +165,7 @@ func RedditBot(new_messages_ch chan *Message) {
 			}
 
 			NewMessage(user, new_message.Topic, new_message_text)
-		case <-time.After(BotHearthBeatPeriod * time.Second):
+		case <-time.After(Config.BotHearthBeatPeriod * time.Second):
 			func() {}()
 		}
 	}
@@ -195,7 +195,7 @@ func YoutubeBot(new_messages_ch chan *Message) {
 			}
 
 			NewMessage(user, new_message.Topic, yt_list)
-		case <-time.After(BotHearthBeatPeriod * time.Second):
+		case <-time.After(Config.BotHearthBeatPeriod * time.Second):
 			func() {}()
 		}
 	}
@@ -213,7 +213,7 @@ func ExpAnswerBot() {
 			if new_message.Author.Id != user.Id {
 				NewMessage(user, new_message.Topic, "Answer to a message")
 			}
-		case <-time.After(BotHearthBeatPeriod * time.Second):
+		case <-time.After(Config.BotHearthBeatPeriod * time.Second):
 			func() {}()
 		}
 	}
@@ -229,7 +229,7 @@ func redis_keys_pattern() string {
 
 func beat_hearth(bot_name string) {
 	key_name := redis_key_name(bot_name)
-	redis_client.Set(key_name, time.Now().Unix(), BotHearthBeatExpire*time.Second)
+	redis_client.Set(key_name, time.Now().Unix(), Config.BotHearthBeatExpire*time.Second)
 }
 
 func hearthbeat_is_alive(val string) bool {
@@ -240,7 +240,7 @@ func hearthbeat_is_alive(val string) bool {
 	}
 
 	hearthbeat_interval := time.Now().Unix() - valint
-	dead_interval := int64(BotHearthBeatDead * time.Second)
+	dead_interval := int64(Config.BotHearthBeatDead * time.Second)
 	return hearthbeat_interval < dead_interval
 }
 

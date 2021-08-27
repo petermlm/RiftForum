@@ -1,46 +1,79 @@
 package main
 
-const (
+import (
+	"os"
+	"time"
+
+	"gopkg.in/yaml.v2"
+)
+
+type ConfigStruct struct {
 	// Debug
-	DebugMode = true
+	DebugMode bool `yaml:"DebugMode"`
 
 	// Server
-	VersionString = "0.1"
-	HostAndPort   = ":8080"
-	BaseUrl       = "localhost:8080"
-	ApiBase       = "/"
-	Https         = false
+	VersionString string `yaml:"VersionString"`
+	HostAndPort   string `yaml:"HostAndPort"`
+	BaseURL       string `yaml:"BaseURL"`
+	APIBase       string `yaml:"APIBase"`
+	HTTPS         bool   `yaml:"HTTPS"`
 
 	// Secret
-	SecretFilename = "secret"
+	SecretFilename string
 
 	// Database and Reddis
-	DatabaseConnRetries = 5
-	DatabaseAddr        = "localhost:8090"
-	DatabaseDatabase    = "riftforum_db"
-	DatabaseUser        = "riftforum_user"
-	DatabasePassword    = "riftforum_pass"
-	RedisAddr           = "localhost:8070"
+	DatabaseConnRetries int    `yaml:"DatabaseConnRetries"`
+	DatabaseAddr        string `yaml:"DatabaseAddr"`
+	DatabaseDatabase    string `yaml:"DatabaseDatabase"`
+	DatabaseUser        string `yaml:"DatabaseUser"`
+	DatabasePassword    string `yaml:"DatabasePassword"`
+	RedisAddr           string `yaml:"RedisAddr"`
 
 	// Users and Invites
-	MaxUsernameSize = 20
-	AdminUsername   = "admin"
-	FirstUsername   = "Pedro"
-	DefaultPassword = "pl"
-	InviteSize      = 12
+	MaxUsernameSize int    `yaml:"MaxUsernameSize"`
+	AdminUsername   string `yaml:"AdminUsername"`
+	FirstUsername   string `yaml:"FirstUsername"`
+	DefaultPassword string `yaml:"DefaultPassword"`
+	InviteSize      int    `yaml:"InviteSize"`
 
 	// Bots
-	BotHearthBeatPeriod = 10 // Seconds
-	BotHearthBeatExpire = 60 // Seconds
-	BotHearthBeatDead   = 60 // Seconds
-	BotChannelLag       = 1024
+	BotHearthBeatPeriod time.Duration `yaml:"BotHearthBeatPeriod"`
+	BotHearthBeatExpire time.Duration `yaml:"BotHearthBeatExpire"`
+	BotHearthBeatDead   time.Duration `yaml:"BotHearthBeatDead"`
+	BotChannelLag       int           `yaml:"BotChannelLag"`
 
 	// Templating
-	TemplatesDir = "templates"
+	TemplatesDir string `yaml:"TemplatesDir"`
 
 	// Pages
-	PageDefaultLimit  = 20
-	PageDefaultOffset = 0
-	PageDefaultSize   = 20
-	PageDefaultNum    = 0
-)
+	PageDefaultLimit  int `yaml:"PageDefaultLimit"`
+	PageDefaultOffset int `yaml:"PageDefaultOffset"`
+	PageDefaultSize   int `yaml:"PageDefaultSize"`
+	PageDefaultNum    int `yaml:"PageDefaultNum"`
+}
+
+var Config *ConfigStruct
+
+func init() {
+	Config = new(ConfigStruct)
+
+	if err := loadConfigFile(); err != nil {
+		panic(err)
+	}
+}
+
+func loadConfigFile() error {
+	f, err := os.Open("src/config.yml")
+	if err != nil {
+		return err
+	}
+	defer f.Close()
+
+	decoder := yaml.NewDecoder(f)
+	err = decoder.Decode(Config)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}

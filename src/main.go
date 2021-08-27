@@ -23,7 +23,7 @@ func riftforum() {
 
 	log.Println("Starting Server")
 	router := CreateRouter()
-	status := http.ListenAndServe(HostAndPort, router)
+	status := http.ListenAndServe(Config.HostAndPort, router)
 	log.Fatal(status)
 }
 

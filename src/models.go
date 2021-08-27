@@ -59,7 +59,7 @@ func NewUser(username string, user_type UserTypes, password string) (*User, erro
 		panic(err)
 	}
 
-	if len(username) > MaxUsernameSize {
+	if len(username) > Config.MaxUsernameSize {
 		return nil, errors.New("Username is to big")
 	}
 

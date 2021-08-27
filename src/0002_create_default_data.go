@@ -11,14 +11,14 @@ func init() {
 		fmt.Println("Creating default users...")
 
 		// Admin and first user
-		NewUser(AdminUsername, Administrator, DefaultPassword)
-		NewUser(FirstUsername, Moderator, DefaultPassword)
+		NewUser(Config.AdminUsername, Administrator, Config.DefaultPassword)
+		NewUser(Config.FirstUsername, Moderator, Config.DefaultPassword)
 
 		// Bots
-		NewUser("RiftBot", Bot, DefaultPassword)
-		NewUser("GreeterBot", Bot, DefaultPassword)
-		NewUser("RedditBot", Bot, DefaultPassword)
-		NewUser("YoutubeBot", Bot, DefaultPassword)
+		NewUser("RiftBot", Bot, Config.DefaultPassword)
+		NewUser("GreeterBot", Bot, Config.DefaultPassword)
+		NewUser("RedditBot", Bot, Config.DefaultPassword)
+		NewUser("YoutubeBot", Bot, Config.DefaultPassword)
 
 		return nil
 	}, func(db migrations.DB) error {

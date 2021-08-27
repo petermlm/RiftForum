@@ -27,7 +27,7 @@ func InitTmpl() {
 		},
 	}
 
-	files, err = ioutil.ReadDir(TemplatesDir)
+	files, err = ioutil.ReadDir(Config.TemplatesDir)
 	if err != nil {
 		RiftForumPanic("can't read directory with templates", err)
 	}
@@ -57,8 +57,8 @@ func Render(res *http.ResponseWriter, req *http.Request, tpl_name string, data R
 	if ok {
 		data.SetUserInfo(user_info)
 	}
-	if ApiBase != "/" {
-		data.SetData(ApiBase + req.URL.Path)
+	if Config.APIBase != "/" {
+		data.SetData(Config.APIBase + req.URL.Path)
 	} else {
 		data.SetData(req.URL.Path)
 	}
@@ -95,5 +95,5 @@ func OperationNotAllowed(res *http.ResponseWriter, req *http.Request) {
 }
 
 func tpl_dir(tpl_name string) string {
-	return path.Join(TemplatesDir, tpl_name)
+	return path.Join(Config.TemplatesDir, tpl_name)
 }

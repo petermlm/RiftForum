@@ -18,7 +18,7 @@ func Register(invite_key string,
 		return register_errors
 	}
 
-	if len(username) > MaxUsernameSize {
+	if len(username) > Config.MaxUsernameSize {
 		register_errors.username_is_invalid = true
 		return register_errors
 	}

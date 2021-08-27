@@ -21,11 +21,11 @@ type Claims struct {
 }
 
 func InitAuth() {
-	if DebugMode {
+	if Config.DebugMode {
 		secret = []byte("secret")
 	} else {
 		var err error
-		secret, err = ioutil.ReadFile(SecretFilename)
+		secret, err = ioutil.ReadFile(Config.SecretFilename)
 		if err != nil {
 			panic("Could not read file with secret.")
 		}

@@ -14,4 +14,5 @@ require (
 	github.com/yalp/jsonpath v0.0.0-20180802001716-5cc68e5049a0
 	golang.org/dl v0.0.0-20210816190658-eea66df5a73d // indirect
 	golang.org/x/crypto v0.0.0-20190701094942-4def268fd1a4
+	gopkg.in/yaml.v2 v2.2.1
 )

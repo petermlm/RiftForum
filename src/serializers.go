@@ -53,8 +53,8 @@ func (r *RiftData) SetUserInfo(UserInfo *UserInfo) {
 func (r *RiftData) SetData(path string) {
 	r.Path = path
 	r.BannerSentence = get_banner_sentence()
-	r.ApiBase = ApiBase
-	r.VersionString = VersionString
+	r.ApiBase = Config.APIBase
+	r.VersionString = Config.VersionString
 }
 
 func (r *RiftData) HasUser() bool {

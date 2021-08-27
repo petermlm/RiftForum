@@ -14,12 +14,12 @@ var db *pg.DB
 
 func InitDB() {
 	// Connect to database, waits one second between attempts
-	for i := 0; i < DatabaseConnRetries; i++ {
+	for i := 0; i < Config.DatabaseConnRetries; i++ {
 		db = pg.Connect(&pg.Options{
-			Addr:     DatabaseAddr,
-			Database: DatabaseDatabase,
-			User:     DatabaseUser,
-			Password: DatabasePassword,
+			Addr:     Config.DatabaseAddr,
+			Database: Config.DatabaseDatabase,
+			User:     Config.DatabaseUser,
+			Password: Config.DatabasePassword,
 		})
 
 		db_con_good := isDbConGood()
