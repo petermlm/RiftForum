@@ -4,13 +4,12 @@ services:
     container_name: riftforum-server
     build:
       context: ..
-      dockerfile: docker/server-prod.docker
+      dockerfile: deploy/Dockerfile
     ports:
       - "8080:8080"
     depends_on:
       - postgres
       - redis
-    entrypoint: docker/entry-prod.sh
   postgres:
     container_name: riftforum-postgres
     image: postgres:9.6
