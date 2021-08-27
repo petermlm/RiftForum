@@ -20,15 +20,15 @@ func InitSers() {
 type UserInfo struct {
 	Id       uint
 	Username string
-	Usertype UserTypes
+	UserType UserTypes
 }
 
 func (u *UserInfo) IsAdmin() bool {
-	return u.Usertype == Administrator
+	return u.UserType == Administrator
 }
 
 func (u *UserInfo) IsMod() bool {
-	return u.Usertype == Administrator || u.Usertype == Moderator
+	return u.UserType == Administrator || u.UserType == Moderator
 }
 
 type RiftDataI interface {
@@ -42,7 +42,7 @@ type RiftData struct {
 	UserInfo       *UserInfo
 	Path           string
 	BannerSentence string
-	ApiBase        string
+	APIBase        string
 	VersionString  string
 }
 
@@ -53,7 +53,7 @@ func (r *RiftData) SetUserInfo(UserInfo *UserInfo) {
 func (r *RiftData) SetData(path string) {
 	r.Path = path
 	r.BannerSentence = get_banner_sentence()
-	r.ApiBase = Config.APIBase
+	r.APIBase = Config.APIBase
 	r.VersionString = Config.VersionString
 }
 
@@ -88,7 +88,7 @@ type LoginData struct {
 
 type UserListData struct {
 	Username  string
-	Usertype  string
+	UserType  string
 	CreatedAt string
 	Banned    bool
 }
@@ -108,7 +108,7 @@ type UsersListData struct {
 type UserData struct {
 	RiftData
 	Username            string
-	Usertype            string
+	UserType            string
 	CreatedAt           string
 	AboutParagraphs     []template.HTML
 	About               string
@@ -200,7 +200,7 @@ type InvitesListData struct {
 type InviteNewData struct {
 	RiftData
 	Key    string
-	KeyUrl string
+	KeyURL string
 }
 
 type BotsData struct {
@@ -231,7 +231,7 @@ type MessageData struct {
 	Id                  uint
 	AuthorId            uint
 	AuthorUsername      string
-	AuthorUsertype      string
+	AuthorUserType      string
 	AuthorBanned        bool
 	SignatureParagraphs []template.HTML
 	CreatedAt           string
@@ -290,7 +290,7 @@ func SerializeUsers(users []*User, page Page) *UsersListData {
 	for _, user := range users {
 		ser_user := UserListData{
 			Username:  user.Username,
-			Usertype:  user.GetUserType(),
+			UserType:  user.GetUserType(),
 			CreatedAt: user.CreatedAt.Format("2006-01-02 15:04:05"),
 			Banned:    user.Banned,
 		}
@@ -305,7 +305,7 @@ func SerializeUser(cusername string, user *User) *UserData {
 	ser_user := new(UserData)
 
 	ser_user.Username = user.Username
-	ser_user.Usertype = user.GetUserType()
+	ser_user.UserType = user.GetUserType()
 	ser_user.CreatedAt = user.CreatedAt.Format("2006-01-02 15:04:05")
 	ser_user.AboutParagraphs = stringToOutputHtml(user.About)
 	ser_user.About = user.About
@@ -359,7 +359,7 @@ func SerializeInvites(invites []*Invite, page Page) *InvitesListData {
 func SerializeInviteNew(new_invite *Invite) *InviteNewData {
 	return &InviteNewData{
 		Key:    new_invite.Key,
-		KeyUrl: new_invite.GetKeyUrl(),
+		KeyURL: new_invite.GetKeyURL(),
 	}
 }
 
@@ -405,7 +405,7 @@ func SerializeTopic(topic *Topic, page Page) *TopicData {
 			Id:                  message.Id,
 			AuthorId:            message.Author.Id,
 			AuthorUsername:      message.Author.Username,
-			AuthorUsertype:      message.Author.GetUserType(),
+			AuthorUserType:      message.Author.GetUserType(),
 			AuthorBanned:        message.Author.Banned,
 			SignatureParagraphs: stringToOutputHtml(message.Author.Signature),
 			CreatedAt:           message.CreatedAt.Format("2006-01-02 15:04:05"),

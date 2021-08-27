@@ -3,8 +3,9 @@ package main
 import (
 	"errors"
 	"fmt"
-	"github.com/go-pg/pg/orm"
 	"time"
+
+	"github.com/go-pg/pg/orm"
 )
 
 func GetUser(username string) (*User, error) {
@@ -62,7 +63,7 @@ func UserTypeSet(username string, new_type UserTypes) {
 		return
 	}
 
-	user.Usertype = new_type
+	user.UserType = new_type
 	db.Update(user)
 }
 
@@ -108,7 +109,7 @@ func SaveUser(user *User) {
 }
 
 func BanUser(user *User) {
-	if user.Usertype == Administrator {
+	if user.UserType == Administrator {
 		panic("Administrator can't be banned")
 	}
 

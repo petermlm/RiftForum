@@ -119,7 +119,7 @@ func GreeterBot(new_users_ch chan *User) {
 		select {
 		case new_user := <-new_users_ch:
 			title := fmt.Sprintf("Welcome %s!", new_user.Username)
-			user_detail_page := fmt.Sprintf("%s/users/%s", MakeBaseUrl(), new_user.Username)
+			user_detail_page := fmt.Sprintf("%s/users/%s", MakeBaseURL(), new_user.Username)
 			message := fmt.Sprintf(greeter_template, new_user.Username, user_detail_page)
 			NewTopic(user, title, message)
 		case <-time.After(Config.BotHearthBeatPeriod * time.Second):

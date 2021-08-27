@@ -9,7 +9,7 @@
     <div class="page_content_wrapper">
       <div class="notfound-container">
         Operation no Allowed<br />
-        Click <a href="{{.ApiBase}}">here</a> to go main page
+        Click <a href="{{if .APIBase}}/{{else}}{{.APIBase}}{{end}}">here</a> to go main page
       </div>
     </div>
 

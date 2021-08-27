@@ -16,9 +16,9 @@
     <div class="page_content_wrapper">
       <div class="page_content_wrapper_in">
         <span class="invites_bulk_actions_text_subtitle">Bulk Action:</span>&nbsp;&nbsp;
-        <a href="{{.ApiBase}}admin/invites_new">New Invite</a>
+        <a href="{{.APIBase}}/admin/invites_new">New Invite</a>
         <span class="invites_bulk_actions_text_middot">&middot;</span>
-        <a href="{{.ApiBase}}admin/invites_cancel_all">Cancel All</a>
+        <a href="{{.APIBase}}/admin/invites_cancel_all">Cancel All</a>
       </div>
     </div>
 
@@ -39,7 +39,7 @@
             <td class="invites_list_status">{{.Status}}</td>
             <td class="invites_list_created_at">{{.CreatedAt}}</td>
             {{if eq .Status "Unused"}}
-            <td class="invites_list_actions"><a href="{{$.ApiBase}}admin/invites_cancel/{{.Key}}">Cancel</a></td>
+            <td class="invites_list_actions"><a href="{{$.APIBase}}/admin/invites_cancel/{{.Key}}">Cancel</a></td>
             {{else}}
             <td class="invites_list_actions">-</td>
             {{end}}

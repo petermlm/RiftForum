@@ -10,7 +10,7 @@ func RiftForumPanic(msg string, err error) {
 	panic(msg)
 }
 
-func MakeBaseUrl() string {
+func MakeBaseURL() string {
 	var protocol string
 
 	if Config.HTTPS {

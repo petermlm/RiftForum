@@ -10,7 +10,7 @@ bin = "tmp/riftforum"
 # Customize binary.
 full_bin = "./tmp/riftforum"
 # Watch these filename extensions.
-include_ext = ["go", "tpl", "tmpl", "html"]
+include_ext = ["go", "tpl", "tmpl", "html", "yml"]
 # Watch these directories if you specified.
 include_dir = ["src", "templates", "static"]
 # Follow symlink for directories

@@ -30,23 +30,23 @@
         </thead>
         <tbody>
           {{range .Users}}
-            {{if eq .Usertype "Administrator"}}
-            <tr class="warning">
-            {{else if eq .Usertype "Moderator"}}
-            <tr class="info">
-            {{else if eq .Usertype "Bot"}}
-            <tr class="success">
+            {{if eq .UserType "Administrator"}}
+            <tr class="text-warning">
+            {{else if eq .UserType "Moderator"}}
+            <tr class="text-info">
+            {{else if eq .UserType "Bot"}}
+            <tr class="text-success">
             {{else if .IsBanned}}
-            <tr class="danger">
+            <tr class="text-danger">
             {{else}}
             <tr>
             {{end}}
               <td>
-                <a href="{{$.ApiBase}}users/{{.Username}}">{{.Username}}</a>
+                <a href="{{$.APIBase}}/users/{{.Username}}">{{.Username}}</a>
                 {{template "banned" .IsBanned}}
               </td>
               <td class="users_list_user_type">
-                {{.Usertype}}
+                {{.UserType}}
               </td>
               <td class="users_list_creation_date">
                 {{.CreatedAt}}
@@ -54,12 +54,12 @@
 
               {{if $.IsAdmin}}
               <td class="users_list_change_type">
-                {{if eq .Usertype "Administrator"}}
+                {{if eq .UserType "Administrator"}}
                 -
-                {{else if eq .Usertype "Moderator"}}
-                <a href="{{$.ApiBase}}admin/users/{{.Username}}/change_type?new_type=basic">Make Basic</a>
+                {{else if eq .UserType "Moderator"}}
+                <a href="{{$.APIBase}}/admin/users/{{.Username}}/change_type?new_type=basic">Make Basic</a>
                 {{else}}
-                <a href="{{$.ApiBase}}admin/users/{{.Username}}/change_type?new_type=moderator">Make Moderator</a>
+                <a href="{{$.APIBase}}/admin/users/{{.Username}}/change_type?new_type=moderator">Make Moderator</a>
                 {{end}}
               </td>
               {{end}}

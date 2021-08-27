@@ -14,10 +14,10 @@
 
     <div class="page_content_wrapper">
       <div class="login-container">
-        <form method="POST" action="{{.ApiBase}}login">
+        <form method="POST" action="{{.APIBase}}/login">
           <input class="form-control" name="username" placeholder="Username" type="text" required />
           <input class="form-control" name="password" placeholder="Password" type="password" required />
-          <button class="form-control btn btn-default" type="submit">Login</button>
+          <button class="form-control btn btn-primary" type="submit">Login</button>
           <input name="next_page" type="hidden" value={{.NextPage}}/>
         </form>
       </div>

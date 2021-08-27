@@ -14,14 +14,14 @@
 
     <div class="page_content_wrapper">
       <div class="register-container">
-        <form method="POST" action="{{.ApiBase}}register">
+        <form method="POST" action="{{.APIBase}}/register">
           <input class="form-control" name="invite_key" placeholder="Invite Key" type="text"
             {{if .HasKey}} value="{{.Key}}"{{end}}
           required />
           <input class="form-control" name="username" placeholder="Username" type="text" required />
           <input class="form-control" name="password" placeholder="Password" type="password" required />
           <input class="form-control" name="password2" placeholder="Confirm Password" type="password" required />
-          <button class="form-control btn btn-default" type="submit">Register</button>
+          <button class="form-control btn btn-primary" type="submit">Register</button>
 
           {{if .InviteKeyBad}}{{template "password_form_error" "Invite Is Invalid"}}{{end}}
           {{if .UsernameAlreayTaken}}{{template "password_form_error" "Username Already Taken"}}{{end}}

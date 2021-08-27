@@ -478,7 +478,7 @@ func save_user_info(next http.Handler) http.Handler {
 					user_info := &UserInfo{
 						Id:       claims.Id,
 						Username: claims.Username,
-						Usertype: claims.Usertype,
+						UserType: claims.UserType,
 					}
 
 					ctx = context.WithValue(ctx, "UserInfo", user_info)
@@ -522,7 +522,7 @@ func admin_middleware(next http.Handler) http.Handler {
 		ctx := req.Context()
 		user_info := ctx.Value("UserInfo").(*UserInfo)
 
-		if user_info != nil && user_info.Usertype == Administrator {
+		if user_info != nil && user_info.UserType == Administrator {
 			next.ServeHTTP(res, req.WithContext(ctx))
 		} else {
 			AdminOnly(&res, req)

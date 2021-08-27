@@ -4,9 +4,9 @@ DebugMode: true
 # Server
 VersionString: "0.1"
 HostAndPort: ":8080"
-BaseUrl: "localhost:8080"
-ApiBase: "/"
-Https: false
+BaseURL: "localhost:8080"
+APIBase: ""
+HTTPS: false
 
 # Secret
 SecretFilename: "secret"

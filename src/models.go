@@ -36,7 +36,7 @@ type User struct {
 	PasswordHash string    `sql:",notnull"`
 	Signature    string    `sql:"default:''`
 	About        string    `sql:"default:''`
-	Usertype     UserTypes `sql:",notnull"`
+	UserType     UserTypes `sql:",notnull"`
 	Banned       bool      `sql:",defautl:false"`
 }
 
@@ -71,7 +71,7 @@ func NewUser(username string, user_type UserTypes, password string) (*User, erro
 	user := &User{
 		Username:     username,
 		PasswordHash: hash,
-		Usertype:     user_type,
+		UserType:     user_type,
 	}
 	db.Insert(user)
 	SendNewUser(user)
@@ -79,13 +79,13 @@ func NewUser(username string, user_type UserTypes, password string) (*User, erro
 }
 
 func (u User) GetUserType() string {
-	if u.Usertype == Administrator {
+	if u.UserType == Administrator {
 		return "Administrator"
-	} else if u.Usertype == Moderator {
+	} else if u.UserType == Moderator {
 		return "Moderator"
-	} else if u.Usertype == Basic {
+	} else if u.UserType == Basic {
 		return "Basic"
-	} else if u.Usertype == Bot {
+	} else if u.UserType == Bot {
 		return "Bot"
 	}
 	return "NoType"
@@ -211,7 +211,7 @@ func (i Invite) GetInviteStatus() string {
 	return "NoStatus"
 }
 
-func (i Invite) GetKeyUrl() string {
-	base_url := MakeBaseUrl()
+func (i Invite) GetKeyURL() string {
+	base_url := MakeBaseURL()
 	return fmt.Sprintf("%s/register?key=%s", base_url, i.Key)
 }

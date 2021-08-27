@@ -1,39 +1,47 @@
 {{define "header"}}
 <header>
-  <nav class="navbar navbar-default" role="navigation">
+  <nav class="navbar navbar-expand-lg navbar-light bg-light" role="navigation">
     <div class="container-fluid nav_wrapper">
 
       <div class="navbar-header">
-        <a class="navbar-brand" href="{{.ApiBase}}">RiftForum</a>
+        <a class="navbar-brand" href="{{.APIBase}}/">RiftForum</a>
       </div>
 
-      <ul class="nav navbar-nav">
-        {{if .HasUser}}
-        {{if .IsAdmin}}
-        <li><a href="{{.ApiBase}}admin/">Admin</a></li>
-        <li><a href="{{.ApiBase}}admin/invites">Invites</a></li>
-        {{end}}
-        <li><a href="{{.ApiBase}}users">Users</a></li>
-        <li><a href="{{.ApiBase}}bots">Bots</a></li>
-        <li><a href="{{.ApiBase}}bbcode">BBCode</a></li>
-        {{else}}
-        <li><a href="{{.ApiBase}}register">Register</a></li>
-        {{end}}
-      </ul>
+      <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav mr-auto">
+          {{if .HasUser}}
+          {{if .IsAdmin}}
+          <li class="nav-item"><a class="nav-link" href="{{.APIBase}}/admin/">Admin</a></li>
+          <li class="nav-item"><a class="nav-link" href="{{.APIBase}}/admin/invites">Invites</a></li>
+          {{end}}
+          <li class="nav-item"><a class="nav-link" href="{{.APIBase}}/users">Users</a></li>
+          <li class="nav-item"><a class="nav-link" href="{{.APIBase}}/bots">Bots</a></li>
+          <li class="nav-item"><a class="nav-link" href="{{.APIBase}}/bbcode">BBCode</a></li>
+          {{else}}
+          <li class="nav-item"><a class="nav-link" href="{{.APIBase}}/register">Register</a></li>
+          {{end}}
+        </ul>
+      </div>
 
       <div class="nav_right">
         {{if .HasUser}}
-        <form class="form-input nav_right_element" method="POST" action="{{.ApiBase}}logout">
-          <button type="submit" class="btn btn-default">Logout</button>
+        <form class="form-input nav_right_element" method="POST" action="{{.APIBase}}/logout">
+          <button type="submit" class="btn btn-primary">Logout</button>
         </form>
-        <div class="user_display nav_right_element">Hello, <a href="{{.ApiBase}}users/{{.RiftData.UserInfo.Username}}">{{.RiftData.UserInfo.Username}}</a>!</div>
+        <div class="user_display nav_right_element">Hello, <a href="{{.APIBase}}/users/{{.RiftData.UserInfo.Username}}">{{.RiftData.UserInfo.Username}}</a>!</div>
         <div class="user_display nav_right_element">|</div>
         <div class="user_display nav_right_element">{{.BannerSentence}}</div>
         {{else}}
-        <form class="form-inline" method="POST" action="{{.ApiBase}}login">
-          <input type="text" class="form-control" id="login-username" name="username" placeholder="username" autofocus required />
-          <input type="password" class="form-control" id="login-password" name="password" placeholder="password" required />
-          <button type="submit" class="btn btn-default">Login</button>
+        <form class="row row-cols-lg-auto g-3 align-items-center" method="POST" action="{{.APIBase}}/login">
+          <div class="col-12">
+            <input type="text" class="form-control" id="login-username" name="username" placeholder="username" autofocus required />
+          </div>
+          <div class="col-12">
+            <input type="password" class="form-control" id="login-password" name="password" placeholder="password" required />
+          </div>
+          <div class="col-12">
+            <button type="submit" class="btn btn-primary">Login</button>
+          </div>
         </form>
         {{end}}
       </div>

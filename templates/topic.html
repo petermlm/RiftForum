@@ -19,25 +19,25 @@
           <div class="row">
             <div class="col-sm-2 message_list_author_info">
               <div class="message_list_author_info_name">
-                <a href="{{$.ApiBase}}users/{{.AuthorUsername}}"
-                {{if eq .AuthorUsertype "Administrator"}}
+                <a href="{{$.APIBase}}/users/{{.AuthorUsername}}"
+                {{if eq .AuthorUserType "Administrator"}}
                 class="text-warning"
-                {{else if eq .AuthorUsertype "Moderator"}}
+                {{else if eq .AuthorUserType "Moderator"}}
                 class="text-info"
-                {{else if eq .AuthorUsertype "Bot"}}
+                {{else if eq .AuthorUserType "Bot"}}
                 class="text-success"
                 {{end}}
                 >{{.AuthorUsername}}</a>
                 {{template "banned" .IsAuthorBanned}}
               </div>
-              <div class="message_list_author_info_type">{{.AuthorUsertype}}</div>
+              <div class="message_list_author_info_type">{{.AuthorUserType}}</div>
               <div class="message_list_author_info_date">
                 Posted on<br/>
                 <span>{{.CreatedAt}}</span>
               </div>
               {{if or $.IsMod (eq .AuthorId $.UserInfo.Id)}}
               <div class="message_list_edit_bnt">
-                <a href="{{$.ApiBase}}messages/{{.Id}}">Edit</a>
+                <a href="{{$.APIBase}}/messages/{{.Id}}">Edit</a>
               </div>
               {{end}}
             </div>
@@ -64,12 +64,12 @@
       {{if .HasUser}}
       <div class="new_message_wrapper">
         <div id="new_message" class="new_message">
-          <form method="POST" action="{{.ApiBase}}topics/{{ .TopicId }}">
+          <form method="POST" action="{{.APIBase}}/topics/{{ .TopicId }}">
             <input type="hidden" name="method" value="post" />
             <input type="hidden" name="message_id" value="" />
             <textarea class="form-control" name="message" placeholder="Message" required></textarea>
-            <button type="submit" name="post" class="btn btn-default submit_button">Post</button>
-            <button type="button" name="clear" class="btn btn-default">Clear</button>
+            <button type="submit" name="post" class="btn btn-primary submit_button">Post</button>
+            <button type="button" name="clear" class="btn btn-primary">Clear</button>
           </form>
         </div>
       </div>

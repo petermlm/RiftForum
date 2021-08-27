@@ -17,7 +17,7 @@ type Claims struct {
 	jwt.StandardClaims
 	Id       uint
 	Username string
-	Usertype UserTypes
+	UserType UserTypes
 }
 
 func InitAuth() {
@@ -55,7 +55,7 @@ func CreateToken(form_username string, form_password string) (string, error) {
 		},
 		user.Id,
 		user.Username,
-		user.Usertype,
+		user.UserType,
 	}
 
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)

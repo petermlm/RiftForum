@@ -7,7 +7,7 @@ CREATE TABLE Users (
     username text NOT NULL UNIQUE,
     password_hash text NOT NULL,
 
-    usertype smallint NOT NULL,
+    user_type smallint NOT NULL,
     signature text,
     about text,
     banned boolean,
