@@ -1,70 +1,45 @@
-# Docker Files
+This is RiftForum, an implementation of a simple forum inspired by the old
+phpBB and Simple Machines Forums.
 
-There is a docker file for the server container and for the postgres container.
+It supports:
 
-## Server
+ * User groups
+ * Registration by invite
+ * BB code for formating
+ * Bots
 
-The docker file for the server Ubuntu 18.04 LTS. It installs the dependencies
-to run the golang server for RiftForum's backend.
+# Dependencies
 
-The `/app` directory contains the whole repository.
+Aside from the dependencies listed in `go.mod`, RiftForum requires PostgreSQL
+and Redis to work. A docker-compose file is provided to handle both of these
+dependencies.
 
-## Postgres
+[Air](https://github.com/cosmtrek/air) may also be used for development, but
+isn't fully necessary.
 
-This docker is based on postgres 9.6 and defines three things:
+# Development
 
- * Database name
- * Database user
- * Database pass
+## Running
 
-# Docker Compose
+Start postgres and redis using the docker compose file:
 
-The docker compose files are used to build and run the containers. There are
-two files:
+    docker-compose up
 
- * `docker-compose-prod.sh`
- * `docker-compose-dev.sh`
+Run the migrations:
 
-## Production
+    make migrations
 
-The production file is to be used in production so the database is persistent.
-The mapped directory with the postgres data is:
+Then run the server:
 
-    REPO/docker/data
+    make run
 
-## Development
+Alternatively, [air](https://github.com/cosmtrek/air) can be used for live
+reload, if it is configured:
 
-The development file is to be used while developing. The database is not
-persistent.
+    make air
 
-## Build
+## PSQL
 
-Use the following commands to build:
+To run psql, do:
 
-    docker-compose -f docker-compose-prod.yml build
-    docker-compose -f docker-compose-dev.yml build
-
-To run:
-
-    docker-compose -f docker-compose-prod.yml up
-    docker-compose -f docker-compose-dev.yml up
-
-To tear down:
-
-    docker-compose -f docker-compose-prod.yml down
-    docker-compose -f docker-compose-dev.yml down
-
-## Bash and PSQL
-
-To open a shell in the node docker use:
-
-    docker exec -it docker_server_1 bash
-
-This will allow you to create models, seeds, and run migrations when in
-development.
-
-To open psql, first run bash into the Postgres container, then run:
-
-    psql -h postgres -U riftforum_user -d riftforum_db
-
-You will be prompted for the password.
+    docker-compose exec postgres psql -h localhost -U riftforum_user -d riftforum_db
