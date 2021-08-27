@@ -16,11 +16,11 @@ const (
 
 	// Database and Reddis
 	DatabaseConnRetries = 5
-	DatabaseAddr        = "postgres:5432"
+	DatabaseAddr        = "localhost:8090"
 	DatabaseDatabase    = "riftforum_db"
 	DatabaseUser        = "riftforum_user"
 	DatabasePassword    = "riftforum_pass"
-	RedisAddr           = "redis:6379"
+	RedisAddr           = "localhost:8070"
 
 	// Users and Invites
 	MaxUsernameSize = 20

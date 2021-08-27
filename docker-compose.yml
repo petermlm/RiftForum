@@ -1,0 +1,16 @@
+version: '2'
+services:
+  postgres:
+    container_name: riftforum-postgres
+    image: postgres:9.6
+    environment:
+      - POSTGRES_DB=riftforum_db
+      - POSTGRES_USER=riftforum_user
+      - POSTGRES_PASSWORD=riftforum_pass
+    ports:
+      - "8090:5432"
+  redis:
+    container_name: riftforum-redis
+    image: redis:5-alpine
+    ports:
+      - "8070:6379"

@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"errors"
 	"fmt"
 	"log"
 	"net/http"
@@ -9,7 +10,6 @@ import (
 	"strings"
 
 	"github.com/gorilla/mux"
-	// "github.com/jasonlvhit/gocron"
 )
 
 func index(res http.ResponseWriter, req *http.Request) {
@@ -172,7 +172,7 @@ func admin_users_change_password_post(res http.ResponseWriter, req *http.Request
 }
 
 func admin_users_ban_get(res http.ResponseWriter, req *http.Request) {
-	user, err := get_user_from_url(res, req)
+	user, err := get_user_from_url(req)
 
 	if err != nil {
 		NotFound(&res, req)
@@ -184,7 +184,7 @@ func admin_users_ban_get(res http.ResponseWriter, req *http.Request) {
 }
 
 func admin_users_unban_get(res http.ResponseWriter, req *http.Request) {
-	user, err := get_user_from_url(res, req)
+	user, err := get_user_from_url(req)
 
 	if err != nil {
 		NotFound(&res, req)
@@ -530,9 +530,21 @@ func admin_middleware(next http.Handler) http.Handler {
 	})
 }
 
-func get_user_from_url(res http.ResponseWriter, req *http.Request) (*User, error) {
-	vars := mux.Vars(req)
-	username := vars["username"]
+func get_key_from_url(r *http.Request, key string) (string, error) {
+	vars := mux.Vars(r)
+	if value, ok := vars[key]; ok {
+		return value, nil
+	}
+
+	err_str := fmt.Sprintf("Not in request: %s", key)
+	return "", errors.New(err_str)
+}
+
+func get_user_from_url(r *http.Request) (*User, error) {
+	username, err := get_key_from_url(r, "username")
+	if err != nil {
+		return nil, err
+	}
 	return GetUser(username)
 }
 
@@ -601,8 +613,8 @@ func CreateRouter() *mux.Router {
 	admin_routes.Use(admin_middleware)
 
 	router.
-		PathPrefix("/static/style/").
-		Handler(http.StripPrefix("/static/style/", http.FileServer(http.Dir("static/style/"))))
+		PathPrefix("/static/").
+		Handler(http.StripPrefix("/static/", http.FileServer(http.Dir("static/"))))
 
 	log.Println("Routers created")
 	return router
