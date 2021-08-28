@@ -7,6 +7,8 @@ import (
 	"gopkg.in/yaml.v2"
 )
 
+const ConfigFile = "src/config.yml"
+
 type ConfigStruct struct {
 	// Debug
 	DebugMode bool `yaml:"DebugMode"`
@@ -63,7 +65,7 @@ func init() {
 }
 
 func loadConfigFile() error {
-	f, err := os.Open("src/config.yml")
+	f, err := os.Open(ConfigFile)
 	if err != nil {
 		return err
 	}
