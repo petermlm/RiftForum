@@ -2,7 +2,7 @@
 DebugMode: true
 
 # Server
-VersionString: "0.1"
+VersionString: "0.2"
 HostAndPort: ":8080"
 BaseURL: "localhost:8080"
 APIBase: ""
