@@ -10,7 +10,7 @@ var banner_sentences = [...]string{
 	"Powered by Markdown",
 	"Malware Free",
 	"Password == \"Banana7\"",
-	"JavaScript Free",
+	"NPM Free",
 	"Поддерживает UTF-8",
 	"User Friendly",
 	"No lollygagging",
