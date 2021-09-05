@@ -292,7 +292,7 @@ nav {
 .edit_message form textarea {
   margin-top: 10px;
   resize: vertical;
-  height: 8em;
+  height: 34em;
 }
 
 .edit_message form button {
