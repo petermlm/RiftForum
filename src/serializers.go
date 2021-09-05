@@ -270,13 +270,7 @@ func SerializeEmpty() *EmptyData {
 
 func SerializeLogin(next_page string) *LoginData {
 	ser_login := new(LoginData)
-
-	if next_page == "" {
-		ser_login.NextPage = "/"
-	} else {
-		ser_login.NextPage = next_page
-	}
-
+	ser_login.NextPage = next_page
 	return ser_login
 }
 

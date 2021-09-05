@@ -18,7 +18,7 @@
           <input class="form-control" name="username" placeholder="Username" type="text" required />
           <input class="form-control" name="password" placeholder="Password" type="password" required />
           <button class="form-control btn btn-primary" type="submit">Login</button>
-          <input name="next_page" type="hidden" value={{.NextPage}}/>
+          <input name="next_page" type="hidden" value="{{.APIBase}}/{{.NextPage}}/">
         </form>
       </div>
     </div>

@@ -29,6 +29,9 @@ func login_get(res http.ResponseWriter, req *http.Request) {
 	}
 
 	next_page := req.URL.Query().Get("next_page")
+	if len(next_page) > 0 {
+		next_page = next_page[1:]
+	}
 	data := SerializeLogin(next_page)
 	Render(&res, req, "login.html", data)
 }
