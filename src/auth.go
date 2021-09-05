@@ -41,8 +41,8 @@ func CreateToken(form_username string, form_password string) (string, error) {
 		return "", errors.New("Login credentials are invalid")
 	}
 
-	if user.Banned {
-		return "", errors.New("")
+	if user.UserType == Bot {
+		return "", errors.New("Bot's can't login")
 	}
 
 	if !VerifyUserPass(user, form_password) {
