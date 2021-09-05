@@ -96,6 +96,8 @@ func (u User) GetUserType() string {
  * ============================================================================
  */
 
+const TitleLengthMax = 60
+
 type Topic struct {
 	DBObject
 
@@ -107,8 +109,12 @@ type Topic struct {
 	Messages []*Message
 }
 
-func NewTopic(user *User, title_text string, message_text string) *Topic {
+func NewTopic(user *User, title_text string, message_text string) (*Topic, error) {
 	var err error
+
+	if len(title_text) > TitleLengthMax {
+		return nil, errors.New("Title is too big")
+	}
 
 	// Topic
 	topic := &Topic{
@@ -140,7 +146,7 @@ func NewTopic(user *User, title_text string, message_text string) *Topic {
 
 	SendNewMessage(message)
 	SendNewTopic(topic)
-	return topic
+	return topic, nil
 }
 
 /* ============================================================================

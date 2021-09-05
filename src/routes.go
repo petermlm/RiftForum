@@ -223,7 +223,11 @@ func topics_post(res http.ResponseWriter, req *http.Request) {
 		panic(err)
 	}
 
-	topic := NewTopic(user, form_title, form_message)
+	topic, err := NewTopic(user, form_title, form_message)
+	if err != nil {
+		OperationNotAllowed(&res, req)
+		return
+	}
 	Redirect(&res, req, fmt.Sprintf("/topics/%d", topic.Id))
 }
 
