@@ -7,6 +7,7 @@ import (
 func AddCustomBBCode(compiler *bbcode.Compiler) {
 	add_lists(compiler)
 	add_youtube(compiler)
+	add_image_style(compiler)
 }
 
 // From:
@@ -129,5 +130,13 @@ func add_youtube(compiler *bbcode.Compiler) {
 		// Closes the tag
 		out.AppendChild(bbcode.NewHTMLTag(""))
 		return out, false
+	})
+}
+
+func add_image_style(compiler *bbcode.Compiler) {
+	compiler.SetTag("img", func(node *bbcode.BBCodeNode) (*bbcode.HTMLTag, bool) {
+		out, appendExpr := bbcode.DefaultTagCompilers["img"](node)
+		out.Attrs["class"] = "posted-image"
+		return out, appendExpr
 	})
 }
