@@ -1,4 +1,4 @@
-GOVERSION=1.17
+GOVERSION=1.18
 GOBIN=go$(GOVERSION)
 BIN=tmp/riftforum
 
